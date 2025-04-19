@@ -1,9 +1,0 @@
-<input 
-    type="checkbox" 
-    class="form-check-input" 
-    {% if name is defined %}name="{{ name }}"{% endif %} 
-    id="form-input-{{ id }}" 
-    {% if checked %} checked {% endif %}
-    {% if required %} required {% endif %}
-    {% if disabled %} disabled {% endif %}
-    aria-describedby="label-form-input-{{ id }}"></input>

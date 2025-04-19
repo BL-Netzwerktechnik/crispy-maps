@@ -67,8 +67,7 @@ services:
         - THEME_GIT_COMMIT=${THEME_GIT_COMMIT}
     volumes:
       - crisp:/data
-      - ./public:/var/www/crisp/cms/themes/crisptheme
-      - ./plugins:/plugins
+      - ./plugin:/plugins/lostplaces
       - ./.env:/var/www/crisp/.env
 
 volumes:

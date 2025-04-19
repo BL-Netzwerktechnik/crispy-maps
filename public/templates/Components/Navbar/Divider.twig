@@ -1,5 +1,0 @@
-{% if Item.getPermissions() is empty or Item.getPermissionHaystack() is empty or in_array_any(Item.getPermissions(), Item.getPermissionHaystack()) %}
-	<li class="menu-header small text-uppercase">
-		<span class="menu-header-text">{{ Item.getTitle() }}</span>
-	</li>
-{% endif %}

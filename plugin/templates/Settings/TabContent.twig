@@ -1,0 +1,18 @@
+<div class="row row-cols-2">
+	{% include "Components/Input.twig" with {
+        "type": "checkbox",
+        "id": "settings-lostplaces-auth-required",
+        "name": "LostPlaces_AuthRequired",
+        "checked": config.LostPlaces_AuthRequired,
+        "label": "Kartenansicht: Login erforderlich",
+        "hint": "Wenn aktiviert ist für die Kartenansicht ein Login erforderlich",
+    } %}
+	{% include "Components/Input.twig" with {
+        "type": "text",
+        "id": "settings-lostplaces-map-path",
+        "name": "LostPlaces_MapPath",
+        "value": config.LostPlaces_MapPath,
+        "label": "Kartenansicht: URL Pfad",
+        "hint": "Der URL Pfad der Kartenansicht",
+    } %}
+</div>

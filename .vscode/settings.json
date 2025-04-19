@@ -1,5 +1,6 @@
 {
     "intelephense.environment.includePaths": [
-        "/workspace/crispcms"
+        "/workspace/crispcms",
+        "/workspace/crispy"
     ]
 }

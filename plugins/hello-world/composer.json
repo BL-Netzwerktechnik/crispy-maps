@@ -1,0 +1,16 @@
+{
+    "name": "crispy/helloworld",
+    "description": "A test plugin. It simply adds a Test Nav link to the admin menu.",
+    "version": "1.0.0",
+    "autoload": {
+          "psr-4": {
+              "helloworld\\": "src/"
+        }
+    },  
+    "authors": [
+        {
+            "name": "Justin Back",
+            "email": "justin.back@bl-netzwerke.de"
+        }
+    ]
+}

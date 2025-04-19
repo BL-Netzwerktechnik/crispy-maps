@@ -1,0 +1,6 @@
+{
+    "require": {
+        "nadar/quill-delta-parser": "^3.4",
+        "studio-42/elfinder": "^2.1"
+    }
+}

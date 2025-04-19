@@ -1,0 +1,1 @@
+/workspace/crispcms/cli-wrapper.sh

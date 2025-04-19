@@ -1,0 +1,83 @@
+{% extends "Base.twig" %}
+{% set pageTitle = "CMSControl.Views.Categories.Title"| translate %}
+{% set currentPage = 'admin/categories' %}
+
+
+{% block Content %}
+	<div class="row">
+		<div class="col-xxl-6 mb-6 order-0 gy-2">
+			<div class="card">
+				<div class="card-header">
+					<h5 class="card-title">{{ "CMSControl.Views.Categories.Title"| translate }}
+						{% if HasWritePermission %}
+							<button type="button" id="create-category" data-bs-toggle="modal" data-bs-target="#createCategoryModal" class="btn btn-primary btn-sm float-end">
+								<i class="fa-solid fa-plus"></i>
+								{{ "CMSControl.Views.Categories.Card.EditCategory.Form.Create"| translate }}</button>
+						{% endif %}
+					</h5>
+
+				</div>
+				<div class="card-body">
+					<div id="category_tree"></div>
+				</div>
+			</div>
+		</div>
+		<div class="col-xxl-6 mb-6 order-0 gy-2" style="display: none;" id="category-edit">
+			<div class="card">
+				<div class="card-header">
+					<h5 class="card-title">{{ "CMSControl.Views.Categories.Card.EditCategory.Title"| translate }}</h5>
+				</div>
+				<div class="card-body">
+					<form id="category-edit-form">
+						<div class="my-2">
+							<label class="form-label" for="category-id">{{ "CMSControl.Views.Categories.Card.EditCategory.Form.Id"| translate }}</label>
+							<input type="text" class="form-control" name="id" id="category-id" disabled>
+						</div>
+
+						<div class="my-2">
+							<label class="form-label" for="category-name">{{ "CMSControl.Views.Categories.Card.EditCategory.Form.Name"| translate }}</label>
+							<input type="text" class="form-control" name="name" id="category-name" required {% if not HasWritePermission %} disabled {% endif %}>
+						</div>
+
+						<div class="my-2">
+							<label class="form-label" for="category-slug">{{ "CMSControl.Views.Categories.Card.EditCategory.Form.Slug"| translate }}</label>
+							<input type="text" class="form-control" name="slug" id="category-slug" {% if not HasWritePermission %} disabled {% endif %}>
+						</div>
+
+
+						<div class="row-cols-4">
+							{% for CategoryProperty in CategoryProperties %}
+								<div class="col">
+									<div class="form-check form-switch mb-2">
+										<input class="form-check-input" type="checkbox" id="property_{{ CategoryProperty.name|lower|replace({' ': '_'}) }}" name="properties" value="{{ CategoryProperty.value }}" {% if not HasWritePermission %} disabled {% endif %}>
+										<label class="form-check-label" for="property_{{ CategoryProperty.name|lower|replace({' ': '_'}) }}">
+											{{ ('CMSControl.Views.Categories.Card.EditCategory.Form.Visibility.' ~ CategoryProperty.name)|translate }}
+										</label>
+									</div>
+								</div>
+							{% endfor %}
+						</div>
+
+
+						<button type="submit" class="btn btn-primary" {% if not HasWritePermission %} disabled {% endif %}>{{ "CMSControl.Views.Categories.Card.EditCategory.Form.Save"| translate }}</button>
+						<span id="delete-category-tooltip" class="d-inline-block" tabindex="0" data-bs-toggle="tooltip">
+							<button type="button" id="delete-category" class="btn btn-danger" {% if not HasWritePermission %} data-readonly="true" disabled {% endif %}>{{ "CMSControl.Views.Categories.Card.EditCategory.Form.Delete"| translate }}</button>
+						</span>
+						<button type="button" id="move-category" class="btn btn-info" {% if not HasWritePermission %} disabled {% endif %}>{{ "CMSControl.Views.Categories.Card.EditCategory.Form.Move"| translate }}</button>
+					</form>
+				</div>
+			</div>
+		</div>
+	</div>
+	{% include "Components/Modals/CreateCategory.twig" %}
+{% endblock %}
+
+{% block PageJs %} <script src="{{ includeResource("js/CMSControl/categories.js") }}"></script>
+	 <script src="https://cdnjs.cloudflare.com/ajax/libs/jstree/3.3.17/jstree.min.js" integrity="sha512-Rzhxh2sskKwa+96nRopp/hvGexBzEPG6mnFI6uRy059FZfksJJFYmqDFn050KUDhivXLsT6SvoaEf5iSp2SHjg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
+{% endblock %}
+
+
+{% block PageCSS %}
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jstree/3.3.17/themes/default/style.min.css" integrity="sha512-A5OJVuNqxRragmJeYTW19bnw9M2WyxoshScX/rGTgZYj5hRXuqwZ+1AVn2d6wYTZPzPXxDeAGlae0XwTQdXjQA==" crossorigin="anonymous" referrerpolicy="no-referrer"/>
+{% endblock %}

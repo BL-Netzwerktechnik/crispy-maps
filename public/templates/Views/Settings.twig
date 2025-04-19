@@ -1,0 +1,37 @@
+{% extends "Base.twig" %}
+{% set pageTitle = "CMSControl.Views.Settings.Title"| translate %}
+{% set currentPage = 'admin/settings' %}
+
+{% block Content %}
+	&nbsp;
+	<div class="container h-100">
+		<form>
+			<div class="nav-align-top nav-tabs-shadow">
+				<ul class="nav nav-tabs" role="tablist">
+					{% for setting in settingsTabList %}
+						{% include "Components/NavTabs/NavItem.twig" with {"id": setting.id, "icon": setting.icon, "text": setting.text, "active": setting.active } %}
+					{% endfor %}
+				</ul>
+				<div class="tab-content">
+					{% for setting in settingsTabList %}
+						{% embed "Components/NavTabs/TabContent.twig" with {"active": setting.active, "id": setting.id} %}
+							{% block content %}
+								{{ setting.tabPane.content|raw }}
+
+
+								{% if not setting.tabPane.hideButtons %}
+									{% include "Components/Settings/SaveButton.twig" %}
+									{% include "Components/Settings/ResetButton.twig" %}
+									{{ setting.tabPane.extraButtons|raw }}
+								{% endif %}
+							{% endblock %}
+						{% endembed %}
+					{% endfor %}
+				</div>
+			</div>
+		</form>
+	</div>
+{% endblock %}
+{% block PageJs %}
+	<script src="{{ includeResource("js/CMSControl/settings.js") }}"></script>
+{% endblock %}

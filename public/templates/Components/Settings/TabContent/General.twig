@@ -1,0 +1,22 @@
+<div class="row row-cols-2">
+	{% include "Components/Input.twig" with {
+        "type": "text",
+        "id": "settings-general-site-title",
+        "name": "CMSControl_SiteName",
+        "value": config.CMSControl_SiteName,
+        "required_indicator": "required-indicator-tabpane-settings-general",
+        "required": true,
+        "label": "CMSControl.Views.Settings.General.SiteName.Label"|translate,
+        "hint": "CMSControl.Views.Settings.General.SiteName.Hint"|translate
+    } %}
+	{% include "Components/Input.twig" with {
+        "type": "text",
+        "id": "settings-general-brand-logo-url",
+        "name": "CMSControl_BrandLogoUrl",
+        "value": config.CMSControl_BrandLogoUrl,
+        "required_indicator": "required-indicator-tabpane-settings-general",
+        "required": false,
+        "label": "CMSControl.Views.Settings.General.BrandLogoUrl.Label"|translate,
+        "hint": "CMSControl.Views.Settings.General.BrandLogoUrl.Hint"|translate
+    } %}
+</div>

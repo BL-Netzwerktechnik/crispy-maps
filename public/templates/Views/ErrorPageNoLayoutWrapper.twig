@@ -1,0 +1,42 @@
+{% extends "Base.twig" %}
+{% set pageTitle = "CMSControl.Views.ErrorPageNoLayoutWrapper.Title"| translate %}
+
+{% block PageCSS %}
+	<link rel="stylesheet" href="{{ includeResource("vendor/css/pages/page-auth.css") }}">
+{% endblock %}
+{% block PageJs %}
+	 <script src="{{ includeResource("js/CMSControl/login.js") }}"></script>
+{% endblock %}
+{% block LayoutWrapper %}
+	<div class="container-xxl">
+		<div class="authentication-wrapper authentication-basic container-p-y">
+			<div class="authentication-inner">
+				<div class="card px-sm-6 px-0">
+					<div
+						class="card-body">
+						<!-- Logo -->
+						<div class="app-brand justify-content-center">
+							<a href="{{ generateLink("admin") }}" class="app-brand-link gap-2">
+								<span class="app-brand-logo demo">
+
+									<img width="32" src="{{ config.CMSControl_BrandLogoUrl|default(includeResource("img/crisp_icon.svg")) }}" alt="brand-logo" class="logo logo-dark">
+
+								</span>
+								<span class="app-brand-text demo text-heading fw-bold">{{ config.CMSControl_SiteName|default('CrispCMS') }}</span>
+							</a>
+						</div>
+						<!-- /Logo -->
+						<a href="{{ generateLink("admin") }}" class="mb-4">&#8592; {{ 'CMSControl.Views.ErrorPageNoLayoutWrapper.BackLink.Text'|translate }}</a>
+						<div class="alert alert-danger show mt-2" role="alert">
+							{{ AlertText }}
+						</div>
+						<hr>
+						{% include "Components/LanguageSelector.twig" %}
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<!-- / Content -->
+{% endblock %}

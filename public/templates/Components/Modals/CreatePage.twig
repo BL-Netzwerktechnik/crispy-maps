@@ -1,0 +1,40 @@
+<div class="modal fade" id="createPageModal" tabindex="-1" aria-labelledby="createPageModalLabel" aria-hidden="true">
+	<div class="modal-dialog modal-dialog-centered">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h5 class="modal-title" id="createPageModalLabel">{{ 'CMSControl.Components.Modals.CreatePage.Modal.Title'|translate }}</h5>
+				<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+			</div>
+			<div class="modal-body">
+
+				<form id="page-create-form">
+
+					<div class="my-2">
+						<label class="form-label" for="new-category-name">{{ "CMSControl.Components.Modals.CreatePage.Modal.Form.Name"| translate }}</label>
+						<input type="text" class="form-control" name="name" id="new-page-name" required>
+					</div>
+
+
+					<div class="my-2">
+						<label class="form-label" for="new-page-template">{{ "CMSControl.Components.Modals.CreatePage.Modal.Form.Template"| translate }}</label>
+						<select class="form-select" name="template" id="new-page-template" {% if not HasWritePermission %} disabled {% endif %} required>
+							<option selected disabled>{{ "CMSControl.Views.Pages.Card.EditPage.Form.Template.Default"| translate }}</option>
+							{% for Template in Templates %}
+								<option value="{{ Template.id }}">[{{ Template.path }}] {{ Template.name }}</option>
+							{% endfor %}
+						</select>
+					</div>
+
+					<div class="my-2">
+						<label class="form-label" for="new-category-parent">{{ "CMSControl.Components.Modals.CreatePage.Modal.Form.Category"| translate }}</label>
+						<input type="text" class="form-control" id="new-page-category" disabled required>
+					</div>
+				</form>
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">{{ 'CMSControl.Components.Modals.CreatePage.Modal.Button.Close'|translate }}</button>
+				<button type="submit" form="page-create-form" class="btn btn-primary">{{ 'CMSControl.Components.Modals.CreatePage.Modal.Button.Create'|translate }}</button>
+			</div>
+		</div>
+	</div>
+</div>

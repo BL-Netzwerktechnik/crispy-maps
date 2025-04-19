@@ -1,0 +1,33 @@
+{% if Item.getChildren()|length > 0 %}
+
+	<!-- Layouts -->
+	<li id="navbar-item-{{ Item.getId() }}" class="menu-item">
+		<a href="javascript:void(0);" class="menu-link menu-toggle">
+			{% if Item.getIcon() is not null %}
+				<i class="menu-icon tf-icons me-1 {{ Item.getIcon() }}"></i>
+			{% endif %}
+			<div class="text-truncate">{{ Item.getName() }}</div>
+
+		</a>
+
+		<ul class="menu-sub">
+			{% for Child in Item.getChildren() %}
+				{% if Child.getPermissions() is empty or Child.getPermissionHaystack() is empty or in_array_any(Child.getPermissions(), Child.getPermissionHaystack()) %}
+					{% include 'Components/Navbar/Item.twig' with {'Item': Child} %}
+				{% endif %}
+			{% endfor %}
+		</ul>
+	</li>
+{% else %}
+
+	<li id="navbar-item-{{ Item.getId() }}" class="menu-item {% if currentPage == Item.getUrl() %}active{% endif %}">
+		<a href="{% if Item.getTarget().value == "_blank" %}{{ Item.getUrl() }}{% else %}{{ generateLink(Item.getUrl()) }}{% endif %}" class="menu-link" {% if Item.getTarget().value == "_blank" %} target="{{ Item.getTarget().value }}{% endif %}">
+			{% if Item.getIcon() is not null %}
+				<i class="menu-icon tf-icons me-1 {{ Item.getIcon() }}"></i>
+			{% endif %}
+			<div class="text-truncate">{{ Item.getName() }}</div>
+		</a>
+	</li>
+
+
+{% endif %}

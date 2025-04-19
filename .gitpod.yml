@@ -1,0 +1,63 @@
+ports:
+  - name: Frontend
+    description: CrispCMS Frontend
+    port: 80
+    onOpen: notify
+
+
+  - name: Minio Capitol
+    port: 9005
+    visibility: public
+
+  - name: API
+    description: CrispCMS API Server
+    port: 81
+    onOpen: notify
+
+  - name: Postgresql
+    description: RDBMS Server
+    port: 5432
+    onOpen: ignore
+
+  - name: Redis
+    description: Session and Ratelimit Server
+    port: 6379
+    onOpen: ignore
+
+  - name: Mailhog SMTP
+    description: Mailhog SMTP Server
+    port: 1025
+    onOpen: ignore
+
+  - name: Mailhog Web
+    description: Mailhog Web UI
+    port: 8025
+    onOpen: notify
+tasks:
+  - name: Setup Docker Registry
+    command: | 
+              mkdir /home/gitpod/.docker
+              echo "$AUTHFILE_DOCKER" > /home/gitpod/.docker/config.json
+
+
+  - name: Setup Network
+    init: docker network create crispcms || true
+
+  - name: CrispCMS
+    init: |
+          git clone https://github.com/jrb-it/crispcms /workspace/crispcms || true 
+          cd /workspace/crispcms
+          composer install --ignore-platform-reqs 
+          cd ${GITPOD_REPO_ROOT}/public/includes
+          composer install --ignore-platform-reqs
+          cd ${GITPOD_REPO_ROOT}/plugins
+          ./install.sh
+          cd ${GITPOD_REPO_ROOT}
+          touch .env  || true 
+    command: ./start.sh
+
+vscode:
+  extensions:
+    - felixfbecker.php-debug
+    - neilbrayfield.php-docblocker
+    - mblode.twig-language-2

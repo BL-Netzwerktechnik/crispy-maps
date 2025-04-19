@@ -1,0 +1,4 @@
+public/includes/vendor
+.env
+generated_theme
+vendor/

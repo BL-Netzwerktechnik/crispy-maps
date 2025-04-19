@@ -1,0 +1,32 @@
+<!-- Menu -->
+
+<aside id="layout-menu" class="layout-menu menu-vertical menu bg-menu-theme">
+	<div class="app-brand demo">
+		<a href="{{ generateLink("admin") }}" class="app-brand-link">
+			<span class="app-brand-logo demo">
+
+				<img width="32" src="{{ config.CMSControl_BrandLogoUrl|default(includeResource("img/crisp_icon.svg")) }}" alt="brand-logo" class="logo logo-dark">
+			</span>
+			<span class="app-brand-text demo menu-text fw-bolder ms-2">{{ config.CMSControl_SiteName|default('CrispCMS') }}</span>
+		</a>
+
+		<a href="javascript:void(0);" class="layout-menu-toggle menu-link text-large ms-auto d-block d-xl-none">
+			<i class="bx bx-chevron-left bx-sm align-middle"></i>
+		</a>
+	</div>
+
+	<div class="menu-inner-shadow"></div>
+
+	<ul class="menu-inner py-1">
+		{% for Item in navbarItems %}
+			{% if Item.getPermissions() is empty or in_array_any(Item.getPermissions(), Item.getPermissionHaystack()) %}
+				{% if Item.getUrl() is not empty %}
+					{% include 'Components/Navbar/Item.twig' with {'Item': Item} %}
+				{% else %}
+					{% include 'Components/Navbar/Divider.twig' with {'Item': Item} %}
+				{% endif %}
+			{% endif %}
+		{% endfor %}
+	</ul>
+</aside>
+<!-- / Menu -->

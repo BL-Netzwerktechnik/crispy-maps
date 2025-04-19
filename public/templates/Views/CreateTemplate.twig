@@ -1,0 +1,64 @@
+{% extends "Base.twig" %}
+{% set pageTitle = "CMSControl.Views.CreateTemplate.Title"| translate %}
+{% set currentPage = 'admin/templates' %}
+
+
+{% block Content %}
+	<div class="row">
+		<div class="col-xxl-12 mb-6 order-0 gy-2">
+			<div class="card">
+				<div class="card-header">
+					<h5 class="card-title">{{ "CMSControl.Views.CreateTemplate.Title"| translate }}
+					</h5>
+
+				</div>
+				<div class="card-body">
+					<form>
+
+						<div class="my-2">
+							<label class="form-label" for="name">{{ "CMSControl.Views.CreateTemplate.Form.Name"| translate }}</label>
+							<input type="text" class="form-control" name="name" id="name" required>
+						</div>
+						<div class="my-2">
+							<label class="form-label" for="name">{{ "CMSControl.Views.CreateTemplate.Form.Directory"| translate }}</label>
+							<input type="text" class="form-control" name="directory" id="directory">
+						</div>
+
+
+						<div class="my-2">
+							<label class="form-label" for="layout">{{ "CMSControl.Views.CreateTemplate.Form.Layout"| translate }}</label>
+							<select class="form-select" name="layout" id="layout" aria-label="Default select example">
+								<option value="null" selected>{{ "CMSControl.Views.CreateTemplate.Form.Layout.Default"| translate }}</option>
+								{% for Layout in Layouts %}
+									<option value="{{ Layout.id }}">{{ Layout.name }}</option>
+								{% endfor %}
+							</select>
+						</div>
+
+						<div class="my-2">
+							<label class="form-label" for="editor">{{ "CMSControl.Views.CreateTemplate.Form.Content"| translate }}</label>
+							<textarea name="content" id="editor"></textarea>
+						</div>
+
+						<button type="submit" class="btn btn-primary">{{ 'CMSControl.Views.CreateTemplate.Form.Button.Save'|translate }}</button>
+					</form>
+				</div>
+			</div>
+		</div>
+	</div>
+{% endblock %}
+
+{% block PageCSS %}
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.12/codemirror.min.css">
+{% endblock %}
+
+{% block PageJs %}
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.12/codemirror.min.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.12/mode/htmlmixed/htmlmixed.min.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.12/mode/xml/xml.min.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.12/mode/javascript/javascript.min.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.12/mode/css/css.min.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.12/mode/twig/twig.min.js"></script>
+
+	<script src="{{ includeResource("js/CMSControl/create_template.js") }}"></script>
+{% endblock %}

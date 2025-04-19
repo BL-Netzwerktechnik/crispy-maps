@@ -1,0 +1,42 @@
+{% if type == "checkbox" %}
+
+	<div class="col my-1">
+		<div class="form-check">
+			{% include "Components/Inputs/Checkbox.twig" %}
+
+			{% if label is defined %}
+				<label class="form-check-label" id="label-form-input-{{ id }}" for="form-input-{{ id }}">
+					{{ label }}
+					{% if required %}
+						<span style="color: red;">*</span>
+					{% endif %}
+				</label>
+				{% if hint is defined %}
+					<div id="hint-form-input-{{ id }}" class="form-text">{{ hint }}</div>
+				{% endif %}
+			{% endif %}
+		</div>
+	</div>
+{% else %}
+	<div class="col my-1">
+		{% if label is defined %}
+			<label id="label-form-input-{{ id }}" for="form-input-{{ id }}" class="form-label">{{ label }}
+				{% if required %}
+					<span style="color: red;">*</span>
+				{% endif %}
+			</label>
+		{% endif %}
+		{% if type == 'text' %}
+			{% include "Components/Inputs/Text.twig" %}
+		{% elseif type == 'select' %}
+			{% include "Components/Inputs/Select.twig" %}
+		{% elseif type == 'password' %}
+			{% include "Components/Inputs/Password.twig" %}
+		{% else %}
+			Unsupported input type
+		{% endif %}
+		{% if hint is defined %}
+			<div id="hint-form-input-{{ id }}" class="form-text">{{ hint }}</div>
+		{% endif %}
+	</div>
+{% endif %}

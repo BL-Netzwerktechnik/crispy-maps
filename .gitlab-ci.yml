@@ -1,0 +1,88 @@
+stages:
+    - publish
+    - release
+
+Publish.Tag:
+  stage: publish
+  image:
+    name: gcr.io/kaniko-project/executor:v1.9.0-debug
+    entrypoint:
+    - ''
+  script:
+  - export TAG_MAJOR=$(echo $CI_COMMIT_TAG | cut -d. -f1)
+  - export TAG_MINOR=$(echo $CI_COMMIT_TAG | cut -d. -f2)
+  - export TAG_PATCH=$(echo $CI_COMMIT_TAG | cut -d. -f3)
+  - /kaniko/executor --context "${CI_PROJECT_DIR}" --dockerfile "${CI_PROJECT_DIR}/Dockerfile"
+    --destination "${CI_REGISTRY_IMAGE}:${TAG_MAJOR}"
+    --destination "${CI_REGISTRY_IMAGE}:${TAG_MAJOR}.${TAG_MINOR}"
+    --destination "${CI_REGISTRY_IMAGE}:${TAG_MAJOR}.${TAG_MINOR}.${TAG_PATCH}"
+    --destination "${CI_REGISTRY_IMAGE}:stable"
+    --build-arg THEME_GIT_COMMIT=${CI_COMMIT_SHORT_SHA}
+    --build-arg THEME_GIT_TAG=${CI_COMMIT_TAG}
+  rules:
+  - if: $CI_COMMIT_TAG
+
+Publish.Nightly:
+  stage: publish
+  image:
+    name: gcr.io/kaniko-project/executor:v1.9.0-debug
+    entrypoint:
+    - ''
+  script:
+  - /kaniko/executor --context "${CI_PROJECT_DIR}" --dockerfile "${CI_PROJECT_DIR}/Dockerfile"
+    --destination "${CI_REGISTRY_IMAGE}:nightly"
+    --build-arg THEME_GIT_COMMIT=${CI_COMMIT_SHORT_SHA}
+    --build-arg THEME_GIT_TAG=nightly
+  rules:
+    - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
+
+merge cyclonedx sboms:
+  stage: release
+  allow_failure: true
+  image:
+    name: cyclonedx/cyclonedx-cli:0.24.2
+    entrypoint: [""]
+  script:
+    - apt-get update && apt-get install -y jq
+    - find . -name "gl-sbom-*.cdx.json" -exec cyclonedx merge --output-file gl-sbom-all.cdx.json --input-files "{}" +
+    - '[ ! -e "gl-sbom-all.cdx.json" ] || exit 0'
+    - |
+      jq '. |
+      {
+        "bomFormat": .bomFormat,
+        "specVersion": .specVersion,
+        "serialNumber": .serialNumber,
+        "version": .version,
+        "metadata": {
+          "tools": [
+            (.metadata.tools | unique[])
+          ]
+        },
+        "components": [
+          (.components | unique[])
+        ]
+      }' "gl-sbom-all.cdx.json" > gl-sbom-all.cdx.json.tmp && mv gl-sbom-all.cdx.json.tmp gl-sbom-all.cdx.json
+    - cyclonedx validate --input-version v1_4 --input-file gl-sbom-all.cdx.json
+  artifacts:
+    paths:
+      - gl-sbom-all.cdx.json
+
+Publish.Release:
+  stage: release
+  image: registry.gitlab.com/gitlab-org/release-cli:latest
+  dependencies:
+      - Publish.Tag
+  script:
+    - 'echo "Releasing version ${CI_COMMIT_TAG}"'
+  release:
+    name: '${CI_PROJECT_TITLE} ${CI_COMMIT_TAG}'
+    description: '${CI_PROJECT_DESCRIPTION}'
+    tag_name: '${CI_COMMIT_TAG}'
+    ref: '${CI_COMMIT_SHA}'
+    assets:
+      links:
+        - name: 'sbomReport.json'
+          url: '${CI_JOB_URL}/artifacts/raw/gl-sbom-all.cdx.json'
+
+  rules:
+    - if: $CI_COMMIT_TAG

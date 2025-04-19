@@ -1,0 +1,49 @@
+{% extends "Base.twig" %}
+{% set pageTitle = "CMSControl.Views.CreateLayout.Title"| translate %}
+{% set currentPage = 'admin/layouts' %}
+
+
+{% block Content %}
+	<div class="row">
+		<div class="col-xxl-12 mb-6 order-0 gy-2">
+			<div class="card">
+				<div class="card-header">
+					<h5 class="card-title">{{ "CMSControl.Views.CreateLayout.Title"| translate }}
+					</h5>
+
+				</div>
+				<div class="card-body">
+					<form>
+
+						<div class="my-2">
+							<label class="form-label" for="name">{{ "CMSControl.Views.CreateLayout.Form.Name"| translate }}</label>
+							<input type="text" class="form-control" name="name" id="name" required>
+						</div>
+						<div class="my-2">
+							<label class="form-label" for="editor">{{ "CMSControl.Views.CreateLayout.Form.Content"| translate }}</label>
+							<textarea name="content" id="editor"></textarea>
+						</div>
+
+						<button type="submit" class="btn btn-primary">{{ 'CMSControl.Views.CreateLayout.Form.Button.Save'|translate }}</button>
+					</form>
+				</div>
+			</div>
+			{% include "Components/Cards/LayoutInfoCard.twig" %}
+		</div>
+	</div>
+{% endblock %}
+
+{% block PageCSS %}
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.12/codemirror.min.css">
+{% endblock %}
+
+{% block PageJs %}
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.12/codemirror.min.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.12/mode/htmlmixed/htmlmixed.min.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.12/mode/xml/xml.min.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.12/mode/javascript/javascript.min.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.12/mode/css/css.min.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.12/mode/twig/twig.min.js"></script>
+
+	<script src="{{ includeResource("js/CMSControl/create_layout.js") }}"></script>
+{% endblock %}

@@ -1,0 +1,7 @@
+{% if Layout is defined %}
+{% verbatim %}
+{% extends "{{ CrispyLayout }}" %}
+{% endverbatim %}
+{% endif %}
+
+{{ Content|raw }}

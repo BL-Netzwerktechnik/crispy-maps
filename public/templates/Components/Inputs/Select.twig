@@ -1,0 +1,20 @@
+<select 
+    id="defaultSelect" 
+    class="form-select"
+    {% if name is defined %}name="{{ name }}"{% endif %} 
+    id="form-input-{{ id }}" 
+    {% if required %} required {% endif %}
+    {% if readonly %} readonly {% endif %}
+    {% if autofocus %} autofocus {% endif %}
+    {% if disabled %} disabled {% endif %}
+    aria-describedby="label-form-input-{{ id }}"
+>
+{% for item in items %}
+    <option 
+        {% if item.selected %} selected {% endif %} 
+        {% if item.disabled %} disabled {% endif %}
+        {% if item.value is defined %} value="{{ item.value }}" {% endif %}
+
+    >{{ item.text|default(item.value) }}</option>
+{% endfor %}
+</select>

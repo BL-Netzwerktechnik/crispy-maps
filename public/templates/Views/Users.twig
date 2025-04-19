@@ -1,0 +1,94 @@
+{% extends "Base.twig" %}
+{% set pageTitle = "CMSControl.Views.Users.Title"| translate %}
+{% set currentPage = 'admin/users' %}
+
+
+{% block Content %}
+	<div class="row">
+		<div class="col-xxl-4 mb-6 order-0 gy-2">
+			<div class="card">
+				<div class="card-header">
+					<h5 class="card-title">{{ "CMSControl.Views.Users.Title"| translate }}
+						{% if HasWritePermission and not config.CMSControl_Email_Enabled %}
+							<button type="button" id="create-user" data-bs-toggle="modal" data-bs-target="#createUserModal" class="btn btn-primary btn-sm float-end">
+								<i class="fa-solid fa-plus"></i>
+								{{ "CMSControl.Views.Users.Card.Form.Create"| translate }}</button>
+
+						{% elseif HasWritePermission and config.CMSControl_Email_Enabled %}
+							<button type="button" id="invite-user" data-bs-toggle="modal" data-bs-target="#inviteUserModal" class="btn btn-primary btn-sm float-end">
+								<i class="fa-solid fa-plus"></i>
+								{{ "CMSControl.Views.Users.Card.Form.Invite"| translate }}</button>
+						{% endif %}
+					</h5>
+
+				</div>
+				<div class="card-body">
+					<div id="user_tree"></div>
+				</div>
+			</div>
+		</div>
+		<div class="col-xxl-8 mb-6 order-0 gy-2" style="display: none;" id="user-edit">
+			<div class="card">
+				<div class="card-header">
+					<h5 class="card-title">{{ "CMSControl.Views.Users.Card.EditUser.Title"| translate }}</h5>
+				</div>
+				<div class="card-body">
+					<form id="user-edit-form">
+						<div class="my-2">
+							<label class="form-label" for="user-id">{{ "CMSControl.Views.Users.Card.EditUser.Form.Id"| translate }}</label>
+							<input type="text" class="form-control" name="id" id="user-id" disabled>
+						</div>
+
+						<div class="my-2">
+							<label class="form-label" for="user-username">{{ "CMSControl.Views.Users.Card.EditUser.Form.Username"| translate }}</label>
+							<input type="text" class="form-control" name="username" id="user-username" required {% if not HasWritePermission %} disabled {% endif %} required>
+						</div>
+
+						<div class="my-2">
+							<label class="form-label" for="user-name">{{ "CMSControl.Views.Users.Card.EditUser.Form.Name"| translate }}</label>
+							<input type="text" class="form-control" name="name" id="user-name" required {% if not HasWritePermission %} disabled {% endif %} required>
+						</div>
+
+						<div class="my-2">
+							<label class="form-label" for="user-email">{{ "CMSControl.Views.Users.Card.EditUser.Form.Email"| translate }}</label>
+							<input type="email" class="form-control" name="email" id="user-email" required {% if not HasWritePermission %} disabled {% endif %} required>
+						</div>
+
+						<div class="my-2 mb-4">
+							<label class="form-label" for="user-role">{{ "CMSControl.Views.Users.Card.EditUser.Form.Role"| translate }}</label>
+							<select class="form-select" name="role" id="user-role" aria-label="Default select example" {% if not HasWritePermission %} disabled {% endif %} required>
+								<option value="null" selected disabled>{{ "CMSControl.Views.Users.Card.EditUser.Form.Role.Default"| translate }}</option>
+								{% for Role in Roles %}
+									<option value="{{ Role.id }}">{{ Role.name|translate }}</option>
+								{% endfor %}
+							</select>
+						</div>
+
+
+						<div class="form-check form-switch mb-2">
+							<input class="form-check-input" type="checkbox" id="user-email-verified" name="email_verified" {% if not HasWritePermission %} disabled {% endif %}>
+							<label class="form-check-label" for="user-email-verified">
+								{{ "CMSControl.Views.Users.Card.EditUser.Form.EmailVerified"| translate }}
+							</label>
+						</div>
+
+						<button type="submit" class="btn btn-primary" {% if not HasWritePermission %} disabled {% endif %}>{{ "CMSControl.Views.Users.Card.EditUser.Form.Save"| translate }}</button>
+						<button type="button" id="delete-user" class="btn btn-danger" {% if not HasWritePermission %} data-readonly="true" disabled {% endif %}>{{ "CMSControl.Views.Users.Card.EditUser.Form.Delete"| translate }}</button>
+					</form>
+				</div>
+			</div>
+		</div>
+	</div>
+	{% include "Components/Modals/CreateUser.twig" %}
+{% endblock %}
+
+{% block PageJs %}
+	<script src="{{ includeResource("js/CMSControl/users.js") }}"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/jstree/3.3.17/jstree.min.js" integrity="sha512-Rzhxh2sskKwa+96nRopp/hvGexBzEPG6mnFI6uRy059FZfksJJFYmqDFn050KUDhivXLsT6SvoaEf5iSp2SHjg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
+{% endblock %}
+
+
+{% block PageCSS %}
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jstree/3.3.17/themes/default/style.min.css" integrity="sha512-A5OJVuNqxRragmJeYTW19bnw9M2WyxoshScX/rGTgZYj5hRXuqwZ+1AVn2d6wYTZPzPXxDeAGlae0XwTQdXjQA==" crossorigin="anonymous" referrerpolicy="no-referrer"/>
+{% endblock %}

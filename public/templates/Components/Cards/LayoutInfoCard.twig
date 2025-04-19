@@ -1,0 +1,10 @@
+<div class="card my-2">
+	<div class="card-header">
+		<h5 class="card-title">{{ "CMSControl.Components.Cards.LayoutInfoCard.Title"| translate }}</h5>
+	</div>
+	<div class="card-body">
+        <label class="form-label" for="id">{{ "CMSControl.Components.Cards.LayoutInfoCard.Stylesheet.Label"| translate }}</label>
+		<textarea class="form-control" readonly>{% verbatim %}<link rel="stylesheet" href="{{ includeResource("vendor/libs/ckeditor5/ckeditor5-content.css") }}"/>{% endverbatim %}</textarea>
+        <small class="text-muted">{{ 'CMSControl.Components.Cards.LayoutInfoCard.Stylesheet.Text'|translate }}</small>
+	</div>
+</div>

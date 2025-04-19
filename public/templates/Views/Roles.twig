@@ -1,0 +1,75 @@
+{% extends "Base.twig" %}
+{% set pageTitle = "CMSControl.Views.Roles.Title"| translate %}
+{% set currentPage = 'admin/roles' %}
+
+
+{% block Content %}
+	<div class="row">
+		<div class="col-xxl-4 mb-6 order-0 gy-2">
+			<div class="card">
+				<div class="card-header">
+					<h5 class="card-title">{{ "CMSControl.Views.Roles.Title"| translate }}
+						{% if HasWritePermission %}
+							<button type="button" id="create-role" data-bs-toggle="modal" data-bs-target="#createRoleModal" class="btn btn-primary btn-sm float-end">
+								<i class="fa-solid fa-plus"></i>
+								{{ "CMSControl.Views.Roles.Card.Form.Create"| translate }}</button>
+						{% endif %}
+					</h5>
+
+				</div>
+				<div class="card-body">
+					<div id="role_tree"></div>
+				</div>
+			</div>
+		</div>
+		<div class="col-xxl-8 mb-6 order-0 gy-2" style="display: none;" id="role-edit">
+			<div class="card">
+				<div class="card-header">
+					<h5 class="card-title">{{ "CMSControl.Views.Roles.Card.EditRole.Title"| translate }}</h5>
+				</div>
+				<div class="card-body">
+					<form id="role-edit-form">
+						<div class="my-2">
+							<label class="form-label" for="role-id">{{ "CMSControl.Views.Roles.Card.EditRole.Form.Id"| translate }}</label>
+							<input type="text" class="form-control" name="id" id="role-id" disabled>
+						</div>
+
+						<div class="my-2">
+							<label class="form-label" for="role-name">{{ "CMSControl.Views.Roles.Card.EditRole.Form.Name"| translate }}</label>
+							<input type="text" class="form-control" name="name" id="role-name" required {% if not HasWritePermission %} disabled {% endif %}>
+						</div>
+
+
+						<div class="row-cols-2">
+							{% for Permission in Permissions %}
+								<div class="col">
+									<div class="form-check form-switch mb-2">
+										<input class="form-check-input" type="checkbox" id="permission_{{ Permission.name|lower|replace({' ': '_'}) }}" name="permissions" value="{{ Permission.value }}" {% if not HasWritePermission %} disabled {% endif %}>
+										<label class="form-check-label" for="permission_{{ Permission.name|lower|replace({' ': '_'}) }}">
+											{{ ('CMSControl.Permission.' ~ Permission.name)|translate }}
+										</label>
+									</div>
+								</div>
+							{% endfor %}
+						</div>
+
+
+						<button type="submit" class="btn btn-primary" {% if not HasWritePermission %} disabled {% endif %}>{{ "CMSControl.Views.Roles.Card.EditRole.Form.Save"| translate }}</button>
+							<button type="button" id="delete-role" class="btn btn-danger" {% if not HasWritePermission %} data-readonly="true" disabled {% endif %}>{{ "CMSControl.Views.Roles.Card.EditRole.Form.Delete"| translate }}</button>
+					</form>
+				</div>
+			</div>
+		</div>
+	</div>
+	{% include "Components/Modals/CreateRole.twig" %}
+{% endblock %}
+
+{% block PageJs %} <script src="{{ includeResource("js/CMSControl/roles.js") }}"></script>
+	 <script src="https://cdnjs.cloudflare.com/ajax/libs/jstree/3.3.17/jstree.min.js" integrity="sha512-Rzhxh2sskKwa+96nRopp/hvGexBzEPG6mnFI6uRy059FZfksJJFYmqDFn050KUDhivXLsT6SvoaEf5iSp2SHjg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
+{% endblock %}
+
+
+{% block PageCSS %}
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jstree/3.3.17/themes/default/style.min.css" integrity="sha512-A5OJVuNqxRragmJeYTW19bnw9M2WyxoshScX/rGTgZYj5hRXuqwZ+1AVn2d6wYTZPzPXxDeAGlae0XwTQdXjQA==" crossorigin="anonymous" referrerpolicy="no-referrer"/>
+{% endblock %}

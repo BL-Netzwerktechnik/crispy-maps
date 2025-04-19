@@ -1,0 +1,20 @@
+<div class="row row-cols-2">
+	{% include "Components/Input.twig" with {
+        "type": "checkbox",
+        "id": "settings-auth-register-enabled",
+        "name": "CMSControl_RegisterEnabled",
+        "checked": config.CMSControl_RegisterEnabled,
+        "label": "CMSControl.Views.Settings.General.RegisterEnabled.Label"|translate,
+        "hint": "CMSControl.Views.Settings.General.RegisterEnabled.Hint"|translate,
+    } %}
+
+	{% include "Components/Input.twig" with {
+        "type": "checkbox",
+        "id": "settings-auth-password-reset-enabled",
+        "name": "CMSControl_ForgotPasswordEnabled",
+        "checked": config.CMSControl_ForgotPasswordEnabled,
+        "disabled": true,
+        "label": "CMSControl.Views.Settings.General.ForgotPasswordEnabled.Label"|translate,
+        "hint": "CMSControl.Banner.WorkInProgress"|translate,
+    } %}
+</div>

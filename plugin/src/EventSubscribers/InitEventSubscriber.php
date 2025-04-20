@@ -39,8 +39,12 @@ class InitEventSubscriber implements EventSubscriberInterface
 
         //$Migrations->migrate(__DIR__ . '/../', 'bl-filme/lost-places');
 
-        if (!Config::exists("LostPlaces_MapPath") || empty(Config::get("LostPlaces_MapPath") || strlen(Config::get("LostPlaces_MapPath") === 0))) {
+        if (!Config::exists("LostPlaces_MapPath") || empty(Config::get("LostPlaces_MapPath"))) {
             Config::set("LostPlaces_MapPath", "/map");
+        }
+
+        if (!Config::exists("LostPlaces_IconClass") || empty(Config::get("LostPlaces_IconClass"))) {
+            Config::set("LostPlaces_IconClass", "FontAwesomeSolidIconModel");
         }
     }
 

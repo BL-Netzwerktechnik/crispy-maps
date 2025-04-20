@@ -16,3 +16,16 @@
         "hint": "Der URL Pfad der Kartenansicht",
     } %}
 </div>
+<div class="row row-cols-2">
+
+	{% include "Components/Input.twig" with {
+        "type": "select",
+        "id": "settings-lostplaces-icon-class",
+        "name": "LostPlaces_IconClass",
+        "items": [
+            {"value": "FontAwesomeSolidIconModel", "text": "Font Awesome Solid", selected: config.LostPlaces_IconClass == "FontAwesomeSolidIconModel"}
+        ],	
+        "label": "Kartenansicht: Icon Font",
+        "hint": "Die Font Awesome Font die für die Icons verwendet werden soll",
+    } %}
+</div>

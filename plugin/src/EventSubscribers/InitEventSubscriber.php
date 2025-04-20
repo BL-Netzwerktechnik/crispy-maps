@@ -2,17 +2,21 @@
 
 namespace blfilme\lostplaces\EventSubscribers;
 
+use blfilme\lostplaces\PageControllers\CmsControl\MapPageController;
 use crisp\api\Config;
 use crisp\api\Helper as ApiHelper;
 use crisp\core\Logger;
 use crisp\core\Migrations;
+use crisp\core\Router;
 use crisp\core\Themes;
 use crisp\Events\MigrationEvents;
 use crisp\Events\ThemeEvents;
+use crisp\types\RouteType;
 use Crispy\Events\NavbarCreatedEvent;
 use Crispy\Events\PluginActivatedEvent;
 use Crispy\Helper;
 use Crispy\Models\NavBarItemModel;
+use Phroute\Phroute\Route;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Contracts\EventDispatcher\Event;
 
@@ -43,5 +47,6 @@ class InitEventSubscriber implements EventSubscriberInterface
     public function onSetup(Event $event)
     {
         Themes::addRendererDirectory("/plugins");
+        Router::add(route: "/admin/map", routeType: RouteType::PUBLIC, class: MapPageController::class, method: Route::GET);
     }
 }

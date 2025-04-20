@@ -39,4 +39,18 @@ class FontAwesomeSolidIconModel implements IconInterface
     {
         return $this->getPrefix() . ' fa-' . $this->getName();
     }
+
+    public function __toString(): string
+    {
+        return $this->getFullClass();
+    }
+
+    public function toArray(): array
+    {
+        return [
+            'prefix' => $this->getPrefix(),
+            'name' => $this->getName(),
+            'fullClass' => $this->getFullClass(),
+        ];
+    }
 }

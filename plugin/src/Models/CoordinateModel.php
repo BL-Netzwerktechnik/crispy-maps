@@ -2,10 +2,7 @@
 
 namespace blfilme\lostplaces\Models;
 
-use blfilme\lostplaces\Interfaces\CategoryInterface;
-use blfilme\lostplaces\Interfaces\CoordinateInterface;
-
-class CoordinateModel implements CoordinateInterface
+class CoordinateModel
 {
     public function __construct(
         private float $latitude,

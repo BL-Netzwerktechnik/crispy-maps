@@ -28,4 +28,29 @@
         "label": "Kartenansicht: Icon Font",
         "hint": "Die Font Awesome Font die für die Icons verwendet werden soll",
     } %}
+
+	{% include "Components/Input.twig" with {
+        "type": "select",
+        "id": "settings-lostplaces-fileprovider-class",
+        "name": "LostPlaces_FileProvider",
+        "items": [
+            {"value": "LocalFileProvider", "text": "Lokal", selected: config.LostPlaces_FileProvider == "LocalFileProvider"}
+        ],	
+        "label": "Datei Provider",
+        "hint": "Provider der alle Dateien bereitstellt",
+    } %}
+</div>
+<div class="divider">
+	<div class="divider-text">Lokaler Datei Provider</div>
+</div>
+<div class="row row-cols-2">
+
+	{% include "Components/Input.twig" with {
+        "type": "text",
+        "id": "settings-lostplaces-provider-path",
+        "name": "LostPlaces_ProviderPath",
+        "value": config.LostPlaces_ProviderPath,
+        "label": "Lokaler Pfad",
+        "hint": "Der lokale Pfad zu den Dateien, relativ zum /data Verzeichnis",
+    } %}
 </div>

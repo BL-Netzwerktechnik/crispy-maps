@@ -2,18 +2,25 @@
 
 namespace blfilme\lostplaces\Models;
 
-use blfilme\lostplaces\Interfaces\CategoryInterface;
 use blfilme\lostplaces\Interfaces\IconInterface;
 
-class CategoryModel implements CategoryInterface
+class CategoryModel
 {
     public function __construct(
+        private ?int $id,
         private string $name,
         private string $description,
         private IconInterface $icon,
-    )
+    ) {}
+
+    /**
+     * Get the ID of the category
+     *
+     * @return int|null
+     */
+    public function getId(): ?int
     {
-        
+        return $this->id;
     }
 
     /**
@@ -39,7 +46,7 @@ class CategoryModel implements CategoryInterface
     /**
      * Get the icon of the category
      *
-     * @return string
+     * @return IconInterface
      */
     public function getIcon(): IconInterface
     {
@@ -47,4 +54,55 @@ class CategoryModel implements CategoryInterface
     }
 
 
+    /**
+     * Set the name of the category
+     * 
+     * @param string $name
+     * @return self
+     */
+    public function setName(string $name): self
+    {
+        $this->name = $name;
+        return $this;
+    }
+
+    /**
+     * Set the description of the category
+     * 
+     * @param string $description
+     * @return self
+     */
+
+    public function setDescription(string $description): self
+    {
+        $this->description = $description;
+        return $this;
+    }
+
+    /**
+     * Set the icon of the category
+     * 
+     * @param IconInterface $icon
+     * @return self
+     */
+    public function setIcon(IconInterface $icon): self
+    {
+        $this->icon = $icon;
+        return $this;
+    }
+
+    /**
+     * Convert the category to an array
+     *
+     * @return array
+     */
+    public function toArray(): array
+    {
+        return [
+            'id' => $this->getId(),
+            'name' => $this->getName(),
+            'description' => $this->getDescription(),
+            'icon' => $this->getIcon()->toArray(),
+        ];
+    }
 }

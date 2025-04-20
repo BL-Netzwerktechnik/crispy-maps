@@ -46,6 +46,14 @@ class InitEventSubscriber implements EventSubscriberInterface
         if (!Config::exists("LostPlaces_IconClass") || empty(Config::get("LostPlaces_IconClass"))) {
             Config::set("LostPlaces_IconClass", "FontAwesomeSolidIconModel");
         }
+
+        if (!Config::exists("LostPlaces_ProviderPath") || empty(Config::get("LostPlaces_ProviderPath"))) {
+            Config::set("LostPlaces_ProviderPath", "uploads");
+        }
+
+        if (!Config::exists("LostPlaces_FileProvider") || empty(Config::get("LostPlaces_FileProvider"))) {
+            Config::set("LostPlaces_FileProvider", "LocalFileProvider");
+        }
     }
 
     public function onSetup(Event $event)

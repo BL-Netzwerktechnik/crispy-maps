@@ -2,11 +2,7 @@
 
 namespace blfilme\lostplaces\Models;
 
-use blfilme\lostplaces\Interfaces\CategoryInterface;
-use blfilme\lostplaces\Interfaces\IconInterface;
-use blfilme\lostplaces\Interfaces\MapMarkerInterface;
-
-class MapMarkerModel implements MapMarkerInterface
+class MapMarkerModel 
 {
     public function __construct(
         private string $iconUrl,

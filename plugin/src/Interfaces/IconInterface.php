@@ -24,4 +24,10 @@ interface IconInterface
      * @return string
      */
     public function getFullClass(): string;
+
+    public function __toString(): string;
+
+    public function toArray(): array;
+
+
 }

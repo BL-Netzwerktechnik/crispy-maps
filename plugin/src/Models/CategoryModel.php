@@ -13,9 +13,12 @@ class CategoryModel
         private string $name,
         private string $description,
         private IconInterface $icon,
-        private Carbon $createdAt,
-        private Carbon $updatedAt,
-    ) {}
+        private ?Carbon $createdAt = null,
+        private ?Carbon $updatedAt = null,
+    ) {
+        $this->createdAt = $this->createdAt ?? Carbon::now($_ENV["TZ"] ?? 'UTC');
+        $this->updatedAt = $this->updatedAt ?? Carbon::now($_ENV["TZ"] ?? 'UTC');
+    }
 
     /**
      * Get the ID of the category
@@ -113,9 +116,9 @@ class CategoryModel
     /**
      * Get the created at date of the category
      *
-     * @return Carbon
+     * @return Carbon|null
      */
-    public function getCreatedAt(): Carbon
+    public function getCreatedAt(): ?Carbon
     {
         return $this->createdAt;
     }
@@ -123,10 +126,10 @@ class CategoryModel
     /**
      * Get the updated at date of the category
      *
-     * @return Carbon
+     * @return Carbon|null
      */
 
-    public function getUpdatedAt(): Carbon
+    public function getUpdatedAt(): ?Carbon
     {
         return $this->updatedAt;
     }

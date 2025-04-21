@@ -49,19 +49,41 @@ class NavbarEventSubscriber implements EventSubscriberInterface
 
         $user = Sessions::isSessionValid() ? $this->userDatabaseController->getUserById($_SESSION['crisp_session_login']["user"]) : false;
 
-
+        
         $event->getNavbar()->addItemsAfter(
             "files",
-            new \Crispy\Models\NavBarItemModel(
-                name: 'Karte',
-                url: "admin/map",
-                icon: 'fas fa-map',
+            new \Crispy\Models\NavbarDividerModel(
+                title: 'Lost Places',
                 permissions: [
                     Permissions::READ_PAGES->value,
                     Permissions::SUPERUSER->value,
                     Permissions::READ_PAGES->value
                 ],
                 permissionHaystack: $user->toArray()
+            ),
+            new \Crispy\Models\NavBarItemModel(
+                name: 'Karte',
+                url: "admin/map",
+                icon: 'fas fa-map-location-dot',
+                permissions: [
+                    Permissions::READ_PAGES->value,
+                    Permissions::SUPERUSER->value,
+                    Permissions::WRITE_PAGES->value
+                ],
+                permissionHaystack: $user->toArray(),
+                id: 'lostplaces_map',
+            ),
+            new \Crispy\Models\NavBarItemModel(
+                name: 'Kategorien',
+                url: "admin/lp/categories",
+                icon: 'fas fa-location-dot',
+                permissions: [
+                    Permissions::READ_CATEGORIES->value,
+                    Permissions::SUPERUSER->value,
+                    Permissions::WRITE_CATEGORIES->value
+                ],
+                permissionHaystack: $user->toArray(),
+                id: 'lostplaces_categories',
             ),
         );
     }

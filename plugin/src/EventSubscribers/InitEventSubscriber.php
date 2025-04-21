@@ -2,6 +2,9 @@
 
 namespace blfilme\lostplaces\EventSubscribers;
 
+use blfilme\lostplaces\PageControllers\CmsControl\CategoriesPageController;
+use blfilme\lostplaces\PageControllers\CmsControl\CreateCategoriesPageController;
+use blfilme\lostplaces\PageControllers\CmsControl\EditCategoriesPageController;
 use blfilme\lostplaces\PageControllers\CmsControl\MapPageController;
 use blfilme\lostplaces\PageControllers\MapPageController as PageControllersMapPageController;
 use blfilme\lostplaces\PageControllers\Public\ConfigJsonPageController;
@@ -71,6 +74,17 @@ class InitEventSubscriber implements EventSubscriberInterface
     {
         Themes::addRendererDirectory("/plugins");
         Router::add(route: "/admin/map", routeType: RouteType::PUBLIC, class: MapPageController::class, method: Route::GET);
+
+        Router::add(route: "/admin/lp/categories/{id:\d+}", routeType: RouteType::PUBLIC, class: EditCategoriesPageController::class, method: Route::GET);
+        Router::add(route: "/admin/lp/categories/{id:\d+}", routeType: RouteType::PUBLIC, class: EditCategoriesPageController::class, method: Route::POST, callable: "processPOSTRequest");
+
+
+        Router::add(route: "/admin/lp/categories", routeType: RouteType::PUBLIC, class: CategoriesPageController::class, method: Route::GET);
+
+        Router::add(route: "/admin/lp/categories/create", routeType: RouteType::PUBLIC, class: CreateCategoriesPageController::class, method: Route::GET);
+        Router::add(route: "/admin/lp/categories/create", routeType: RouteType::PUBLIC, class: CreateCategoriesPageController::class, method: Route::POST, callable: "processPOSTRequest");
+
+
         Router::add(route: "/config.json", routeType: RouteType::PUBLIC, class: ConfigJsonPageController::class, method: Route::GET);
         Router::add(route: Config::get("LostPlaces_MapPath"), routeType: RouteType::PUBLIC, class: MapJsonPageController::class, method: Route::GET);
     }

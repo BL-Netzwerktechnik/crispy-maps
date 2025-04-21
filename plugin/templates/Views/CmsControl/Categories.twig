@@ -1,0 +1,40 @@
+{% extends "Base.twig" %}
+{% set pageTitle = "Lost Place Kategorien" %}
+{% set currentPage = 'admin/lp/categories' %}
+
+
+{% block Content %}
+	<div class="row">
+		<div class="col-12">
+			<a href="/admin/lp/categories/create" class="btn btn-primary float-end">Neue Kategorie erstellen</a>
+		</div>
+	</div>
+
+	<div class="row mt-3">
+		<div class="col-12">
+			<table class="table table-striped">
+				<thead>
+					<tr>
+						<th>Icon</th>
+						<th>Name</th>
+						<th>Beschreibung</th>
+						<th>Aktionen</th>
+					</tr>
+				</thead>
+				<tbody>
+					{% for Category in Categories %}
+						<tr>
+							<td><i class="{{ Category.icon.fullClass }} fa-2x"></i></td>
+							<td>{{ Category.name }}</td>
+							<td>{{ Category.description|truncateText(100) }}</td>
+							<td>
+								<a href="/admin/lp/categories/{{ Category.id }}" class="btn btn-warning">Bearbeiten</a>
+								<button data-id="{{ Category.id }}" role="delete" class="btn btn-danger">Löschen</a>
+							</td>
+						</tr>
+					{% endfor %}
+				</tbody>
+			</table>
+		</div>
+	</div>
+{% endblock %}

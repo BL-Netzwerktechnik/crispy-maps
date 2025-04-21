@@ -1,0 +1,101 @@
+{% extends "Base.twig" %}
+{% set pageTitle = "Lost Place Kategorien" %}
+{% set currentPage = 'admin/lp/categories' %}
+
+
+{% block Content %}
+	<div class="card">
+		<div class="card-header">
+			<h5 class="card-title">Kategorie erstellen</h5>
+			<a href="/admin/lp/categories" class="btn btn-primary float-end">Zurück zur Übersicht</a>
+		</div>
+		<div class="card-body">
+			<form method="POST" action="/admin/lp/categories/create">
+				<input type="hidden" name="id" value="{{ Category.id }}">
+				<div class="mb-3">
+					<label for="name" class="form-label">Name</label>
+					<input type="text" class="form-control" id="name" name="name" placeholder="Name der Kategorie" required value="{{ Category.name }}">
+
+					<div class="form-text">Der Name der Kategorie wird in der Übersicht angezeigt.</div>
+				</div>
+				<div class="mb-3">
+					<label for="description" class="form-label">Beschreibung</label>
+					<input type="text" class="form-control" id="description" name="description" placeholder="Beschreibung der Kategorie" required value="{{ Category.description }}">
+					<div class="form-text">Die Beschreibung wird in der Legende angezeigt.</div>
+				</div>
+				<div class="mb-3">
+					<label for="icon" class="form-label">Icon</label>
+					<input type="hidden" class="form-control" id="icon" name="icon" placeholder="Icon der Kategorie" required value="{{ Category.icon.name }}">
+					<div id="iconpicker"></div>
+				</div>
+				<div class="mb-3">
+					<button type="submit" class="btn btn-primary">Kategorie erstellen</button>
+					<a href="/admin/lp/categories" class="btn btn-secondary">Abbrechen</a>
+			</div>
+		</div>
+	</div>
+
+
+{% endblock %}
+
+{% block PageJs %}
+	<script src="{{ includeResource("lp/libs/fontawesome-picker/js/fontawesome-iconpicker.min.js") }}"></script>
+	<script>
+	
+
+    $('#iconpicker').iconpicker({
+        placement: 'inline', // (has some issues with auto and CSS). auto, top, bottom, left, right
+        animation: false, // fade in/out on show/hide ?
+		selected: '{{ Category.icon.name }}',
+        fullClassFormatter: function (val) {
+            return val;
+        },
+    });
+
+	$("#iconpicker").on("iconpickerSetValue", function(event) {
+		var icon = event.iconpickerValue;
+
+		icon = icon.slice(7);
+		
+		$("#icon").val(icon);
+	});
+
+	$("form").on("submit", function(event) {
+		event.preventDefault();
+		var icon = $("#icon").val();
+		if (icon == "") {
+			Swal.fire({
+				icon: 'error',
+				title: 'Fehler',
+				text: 'Bitte wähle ein Icon aus.',
+			});
+		}
+
+		$.ajax({
+			type: "POST",
+			url: window.location.href,
+			data: $(this).serialize(),
+			success: function(data) {
+					Swal.fire({
+						icon: 'success',
+						title: 'Erfolg',
+						text: 'Aktion erfolgreich.',
+					}).then(function() {
+						window.location.href = "/admin/lp/categories";
+					});
+			},
+			error: function() {
+				Swal.fire({
+					icon: 'error',
+					title: 'Fehler',
+					text: 'Ein Fehler ist aufgetreten.',
+				});
+			}
+		});
+	});
+	</script>
+{% endblock %}
+
+{% block PageCSS %}
+	<link rel="stylesheet" href="{{ includeResource("lp/libs/fontawesome-picker/css/fontawesome-iconpicker.min.css") }}">
+{% endblock %}

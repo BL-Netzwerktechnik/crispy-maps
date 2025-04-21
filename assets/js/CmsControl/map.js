@@ -1,11 +1,14 @@
 $(document).on("configLoaded", function (event, config) {
     let map = L.map('map').fitWorld();
     let newMarker;
-    L.tileLayer(
+    let defaultLayer = L.tileLayer(
         config.map.tileLayer.server, {
         attribution: config.map.tileLayer.attribution,
         maxZoom: config.map.tileLayer.maxZoom,
-    }).addTo(map);
+    });
+
+
+    defaultLayer.addTo(map);
 
     L.control.locate().addTo(map);
 
@@ -41,7 +44,7 @@ $(document).on("configLoaded", function (event, config) {
         }
 
         newMarker = L.marker([data.latlng.lat, data.latlng.lng], { icon: L.AwesomeMarkers.icon({ icon: 'plus', stylePrefix: 'fa-solid', prefix: 'fa', markerColor: 'green' }) }).addTo(map);
-        newMarker.bindPopup(`<a class="btn btn-primary text-white" role="button" href="/admin/map/new?lat=${data.latlng.lat}&lng=${data.latlng.lng}">Neue Location Erstellen</a>`).openPopup();
+        newMarker.bindPopup(`<a class="btn btn-primary text-white" role="button" href="/admin/location/create?lat=${data.latlng.lat}&lng=${data.latlng.lng}">Neue Location Erstellen</a>`).openPopup();
     });
 
 

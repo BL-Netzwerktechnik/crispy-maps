@@ -9,16 +9,16 @@
 
 {% block PageJs %}
 	<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
-	<script src="{{ includeResource("ugc/assets/js/shared/lostplaces.js") }}"></script>
+	<script src="{{ includeResource("lp/js/shared/lostplaces.js") }}"></script>
 	<script src="https://cdn.jsdelivr.net/npm/leaflet.locatecontrol@0.84.1/dist/L.Control.Locate.min.js"></script>
-	<script src="{{ includeResource("ugc/assets/libs/Leaflet.awesome-markers/leaflet.awesome-markers.min.js") }}"></script>
-	<script src="{{ includeResource("ugc/assets/js/CmsControl/map.js") }}"></script>
+	<script src="{{ includeResource("lp/libs/Leaflet.awesome-markers/leaflet.awesome-markers.min.js") }}"></script>
+	<script src="{{ includeResource("lp/js/CmsControl/map.js") }}"></script>
 {% endblock %}
 
 {% block PageCSS %}
 	<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin=""/>
 	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/leaflet.locatecontrol@0.84.1/dist/L.Control.Locate.min.css">
-	<link rel="stylesheet" href="{{ includeResource("ugc/assets/css/CmsControl/map.css") }}">
-	<link rel="stylesheet" href="{{ includeResource("ugc/assets/libs/Leaflet.awesome-markers/leaflet.awesome-markers.css") }}">
-	<link rel="stylesheet" href="{{ includeResource("ugc/assets/libs/fontawesome/css/all.min.css") }}">
+	<link rel="stylesheet" href="{{ includeResource("lp/css/CmsControl/map.css") }}">
+	<link rel="stylesheet" href="{{ includeResource("lp/libs/Leaflet.awesome-markers/leaflet.awesome-markers.css") }}">
+	<link rel="stylesheet" href="{{ includeResource("lp/libs/fontawesome/css/all.min.css") }}">
 {% endblock %}

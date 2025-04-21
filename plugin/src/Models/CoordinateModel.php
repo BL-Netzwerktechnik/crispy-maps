@@ -71,4 +71,9 @@ class CoordinateModel
 
         return sprintf("%d°%d'%0.1f\"%s", $degrees, $minutes, $seconds, $direction);
     }
+
+    public function toPostGIS(): string
+    {
+        return sprintf("ST_SetSRID(ST_MakePoint(%s, %s), 4326)", $this->longitude, $this->latitude);
+    }
 }

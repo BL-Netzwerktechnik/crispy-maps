@@ -14,9 +14,9 @@ interface IconInterface
     /**
      * Name of the icon, e.g. "camera" for Font Awesome
      *
-     * @return string
+     * @return null|string
      */
-    public function getName(): string;
+    public function getName(): ?string;
 
     /**
      * Get the full class name of the icon, e.g. "fa-solid fa-camera"
@@ -28,6 +28,12 @@ interface IconInterface
     public function __toString(): string;
 
     public function toArray(): array;
+
+    public function getColor(): ?string;
+
+    public function setColor(?string $color): self;
+
+    public function setName(?string $name): self;
 
 
 }

@@ -95,7 +95,7 @@ class MapPageController
 
         ThemeVariables::set("HasWritePermission", $this->userController->checkPermissionStack($this->writePermissions));
 
-        echo Themes::render("lostplaces/templates/Views/Map.twig");
+        echo Themes::render("lostplaces/templates/Views/CmsControl/Map.twig");
     }
 
     public function postRender(): void {}

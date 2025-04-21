@@ -1,6 +1,8 @@
 FROM registry.jrbit.de/jrb-it/crispy:stable
 
 COPY --chown=33:33 plugin /plugins/lostplaces
-COPY --chown=33:33 assets /data/files/assets
+COPY --chown=33:33 assets /assets
+COPY nginx/assets.conf /etc/nginx/crisp.conf.d/lostplaces_assets.conf
+
 
 RUN cd /plugins/lostplaces && composer install

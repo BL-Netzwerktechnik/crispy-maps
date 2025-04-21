@@ -2,7 +2,9 @@
 
 namespace blfilme\lostplaces\Models;
 
+use blfilme\lostplaces\Enums\MarkerColors;
 use blfilme\lostplaces\Interfaces\IconInterface;
+use Carbon\Carbon;
 
 class CategoryModel
 {
@@ -11,6 +13,8 @@ class CategoryModel
         private string $name,
         private string $description,
         private IconInterface $icon,
+        private Carbon $createdAt,
+        private Carbon $updatedAt,
     ) {}
 
     /**
@@ -104,5 +108,32 @@ class CategoryModel
             'description' => $this->getDescription(),
             'icon' => $this->getIcon()->toArray(),
         ];
+    }
+
+    /**
+     * Get the created at date of the category
+     *
+     * @return Carbon
+     */
+    public function getCreatedAt(): Carbon
+    {
+        return $this->createdAt;
+    }
+
+    /**
+     * Get the updated at date of the category
+     *
+     * @return Carbon
+     */
+
+    public function getUpdatedAt(): Carbon
+    {
+        return $this->updatedAt;
+    }
+
+    public function setUpdatedAt(): self
+    {
+        $this->updatedAt = Carbon::now($_ENV["TZ"] ?? 'UTC');
+        return $this;
     }
 }

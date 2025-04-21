@@ -35,7 +35,7 @@ if (!defined('CRISP_HOOKED')) {
     exit;
 }
 
-class test extends Migrations
+class locations extends Migrations
 {
 
     public function run()
@@ -45,14 +45,17 @@ class test extends Migrations
                 $this->begin();
             }
             $this->createTable(
-                "crispy_test_plugin",
+                "lostplaces_locations",
                 array("id", $this::DB_INTEGER, "NOT NULL SERIAL"),
-                array("name", self::DB_VARCHAR, "NOT NULL"),
-                array("slug", self::DB_VARCHAR, "NOT NULL"),
-                array("properties", $this::DB_BIGINT, "DEFAULT NULL"),
-                array("parent", $this::DB_BIGINT, "DEFAULT NULL"),
-                array("computed_url", $this::DB_TEXT, "NOT NULL"),
+                array("name", $this::DB_VARCHAR, "NOT NULL"),
+                array("description", $this::DB_TEXT, "NOT NULL"),
+                array("category", $this::DB_INTEGER, "NOT NULL"),
+                array("marker_location", "GEOMETRY(Point, 4326)", "NOT NULL"),
+                array("author", $this::DB_INTEGER, "NOT NULL"),
+                array("status", $this::DB_INTEGER, "NOT NULL DEFAULT 0"),
+                array("properties", $this::DB_INTEGER, "NOT NULL DEFAULT 0"),
                 array("created_at", $this::DB_TIMESTAMP, "NOT NULL DEFAULT CURRENT_TIMESTAMP"),
+                array("updated_at", $this::DB_TIMESTAMP, "NOT NULL DEFAULT CURRENT_TIMESTAMP"),
             );
 
             if ($this->Database->inTransaction()) {

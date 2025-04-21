@@ -25,12 +25,12 @@ services:
       - 8080:8080
     container_name: adminer
     links:
-      - postgres
+      - postgis
 
 
 
-  postgres:
-    image: 'postgres:14'
+  postgis:
+    image: 'postgis/postgis:14-3.5-alpine'
     restart: always
     ports:
       - 5432:5432
@@ -47,7 +47,7 @@ services:
         - CRISP_VERSION=nightly
     container_name: crispcms
     links:
-      - postgres
+      - postgis
       - mailhog
     ports:
       - 80:80
@@ -68,7 +68,8 @@ services:
     volumes:
       - crisp:/data
       - ./plugin:/plugins/lostplaces
-      - ./assets:/data/files/assets
+      - ./nginx/assets.conf:/etc/nginx/crisp.conf.d/lostplaces_assets.conf
+      - ./assets:/assets
       - ./.env:/var/www/crisp/.env
 
 volumes:

@@ -48,4 +48,15 @@ enum LocationProperties: int
         }
         return $result;
     }
+
+    public static function fromArrayToInt(array $properties): int
+    {
+        $result = 0;
+        foreach ($properties as $property) {
+            if ($property instanceof self) {
+                $result |= $property->value;
+            }
+        }
+        return $result;
+    }
 }

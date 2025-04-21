@@ -29,14 +29,14 @@ enum LocationStatus: int
     /**
      * Gets the color for the enum value in hex format
      *
-     * @return string
+     * @return MarkerColors
      */
-    public function getColor(): string
+    public function getColor(): MarkerColors
     {
         return match ($this) {
-            self::ACTIVE => '#00FF00', // Green
-            self::DEMOLISHED => '#FF0000', // Red
-            self::UNKNOWN => '#FFFF00' // Yellow
+            self::ACTIVE => MarkerColors::GREEN, // Green
+            self::DEMOLISHED => MarkerColors::RED, // Red
+            self::UNKNOWN => MarkerColors::ORANGE // Orange
         };
     }
 }

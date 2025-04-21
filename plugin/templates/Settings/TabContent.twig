@@ -15,6 +15,22 @@
         "label": "Kartenansicht: URL Pfad",
         "hint": "Der URL Pfad der Kartenansicht",
     } %}
+	{% include "Components/Input.twig" with {
+        "type": "text",
+        "id": "settings-lostplaces-map-attribution",
+        "name": "LostPlaces_MapAttribution",
+        "value": config.LostPlaces_MapAttribution,
+        "label": "Kartenansicht: Attribution",
+        "hint": "Die Attribution die in der Kartenansicht angezeigt wird",
+    } %}
+	{% include "Components/Input.twig" with {
+        "type": "text",
+        "id": "settings-lostplaces-map-tileserver",
+        "name": "LostPlaces_MapTileServer",
+        "value": config.LostPlaces_MapTileServer,
+        "label": "Kartenansicht: Tile Server",
+        "hint": "Der Tile Server der für die Kartenansicht verwendet wird",
+    } %}
 </div>
 <div class="row row-cols-2">
 
@@ -23,7 +39,7 @@
         "id": "settings-lostplaces-icon-class",
         "name": "LostPlaces_IconClass",
         "items": [
-            {"value": "FontAwesomeSolidIconModel", "text": "Font Awesome Solid", selected: config.LostPlaces_IconClass == "FontAwesomeSolidIconModel"}
+            {"value": "\blfilme\lostplaces\Models\IconModels\FontAwesomeSolidIconModel", "text": "Font Awesome Solid", selected: config.LostPlaces_IconClass == "FontAwesomeSolidIconModel"}
         ],	
         "label": "Kartenansicht: Icon Font",
         "hint": "Die Font Awesome Font die für die Icons verwendet werden soll",

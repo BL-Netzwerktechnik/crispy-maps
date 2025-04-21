@@ -6,6 +6,8 @@ use blfilme\lostplaces\Enums\LocationProperties;
 use blfilme\lostplaces\Enums\LocationStatus;
 use blfilme\lostplaces\Interfaces\IconInterface;
 use Carbon\Carbon;
+use crisp\core\Themes;
+use crisp\core\ThemeVariables;
 
 class LocationModel
 {
@@ -175,6 +177,33 @@ class LocationModel
         return $this->id;
     }
 
+    public function toGeoJSON(bool $editMarker = false): array
+    {
+        return [
+            'type' => 'Feature',
+            'geometry' => [
+                'type' => 'Point',
+                'coordinates' => [
+                    $this->coordinates->getLongitude(),
+                    $this->coordinates->getLatitude(),
+                ],
+            ],
+            'properties' => $this->toMarker($editMarker),
+        ];
+    }
+
+    public function toMarker(bool $editMarker = false): array
+    {
+        ThemeVariables::set('location', $this->toArray());
+
+        return [
+            'category' => $this->category->toArray(),
+            'icon' => $this->getIcon()->toArray(),
+            'popupContent' => $editMarker ? Themes::render("lostplaces/templates/Components/CmsControl/MapPopup.twig") : Themes::render("lostplaces/templates/Components/MapPopup.twig"),
+            'markerColor' => $this->status->getColor()->value,
+        ];
+    }
+
     /**
      * Get the properties of the location as an array
      *
@@ -189,8 +218,10 @@ class LocationModel
             'properties' => array_map(fn($property) => $property->value, $this->properties),
             'category' => $this->category->toArray(),
             'coordinates' => $this->coordinates->toArray(),
+            'icon' => $this->getIcon()->toArray(),
             'status' => $this->status->value,
             'author' => $this->author,
+            'markerColor' => $this->status->getColor()->value,
             'createdAt' => $this->createdAt->toDateTimeString(),
             'updatedAt' => $this->updatedAt->toDateTimeString(),
         ];

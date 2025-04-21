@@ -7,15 +7,16 @@ use blfilme\lostplaces\Interfaces\IconInterface;
 class FontAwesomeSolidIconModel implements IconInterface
 {
     public function __construct(
-        private string $name,
+        private ?string $name = null,
+        private ?string $color = null,
     ) {}
 
     /**
      * Get the name of the icon
      *
-     * @return string
+     * @return null|string
      */
-    public function getName(): string
+    public function getName(): ?string
     {
         return $this->name;
     }
@@ -51,6 +52,24 @@ class FontAwesomeSolidIconModel implements IconInterface
             'prefix' => $this->getPrefix(),
             'name' => $this->getName(),
             'fullClass' => $this->getFullClass(),
+            'color' => $this->getColor(),
         ];
+    }
+
+    public function getColor(): ?string
+    {
+        return $this->color;
+    }
+
+    public function setColor(?string $color): self
+    {
+        $this->color = $color;
+        return $this;
+    }
+
+    public function setName(?string $name): self
+    {
+        $this->name = $name;
+        return $this;
     }
 }

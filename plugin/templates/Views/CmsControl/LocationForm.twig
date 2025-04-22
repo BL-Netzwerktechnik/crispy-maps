@@ -1,0 +1,100 @@
+{% extends "Base.twig" %}
+{% set pageTitle = "Lost Place Location - " ~ Location.name %}
+{% set currentPage = 'admin/lp/locations' %}
+{% set load_quill = true %}
+
+
+{% block Content %}
+	<div class="card">
+		<div class="card-header">
+			<a href="/admin/map" class="btn btn-primary float-end">Zurück zur Karte</a>
+		</div>
+		{% if hideMap is not defined %}
+			<div id="map"></div>
+		{% endif %}
+		<div class="card-body">
+			<form method="POST">
+				<input type="hidden" name="id" value="{{ Location.id }}">
+				<div class="mb-3">
+					<label for="name" class="form-label">Name</label>
+					<input type="text" class="form-control" id="name" name="name" placeholder="Name der Location" required value="{{ Location.name }}">
+
+					<div class="form-text">Der Name der Location wird in der Übersicht angezeigt.</div>
+				</div>
+				<div class="my-2">
+					<label class="form-label" for="category">Kategorie</label>
+					<select class="form-select" name="category" id="category" aria-label="Default select example">
+						<option value="null" selected disabled>Bitte auswählen...</option>
+						{% for Category in Categories %}
+							<option value="{{ Category.id }}" {% if Category.id == Location.category.id %} selected {% endif %}>{{ Category.name }}</option>
+						{% endfor %}
+					</select>
+				</div>
+
+				<div class="my-2">
+					<label class="form-label" for="location-description">Beschreibung</label>
+					{% include "lostplaces/templates/Components/CKEditor.twig" with {'Content': Location.description } %}
+				</div>
+
+				<div class="divider my-4"> <!-- Divider -->
+					<div class="divider-text">Zusätzliche Informationen</div>
+				</div>
+
+				<div class="row row-cols-4">
+					{% for Property in Properties %}
+						<div class="col">
+							<div class="form-check form-switch mb-2">
+								<input class="form-check-input" type="checkbox" id="property_{{ Property.name|lower|replace({' ': '_'}) }}" name="properties" value="{{ Property.value }}" {% if Property.value in Location.properties %} checked {% endif %}>
+								<label class="form-check-label" for="property_{{ Property.name|lower|replace({' ': '_'}) }}">
+									{{ Property.getLabel() }}
+								</label>
+							</div>
+						</div>
+					{% endfor %}
+				</div>
+
+				<div class="mb-2 mt-4">
+					<label class="form-label" for="status">Status</label>
+					<select class="form-select" name="status" id="status" aria-label="Default select example" required>
+						<option value="null" selected disabled>Bitte auswählen...</option>
+						{% for Status in Statuses %}
+							<option value="{{ Status.value }}" {% if Status.value == Location.status %} selected {% endif %}>{{ Status.getLabel() }}</option>
+						{% endfor %}
+					</select>
+				</div>
+
+
+
+				<div class="mb-3">
+					<button type="submit" class="btn btn-primary">Absenden</button>
+					<a href="/admin/map" class="btn btn-secondary">Abbrechen</a>
+				</div>
+			</div>
+		</div>
+
+
+	{% endblock %}
+
+
+	{% block PageJs %}
+		<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+		<script src="{{ includeResource("lp/js/shared/lostplaces.js") }}"></script>
+		<script src="https://cdn.jsdelivr.net/npm/leaflet.locatecontrol@0.84.1/dist/L.Control.Locate.min.js"></script>
+		<script src="{{ includeResource("lp/libs/Leaflet.awesome-markers/leaflet.awesome-markers.min.js") }}"></script>
+		<script src="{{ includeResource("lp/js/shared/map.preview.js") }}"></script>
+		<script src="{{ includeResource("lp/js/CmsControl/locationform.js") }}"></script>
+
+	{% endblock %}
+
+	{% block PageCSS %}
+		<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin=""/>
+		<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/leaflet.locatecontrol@0.84.1/dist/L.Control.Locate.min.css">
+		<link rel="stylesheet" href="{{ includeResource("lp/libs/Leaflet.awesome-markers/leaflet.awesome-markers.css") }}">
+		<link rel="stylesheet" href="{{ includeResource("lp/libs/fontawesome/css/all.min.css") }}">
+
+		<style>
+			#map {
+				height: 250px;
+			}
+		</style>
+	{% endblock %}

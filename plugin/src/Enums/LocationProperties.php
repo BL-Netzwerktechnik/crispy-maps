@@ -2,6 +2,8 @@
 
 namespace blfilme\lostplaces\Enums;
 
+use blfilme\lostplaces\Controllers\IconProviderController;
+use blfilme\lostplaces\Interfaces\IconInterface;
 
 enum LocationProperties: int
 {
@@ -16,6 +18,42 @@ enum LocationProperties: int
     case GUARD_WITH_VEHICLE = 0x100;
 
 
+    /**
+     * Bootstrap Badge color for the enum value
+     *
+     * @return string
+     */
+    public function getBadgeColor(): string
+    {
+        return match ($this) {
+            self::ACCESS_WITH_PERMISSION => 'primary',
+            self::CAMERAS_PRESENT => 'danger',
+            self::FENCED => 'warning',
+            self::GUARD_PRESENT => 'danger',
+            self::INACCESSIBLE => 'dark',
+            self::INHABITED => 'warning',
+            self::GUARD_WITH_DOG => 'danger',
+            self::CAMERAS_PRESENT_MAYBE_INACTIVE => 'warning',
+            self::GUARD_WITH_VEHICLE => 'danger',
+            default => 'secondary',
+        };
+    }
+
+    public function getBadgeIcon(): IconInterface
+    {
+        return match ($this){
+            self::ACCESS_WITH_PERMISSION => IconProviderController::fetchFromConfig('envelope'),
+            self::CAMERAS_PRESENT => IconProviderController::fetchFromConfig('camera'),
+            self::FENCED => IconProviderController::fetchFromConfig('xmarks-lines'),
+            self::GUARD_PRESENT => IconProviderController::fetchFromConfig('shield'),
+            self::INACCESSIBLE => IconProviderController::fetchFromConfig('lock'),
+            self::INHABITED => IconProviderController::fetchFromConfig('home'),
+            self::GUARD_WITH_DOG => IconProviderController::fetchFromConfig('dog'),
+            self::CAMERAS_PRESENT_MAYBE_INACTIVE => IconProviderController::fetchFromConfig('camera-retro'),
+            self::GUARD_WITH_VEHICLE => IconProviderController::fetchFromConfig('car'),
+            default => IconProviderController::fetchFromConfig('question'),
+        };
+    }
 
     /**
      * Get Label for the enum value in German

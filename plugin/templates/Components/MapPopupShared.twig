@@ -1,0 +1,11 @@
+<h4>{{ location.name }}</h4>
+
+<p>{{ location.description|striptags|truncateText(200) }}</p>
+
+<span>
+	{% for property in AllLocationProperties %}
+		{% if property.value in location.properties %}
+			{% include "lostplaces/templates/Components/PropertyBadge.twig" with {'property': property} %}
+		{% endif %}
+	{% endfor %}
+</span>

@@ -55,6 +55,14 @@
         "label": "Datei Provider",
         "hint": "Provider der alle Dateien bereitstellt",
     } %}
+	{% include "Components/Input.twig" with {
+        "type": "select",
+        "id": "settings-lostplaces-location-template",
+        "name": "LostPlaces_LocationTemplate",
+        "items": LostPlaces_LocationTemplateList,	
+        "label": "Location Template",
+        "hint": "Das Template das für die Location verwendet wird",
+    } %}
 </div>
 <div class="divider">
 	<div class="divider-text">Lokaler Datei Provider</div>

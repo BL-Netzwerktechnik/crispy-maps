@@ -1,0 +1,6 @@
+<span {% if not PropertyBadgeShowLabels %} title="{{property.getLabel() }}" {% endif %} class="badge bg-{{ property.getBadgeColor() }}">
+    <i class="{{ property.getBadgeIcon().getFullClass() }}"></i>
+    {% if PropertyBadgeShowLabels %}
+        {{ property.getLabel() }}
+    {% endif %}
+</span>

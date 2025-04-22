@@ -33,8 +33,8 @@ class LocationModel
         private LocationStatus $status,
         private CoordinateModel $coordinates,
         private int $author,
-        private Carbon $createdAt,
-        private Carbon $updatedAt,
+        private ?Carbon $createdAt = null,
+        private ?Carbon $updatedAt = null,
     )
     {
         // Ensure properties are of type LocationProperties
@@ -43,6 +43,8 @@ class LocationModel
                 throw new \InvalidArgumentException('Invalid property type');
             }
         }
+        $this->createdAt = $this->createdAt ?? Carbon::now($_ENV['TZ'] ?? 'UTC');
+        $this->updatedAt = $this->updatedAt ?? Carbon::now($_ENV['TZ'] ?? 'UTC');
     }
 
     /**
@@ -195,6 +197,7 @@ class LocationModel
     public function toMarker(bool $editMarker = false): array
     {
         ThemeVariables::set('location', $this->toArray());
+        ThemeVariables::set('AllLocationProperties', LocationProperties::cases());
 
         return [
             'category' => $this->category->toArray(),

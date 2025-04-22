@@ -4,10 +4,13 @@ namespace blfilme\lostplaces\EventSubscribers;
 
 use blfilme\lostplaces\PageControllers\CmsControl\CategoriesPageController;
 use blfilme\lostplaces\PageControllers\CmsControl\CreateCategoriesPageController;
+use blfilme\lostplaces\PageControllers\CmsControl\CreateLocationPageController;
 use blfilme\lostplaces\PageControllers\CmsControl\EditCategoriesPageController;
+use blfilme\lostplaces\PageControllers\CmsControl\EditLocationPageController;
 use blfilme\lostplaces\PageControllers\CmsControl\MapPageController;
 use blfilme\lostplaces\PageControllers\MapPageController as PageControllersMapPageController;
 use blfilme\lostplaces\PageControllers\Public\ConfigJsonPageController;
+use blfilme\lostplaces\PageControllers\Public\LocationRenderPageController;
 use blfilme\lostplaces\PageControllers\Public\MapJsonPageController;
 use crisp\api\Config;
 use crisp\api\Helper as ApiHelper;
@@ -78,8 +81,15 @@ class InitEventSubscriber implements EventSubscriberInterface
         Router::add(route: "/admin/lp/categories/{id:\d+}", routeType: RouteType::PUBLIC, class: EditCategoriesPageController::class, method: Route::GET);
         Router::add(route: "/admin/lp/categories/{id:\d+}", routeType: RouteType::PUBLIC, class: EditCategoriesPageController::class, method: Route::POST, callable: "processPOSTRequest");
 
+        Router::add(route: "/admin/location/{id:\d+}", routeType: RouteType::PUBLIC, class: EditLocationPageController::class, method: Route::GET);
+        Router::add(route: "/admin/location/{id:\d+}", routeType: RouteType::PUBLIC, class: EditLocationPageController::class, method: Route::POST, callable: "processPOSTRequest");
+
+        Router::add(route: "/admin/location/create", routeType: RouteType::PUBLIC, class: CreateLocationPageController::class, method: Route::GET);
+        Router::add(route: "/admin/location/create", routeType: RouteType::PUBLIC, class: CreateLocationPageController::class, method: Route::POST, callable: "processPOSTRequest");
 
         Router::add(route: "/admin/lp/categories", routeType: RouteType::PUBLIC, class: CategoriesPageController::class, method: Route::GET);
+
+        Router::add(route: "/location/{id:\d+}", routeType: RouteType::PUBLIC, class: LocationRenderPageController::class, method: Route::GET);
 
         Router::add(route: "/admin/lp/categories/create", routeType: RouteType::PUBLIC, class: CreateCategoriesPageController::class, method: Route::GET);
         Router::add(route: "/admin/lp/categories/create", routeType: RouteType::PUBLIC, class: CreateCategoriesPageController::class, method: Route::POST, callable: "processPOSTRequest");

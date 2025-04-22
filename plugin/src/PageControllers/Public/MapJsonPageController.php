@@ -19,6 +19,7 @@ use blfilme\lostplaces\DatabaseControllers\LocationDatabaseController;
 use blfilme\lostplaces\Interfaces\IconInterface;
 use blfilme\lostplaces\Models\LocationModel;
 use crisp\api\Config;
+use crisp\core\ThemeVariables;
 
 class MapJsonPageController
 {
@@ -32,15 +33,22 @@ class MapJsonPageController
     public function preRender(): void
     {
 
+        header('Content-Type: application/json');
 
-        // fetch all locations and map them to array in one line
+        if(isset($_GET["location"]) && is_numeric($_GET["location"])) {
+            $location = $this->locationDatabaseController->getLocationById((int)$_GET["location"]);
+            if($location !== null) {
+                ThemeVariables::set("singleLocation", true);
+                echo json_encode($location->toGeoJSON(isset($_GET['editMode'])));
+                return;
+            }
+        }
         $locations = array_map(
             fn(LocationModel $location) => $location->toGeoJSON(isset($_GET['editMode'])),
             $this->locationDatabaseController->fetchAllLocations()
         );
 
 
-        header('Content-Type: application/json');
         echo json_encode($locations);
     }
 }

@@ -1,0 +1,58 @@
+let editorInstance;
+
+
+$("form").on("submit", function (e) {
+    e.preventDefault();
+    var form = $(this);
+    // Convert form data to an object
+    var formData = {};
+    $.each(form.serializeArray(), function (_, field) {
+        if (formData[field.name]) {
+            // If the field already exists, convert it into an array
+            if (!Array.isArray(formData[field.name])) {
+                formData[field.name] = [formData[field.name]];
+            }
+            formData[field.name].push(field.value);
+        } else {
+            formData[field.name] = field.value;
+        }
+    });
+
+
+    formData.description = editorInstance.getData();
+
+    $.ajax({
+        url: window.location.href,
+        type: "POST",
+        data: formData,
+        success: function (data) {
+            Swal.fire({
+                title: "Aktion erfolgreich",
+                icon: "success",
+            });
+
+            if($("#id").val() == "") {
+                window.location.href = "/admin/map";
+            }else{
+                window.location.reload();
+            }
+        },
+        error: function (data) {
+            if (data.status == 400) {
+                var errors = data.responseJSON.parameters.errors;
+                var errorString = "";
+
+                // Loop through the errors and append them to the errorString with translation
+                for (var key in errors) {
+                    errorString += translation[errors[key]] ?? errors[key] + "\n";
+                }
+
+                Swal.fire({
+                    title: translation["CMSControl.Libs.Sweetalert.Error.Title"],
+                    text: errorString,
+                    icon: "error",
+                });
+            }
+        },
+    });
+});

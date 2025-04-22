@@ -6,11 +6,10 @@
 {% block Content %}
 	<div class="card">
 		<div class="card-header">
-			<h5 class="card-title">Kategorie erstellen</h5>
 			<a href="/admin/lp/categories" class="btn btn-primary float-end">Zurück zur Übersicht</a>
 		</div>
 		<div class="card-body">
-			<form method="POST" action="/admin/lp/categories/create">
+			<form method="POST">
 				<input type="hidden" name="id" value="{{ Category.id }}">
 				<div class="mb-3">
 					<label for="name" class="form-label">Name</label>
@@ -29,7 +28,7 @@
 					<div id="iconpicker"></div>
 				</div>
 				<div class="mb-3">
-					<button type="submit" class="btn btn-primary">Kategorie erstellen</button>
+					<button type="submit" class="btn btn-primary">Absenden</button>
 					<a href="/admin/lp/categories" class="btn btn-secondary">Abbrechen</a>
 			</div>
 		</div>

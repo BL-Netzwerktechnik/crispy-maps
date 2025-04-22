@@ -1,7 +1,6 @@
-<h4>{{ location.name }}</h4>
+{% include "lostplaces/templates/Components/MapPopupShared.twig" %}
 
-<p>{{ location.description }}</p>
-
+<hr>
 <a href="/admin/location/{{ location.id }}" class="btn btn-warning text-white">
 	Bearbeiten
 </a>

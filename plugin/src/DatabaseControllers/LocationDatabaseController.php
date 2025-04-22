@@ -70,7 +70,7 @@ class LocationDatabaseController extends DatabaseController
             throw new Exception('Cannot update category, because no transaction is active.');
         }
 
-        $SQLTemplate = 'UPDATE %s SET %s marker_location = %s, 4326) WHERE id = :id';
+        $SQLTemplate = 'UPDATE %s SET %s, marker_location = %s WHERE id = :id';
         $Values = [];
 
         $Values[':id'] = $locationModel->getId();
@@ -158,7 +158,7 @@ class LocationDatabaseController extends DatabaseController
             $ParsedValues[] = $Column;
         }
 
-        Logger::getLogger(__METHOD__)->info('SQL Query', [sprintf($SQLTemplate, self::tableName, implode(', ', $Columns), implode(', ', $ParsedValues)), $locationModel->getCoordinates()->toPostGIS()]);
+        Logger::getLogger(__METHOD__)->info('SQL Query', [sprintf($SQLTemplate, self::tableName, implode(', ', $Columns), implode(', ', $ParsedValues), $locationModel->getCoordinates()->toPostGIS())]);
 
         $statement = $this->getDatabaseConnector()->prepare(sprintf($SQLTemplate, self::tableName, implode(', ', $Columns), implode(', ', $ParsedValues), $locationModel->getCoordinates()->toPostGIS()));
 

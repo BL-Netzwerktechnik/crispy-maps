@@ -82,7 +82,7 @@ class NavbarEventSubscriber implements EventSubscriberInterface
                     Permissions::SUPERUSER->value,
                     Permissions::WRITE_CATEGORIES->value
                 ],
-                permissionHaystack: $user->toArray(),
+                permissionHaystack: $user->getPermissionArray(),
                 id: 'lostplaces_categories',
             ),
         );

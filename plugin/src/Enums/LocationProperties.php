@@ -17,6 +17,10 @@ enum LocationProperties: int
     case CAMERAS_PRESENT_MAYBE_INACTIVE = 0x80;
     case GUARD_WITH_VEHICLE = 0x100;
     case SUBJECT_TO_CHARGE = 0x200;
+    case DRONE_FLYING_ALLOWED = 0x400;
+    case DRONE_FLYING_FORBIDDEN = 0x800;
+    case VIDEO_FORBIDDEN = 0x1000;
+    case VIDEO_ALLOWED = 0x2000;
 
 
     /**
@@ -37,6 +41,10 @@ enum LocationProperties: int
             self::CAMERAS_PRESENT_MAYBE_INACTIVE => 'warning',
             self::GUARD_WITH_VEHICLE => 'danger',
             self::SUBJECT_TO_CHARGE => 'info',
+            self::DRONE_FLYING_ALLOWED => 'success',
+            self::DRONE_FLYING_FORBIDDEN => 'danger',
+            self::VIDEO_FORBIDDEN => 'danger',
+            self::VIDEO_ALLOWED => 'success',
             default => 'secondary',
         };
     }
@@ -54,6 +62,10 @@ enum LocationProperties: int
             self::CAMERAS_PRESENT_MAYBE_INACTIVE => IconProviderController::fetchFromConfig('camera-retro'),
             self::GUARD_WITH_VEHICLE => IconProviderController::fetchFromConfig('car'),
             self::SUBJECT_TO_CHARGE => IconProviderController::fetchFromConfig('money-bill'),
+            self::DRONE_FLYING_ALLOWED => IconProviderController::fetchFromConfig('plane-circle-check'),
+            self::DRONE_FLYING_FORBIDDEN => IconProviderController::fetchFromConfig('plane-circle-xmark'),
+            self::VIDEO_FORBIDDEN => IconProviderController::fetchFromConfig('video-slash'),
+            self::VIDEO_ALLOWED => IconProviderController::fetchFromConfig('video'),
             default => IconProviderController::fetchFromConfig('question'),
         };
     }
@@ -77,6 +89,8 @@ enum LocationProperties: int
             self::CAMERAS_PRESENT_MAYBE_INACTIVE => 'Kameras vorhanden (vielleicht inaktiv)',
             self::GUARD_WITH_VEHICLE => 'Wachschutz mit Fahrzeug',
             self::SUBJECT_TO_CHARGE => 'Gebührenpflichtig',
+            self::DRONE_FLYING_ALLOWED => 'Drohneneinsatz erlaubt',
+            self::DRONE_FLYING_FORBIDDEN => 'Drohneneinsatz verboten',
             default => 'Unbekannt',
         };
     }

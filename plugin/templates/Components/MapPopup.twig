@@ -1,8 +1,10 @@
 {% include "lostplaces/templates/Components/MapPopupShared.twig" %}
 
 {% if not singleLocation %}
-<hr>
-<a href="/location/{{ location.id }}" class="btn btn-primary text-white">
-	Mehr Infos...
-</a>
+	<hr>
+	<div class="d-grid gap-2">
+		<a href="/location/{{ location.id }}" class="btn btn-primary text-white">
+			Mehr Infos...
+		</a>
+	</div>
 {% endif %}

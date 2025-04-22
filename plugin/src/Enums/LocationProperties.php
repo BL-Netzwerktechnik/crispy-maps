@@ -16,6 +16,7 @@ enum LocationProperties: int
     case GUARD_WITH_DOG = 0x40;
     case CAMERAS_PRESENT_MAYBE_INACTIVE = 0x80;
     case GUARD_WITH_VEHICLE = 0x100;
+    case SUBJECT_TO_CHARGE = 0x200;
 
 
     /**
@@ -35,6 +36,7 @@ enum LocationProperties: int
             self::GUARD_WITH_DOG => 'danger',
             self::CAMERAS_PRESENT_MAYBE_INACTIVE => 'warning',
             self::GUARD_WITH_VEHICLE => 'danger',
+            self::SUBJECT_TO_CHARGE => 'info',
             default => 'secondary',
         };
     }
@@ -51,6 +53,7 @@ enum LocationProperties: int
             self::GUARD_WITH_DOG => IconProviderController::fetchFromConfig('dog'),
             self::CAMERAS_PRESENT_MAYBE_INACTIVE => IconProviderController::fetchFromConfig('camera-retro'),
             self::GUARD_WITH_VEHICLE => IconProviderController::fetchFromConfig('car'),
+            self::SUBJECT_TO_CHARGE => IconProviderController::fetchFromConfig('money-bill'),
             default => IconProviderController::fetchFromConfig('question'),
         };
     }
@@ -73,6 +76,8 @@ enum LocationProperties: int
             self::GUARD_WITH_DOG => 'Wachschutz mit Hund',
             self::CAMERAS_PRESENT_MAYBE_INACTIVE => 'Kameras vorhanden (vielleicht inaktiv)',
             self::GUARD_WITH_VEHICLE => 'Wachschutz mit Fahrzeug',
+            self::SUBJECT_TO_CHARGE => 'Gebührenpflichtig',
+            default => 'Unbekannt',
         };
     }
 

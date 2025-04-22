@@ -14,6 +14,7 @@
 namespace blfilme\lostplaces\PageControllers\Public;
 
 use blfilme\lostplaces\DatabaseControllers\LocationDatabaseController;
+use blfilme\lostplaces\DatabaseControllers\VoteDatabaseController;
 use blfilme\lostplaces\Enums\LocationProperties;
 use crisp\api\Config;
 use crisp\api\Helper;
@@ -46,6 +47,7 @@ class LocationRenderPageController
     private UserController $userController;
     private TemplateDatabaseController $templateDatabaseController;
     private LocationDatabaseController $locationDatabaseController;
+    private VoteDatabaseController $voteDatabaseController;
 
     private array $writePermissions = [
         Permissions::SUPERUSER->value,
@@ -57,6 +59,7 @@ class LocationRenderPageController
         $this->templateDatabaseController = new TemplateDatabaseController();
         $this->userController = new UserController();
         $this->locationDatabaseController = new LocationDatabaseController();
+        $this->voteDatabaseController = new VoteDatabaseController();
     }
 
     public function preRender(int $id): void
@@ -87,6 +90,24 @@ class LocationRenderPageController
         ThemeVariables::set("Location", $Location->toArray());
         ThemeVariables::set('AllLocationProperties', LocationProperties::cases());
         ThemeVariables::set("PropertyBadgeShowLabels", true);
+        ThemeVariables::set("hasUpVoted", Sessions::isSessionValid() ? $this->voteDatabaseController->upVoteExistsByLocationAndUser(
+            $Location,
+            $this->userController->getUser()
+        ) : $this->voteDatabaseController->upVoteExistsByLocationAndIpAddress(
+            $Location,
+            Helper::getRealIpAddr()
+        ));
+
+        ThemeVariables::set("hasDownVoted", Sessions::isSessionValid() ? $this->voteDatabaseController->downVoteExistsByLocationAndUser(
+            $Location,
+            $this->userController->getUser()
+        ) : $this->voteDatabaseController->downVoteExistsByLocationAndIpAddress(
+            $Location,
+            Helper::getRealIpAddr()
+        ));
+
+        ThemeVariables::set("upVoteCount", $this->voteDatabaseController->countAllUpVotesForLocation($Location));
+        ThemeVariables::set("downVoteCount", $this->voteDatabaseController->countAllDownVotesForLocation($Location));
 
         echo Themes::render($Template->getFrontendCodePath(), [core::THEME_BASE_DIR . "/build", "/plugins"]);
     }

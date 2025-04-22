@@ -1,0 +1,17 @@
+<div class="btn-group" role="group">
+	<button type="button" class="btn btn-primary" data-action="like" {% if hasUpVoted %} active disabled {% endif %}>
+		<i class="fa-solid fa-thumbs-up"></i>
+		{% if upVoteCount > 0 %}
+			<span class="badge bg-secondary">{{ upVoteCount }}</span>
+		{% endif %}
+	</button>
+	<button type="button" class="btn btn-danger" data-action="dislike" {% if hasDownVoted %} active disabled {% endif %}>
+		<i class="fa-solid fa-thumbs-down"></i>
+		{% if downVoteCount > 0 %}
+			<span class="badge bg-secondary">{{ downVoteCount }}</span>
+		{% endif %}
+	</button>
+	<button type="button" class="btn btn-outline-danger" data-action="report">
+		<i class="fa-solid fa-flag"></i>
+	</button>
+</div>

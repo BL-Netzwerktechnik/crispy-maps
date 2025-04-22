@@ -117,7 +117,7 @@ class CreateLocationPageController
             category: $Category,
             status: LocationStatus::from($_POST['status']),
             coordinates: new CoordinateModel($_GET["lat"], $_GET["lng"]),
-            author: 0,
+            author: $this->userController->getUser(),
         );
 
         $this->locationDatabaseController->beginTransaction();

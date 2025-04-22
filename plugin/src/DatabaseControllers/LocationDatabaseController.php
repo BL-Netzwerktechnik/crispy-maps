@@ -13,6 +13,7 @@ use Carbon\Carbon;
 use crisp\api\Translation;
 use crisp\core\Logger;
 use Crispy\DatabaseControllers\DatabaseController;
+use Crispy\DatabaseControllers\UserDatabaseController;
 use Exception;
 use PDO;
 
@@ -20,12 +21,15 @@ class LocationDatabaseController extends DatabaseController
 {
 
     private CategoryDatabaseController $categoryDatabaseController;
+    private UserDatabaseController $userDatabaseController;
 
     private const tableName = 'lostplaces_locations';
     public const rowsPerPage = 15;
 
     public function __construct()
     {
+        Logger::getLogger(__METHOD__)->debug('Called', debug_backtrace(!DEBUG_BACKTRACE_PROVIDE_OBJECT | DEBUG_BACKTRACE_IGNORE_ARGS, 2)[1] ?? []);
+        $this->userDatabaseController = new UserDatabaseController();
         $this->categoryDatabaseController = new CategoryDatabaseController();
         parent::__construct();
     }
@@ -42,7 +46,7 @@ class LocationDatabaseController extends DatabaseController
             category: $this->categoryDatabaseController->getCategoryById($row['category']),
             status: LocationStatus::tryFrom($row['status']) ?? LocationStatus::UNKNOWN,
             coordinates: new CoordinateModel($row['latitude'], $row['longitude']),
-            author: 0,
+            author: $this->userDatabaseController->getUserById($row['author']),
             createdAt: Carbon::parse($row['created_at'], $_ENV['TZ'] ?? 'UTC'),
             updatedAt: Carbon::parse($row['updated_at'], $_ENV['TZ'] ?? 'UTC'),
         );

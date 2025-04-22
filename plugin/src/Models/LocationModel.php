@@ -8,6 +8,7 @@ use blfilme\lostplaces\Interfaces\IconInterface;
 use Carbon\Carbon;
 use crisp\core\Themes;
 use crisp\core\ThemeVariables;
+use Crispy\Models\UserModel;
 
 class LocationModel
 {
@@ -20,7 +21,7 @@ class LocationModel
      * @param LocationProperties[] $properties
      * @param LocationStatus $status
      * @param CoordinateModel $coordinates
-     * @param int $author
+     * @param UserModel $author
      * @param Carbon $createdAt
      * @param Carbon $updatedAt
      */
@@ -32,7 +33,7 @@ class LocationModel
         private CategoryModel $category,
         private LocationStatus $status,
         private CoordinateModel $coordinates,
-        private int $author,
+        private UserModel $author,
         private ?Carbon $createdAt = null,
         private ?Carbon $updatedAt = null,
     )
@@ -142,9 +143,9 @@ class LocationModel
     /**
      * Get the author of the location
      *
-     * @return int
+     * @return UserModel
      */
-    public function getAuthor(): int
+    public function getAuthor(): UserModel
     {
         return $this->author;
     }
@@ -223,7 +224,7 @@ class LocationModel
             'coordinates' => $this->coordinates->toArray(),
             'icon' => $this->getIcon()->toArray(),
             'status' => $this->status->value,
-            'author' => $this->author,
+            'author' => $this->author->toArray(),
             'markerColor' => $this->status->getColor()->value,
             'createdAt' => $this->createdAt->toDateTimeString(),
             'updatedAt' => $this->updatedAt->toDateTimeString(),
@@ -348,10 +349,10 @@ class LocationModel
     /**
      * Set the author of the location
      *
-     * @param int $author
+     * @param UserModel $author
      * @return self
      */
-    public function setAuthor(int $author): self
+    public function setAuthor(UserModel $author): self
     {
         $this->author = $author;
         return $this;

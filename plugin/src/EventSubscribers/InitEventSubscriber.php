@@ -12,6 +12,7 @@ use blfilme\lostplaces\PageControllers\MapPageController as PageControllersMapPa
 use blfilme\lostplaces\PageControllers\Public\ConfigJsonPageController;
 use blfilme\lostplaces\PageControllers\Public\LocationRenderPageController;
 use blfilme\lostplaces\PageControllers\Public\MapJsonPageController;
+use blfilme\lostplaces\PageControllers\Public\VoteLocationPageController;
 use crisp\api\Config;
 use crisp\api\Helper as ApiHelper;
 use crisp\core\Logger;
@@ -90,6 +91,7 @@ class InitEventSubscriber implements EventSubscriberInterface
         Router::add(route: "/admin/lp/categories", routeType: RouteType::PUBLIC, class: CategoriesPageController::class, method: Route::GET);
 
         Router::add(route: "/location/{id:\d+}", routeType: RouteType::PUBLIC, class: LocationRenderPageController::class, method: Route::GET);
+        Router::add(route: "/location/{id:\d+}/vote", routeType: RouteType::PUBLIC, class: VoteLocationPageController::class, method: Route::POST, callable: "processPOSTRequest");
 
         Router::add(route: "/admin/lp/categories/create", routeType: RouteType::PUBLIC, class: CreateCategoriesPageController::class, method: Route::GET);
         Router::add(route: "/admin/lp/categories/create", routeType: RouteType::PUBLIC, class: CreateCategoriesPageController::class, method: Route::POST, callable: "processPOSTRequest");

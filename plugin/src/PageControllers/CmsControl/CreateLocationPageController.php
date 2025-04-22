@@ -113,6 +113,7 @@ class CreateLocationPageController
             id: null,
             name: $_POST['name'],
             description: $_POST['description'],
+            youtube: $_POST['youtube'] ?? null,
             properties: $convertedProperties,
             category: $Category,
             status: LocationStatus::from($_POST['status']),

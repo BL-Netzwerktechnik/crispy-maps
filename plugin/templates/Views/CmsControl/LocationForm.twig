@@ -40,6 +40,14 @@
 					<div class="divider-text">Zusätzliche Informationen</div>
 				</div>
 
+				
+				<div class="my-2">
+					<label for="name" class="form-label">Youtube-Video ID</label>
+					<input type="text" class="form-control" id="youtube" name="youtube" placeholder="Youtube Video ID" value="{{ Location.youtube }}">
+
+					<div class="form-text">Dieses Video wird in der Seitenleiste eingebettet.</div>
+				</div>
+
 				<div class="row row-cols-4">
 					{% for Property in Properties %}
 						<div class="col">

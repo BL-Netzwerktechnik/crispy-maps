@@ -43,6 +43,7 @@ class LocationDatabaseController extends DatabaseController
             name: $row['name'],
             description: $row['description'],
             properties: LocationProperties::fromIntToArray($row['properties']) ?? [],
+            youtube: $row['youtube'] ?? null,
             category: $this->categoryDatabaseController->getCategoryById($row['category']),
             status: LocationStatus::tryFrom($row['status']) ?? LocationStatus::UNKNOWN,
             coordinates: new CoordinateModel($row['latitude'], $row['longitude']),
@@ -81,6 +82,7 @@ class LocationDatabaseController extends DatabaseController
         $Values[':name'] = $locationModel->getName();
         $Values[':description'] = $locationModel->getDescription();
         $Values[':category'] = $locationModel->getCategory()->getId();
+        $Values[':youtube'] = $locationModel->getYoutube();
         $Values[':status'] = $locationModel->getStatus()->value;
         $Values[':properties'] = LocationProperties::fromArrayToInt($locationModel->getProperties());
         $Values[':author'] = 0; // TODO: Implement author
@@ -150,6 +152,7 @@ class LocationDatabaseController extends DatabaseController
         $Values[':name'] = $locationModel->getName();
         $Values[':description'] = $locationModel->getDescription();
         $Values[':category'] = $locationModel->getCategory()->getId();
+        $Values[':youtube'] = $locationModel->getYoutube();
         $Values[':status'] = $locationModel->getStatus()->value;
         $Values[':properties'] = LocationProperties::fromArrayToInt($locationModel->getProperties());
         $Values[':author'] = 0; // TODO: Implement author

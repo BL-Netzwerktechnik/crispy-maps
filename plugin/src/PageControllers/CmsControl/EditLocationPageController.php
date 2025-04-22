@@ -116,6 +116,7 @@ class EditLocationPageController
 
         $Location->setName($_POST['name']);
         $Location->setDescription($_POST['description']);
+        $Location->setYoutube($_POST['youtube'] ?? null);
         $Location->setProperties($convertedProperties);
         $Location->setStatus(LocationStatus::from($_POST['status']));
         $Location->setCategory($Category);

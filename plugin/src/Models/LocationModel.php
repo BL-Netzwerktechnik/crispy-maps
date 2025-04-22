@@ -30,6 +30,7 @@ class LocationModel
         private string $name,
         private string $description,
         private array $properties,
+        private ?string $youtube,
         private CategoryModel $category,
         private LocationStatus $status,
         private CoordinateModel $coordinates,
@@ -56,6 +57,23 @@ class LocationModel
     public function getName(): string
     {
         return $this->name;
+    }
+
+
+    /**
+     * Get the YouTube link of the location
+     *
+     * @return string|null
+     */
+    public function getYoutube(): ?string
+    {
+        return $this->youtube;
+    }
+
+    public function setYoutube(?string $youtube): self
+    {
+        $this->youtube = $youtube;
+        return $this;
     }
 
     /**
@@ -224,6 +242,7 @@ class LocationModel
             'coordinates' => $this->coordinates->toArray(),
             'icon' => $this->getIcon()->toArray(),
             'status' => $this->status->value,
+            'youtube' => $this->youtube,
             'author' => $this->author->toArray(),
             'markerColor' => $this->status->getColor()->value,
             'createdAt' => $this->createdAt->toDateTimeString(),

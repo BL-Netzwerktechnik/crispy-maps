@@ -50,6 +50,7 @@ class locations extends Migrations
                 array("name", $this::DB_VARCHAR, "NOT NULL"),
                 array("description", $this::DB_TEXT, "NOT NULL"),
                 array("category", $this::DB_INTEGER, "NOT NULL"),
+                array("youtube", $this::DB_VARCHAR, "DEFAULT NULL"),
                 array("marker_location", "GEOMETRY(Point, 4326)", "NOT NULL"),
                 array("author", $this::DB_INTEGER, "NOT NULL"),
                 array("status", $this::DB_INTEGER, "NOT NULL DEFAULT 0"),

@@ -91,6 +91,8 @@ enum LocationProperties: int
             self::SUBJECT_TO_CHARGE => 'Gebührenpflichtig',
             self::DRONE_FLYING_ALLOWED => 'Drohneneinsatz erlaubt',
             self::DRONE_FLYING_FORBIDDEN => 'Drohneneinsatz verboten',
+            self::VIDEO_FORBIDDEN => 'Videoaufnahmen verboten',
+            self::VIDEO_ALLOWED => 'Videoaufnahmen erlaubt',
             default => 'Unbekannt',
         };
     }

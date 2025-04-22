@@ -59,7 +59,7 @@ class NavbarEventSubscriber implements EventSubscriberInterface
                     Permissions::SUPERUSER->value,
                     Permissions::READ_PAGES->value
                 ],
-                permissionHaystack: $user->toArray()
+                permissionHaystack: $user->getPermissionArray()
             ),
             new \Crispy\Models\NavBarItemModel(
                 name: 'Karte',
@@ -70,7 +70,7 @@ class NavbarEventSubscriber implements EventSubscriberInterface
                     Permissions::SUPERUSER->value,
                     Permissions::WRITE_PAGES->value
                 ],
-                permissionHaystack: $user->toArray(),
+                permissionHaystack: $user->getPermissionArray(),
                 id: 'lostplaces_map',
             ),
             new \Crispy\Models\NavBarItemModel(

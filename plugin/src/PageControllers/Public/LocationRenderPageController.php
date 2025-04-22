@@ -62,23 +62,24 @@ class LocationRenderPageController
     public function preRender(int $id): void
     {
 
-        ThemeVariables::set("HasWritePermission", $this->userController->checkPermissionStack($this->writePermissions));
-
-        if(!Config::exists("LostPlaces_LocationTemplate")){
+        if (Sessions::isSessionValid()) {
+            ThemeVariables::set("HasWritePermission", $this->userController->checkPermissionStack($this->writePermissions));
+        }
+        if (!Config::exists("LostPlaces_LocationTemplate")) {
             ThemeVariables::set("ErrorMessage", "Die Vorlage für die Location-Seite ist nicht gesetzt. Bitte setze die Vorlage in den Plugin-Einstellungen.");
             echo Themes::render("Views/ErrorPage.twig");
             return;
         }
 
         $Template = $this->templateDatabaseController->getTemplateById(Config::get("LostPlaces_LocationTemplate"));
-        if($Template === null){
+        if ($Template === null) {
             ThemeVariables::set("ErrorMessage", "Die Vorlage für die Location-Seite existiert nicht. Bitte setze die Vorlage in den Plugin-Einstellungen.");
             echo Themes::render("Views/ErrorPage.twig");
             return;
         }
 
 
-        if(!$Location = $this->locationDatabaseController->getLocationById($id)){
+        if (!$Location = $this->locationDatabaseController->getLocationById($id)) {
             header(("Location: /404"));
             return;
         }

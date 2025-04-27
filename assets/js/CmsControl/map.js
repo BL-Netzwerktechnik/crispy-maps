@@ -17,6 +17,9 @@ function updateMap(config, map) {
     if (geoJsonLayer) {
         map.removeLayer(geoJsonLayer);
     }
+    if (clusterLayer) {
+        map.removeLayer(clusterLayer);
+    }
 
     if (zoom >= 10) {
         $.get(`${config.map.path}?editMode=true&minLat=${params.minLat}&minLon=${params.minLon}&maxLat=${params.maxLat}&maxLon=${params.maxLon}`, function (data) {

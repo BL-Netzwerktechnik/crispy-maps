@@ -81,11 +81,6 @@ class MapJsonPageController
             return;
         }
 
-        if ($this->locationDatabaseController->countAllLocationsByBoundary($_GET["minLat"], $_GET["maxLat"], $_GET["minLon"], $_GET["maxLon"]) > 100) {
-            echo json_encode([]);
-            return;
-        }
-
         $locations = array_map(
             fn(LocationModel $location) => $location->toGeoJSON(isset($_GET['editMode'])),
             $this->locationDatabaseController->fetchAllLocationsByBoundary($_GET["minLat"], $_GET["maxLat"], $_GET["minLon"], $_GET["maxLon"])

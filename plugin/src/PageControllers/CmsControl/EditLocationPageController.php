@@ -29,6 +29,7 @@ use crisp\core\Themes;
 use crisp\core\ThemeVariables;
 use Crispy\Controllers\UserController;
 use Crispy\Enums\Permissions;
+use Crispy\Helper;
 use GeoIp2\Record\Location;
 
 class EditLocationPageController
@@ -94,6 +95,8 @@ class EditLocationPageController
             return;
         }
         $this->locationDatabaseController->commitTransaction();
+
+        $Location->deleteFolderStructure();
 
         http_response_code(204);
     }
@@ -201,6 +204,8 @@ class EditLocationPageController
 
         $Location = $this->locationDatabaseController->getLocationById($id);
 
+        $Location->createFolderStructure();
+
         if ($Location === null) {
             ThemeVariables::set("ErrorMessage", "Location nicht gefunden");
             echo Themes::render("Views/ErrorPage.twig");
@@ -220,6 +225,7 @@ class EditLocationPageController
 
         ThemeVariables::set("Statuses", LocationStatus::cases());
         ThemeVariables::set("Properties", LocationProperties::cases());
+        ThemeVariables::set("elFinderUploadTargetHash", $Location->getUploadFilePathHash());
 
 
         echo Themes::render("lostplaces/templates/Views/CmsControl/LocationForm.twig");

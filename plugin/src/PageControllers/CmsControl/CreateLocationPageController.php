@@ -128,6 +128,7 @@ class CreateLocationPageController
             return;
         }
         $this->locationDatabaseController->commitTransaction();
+        $Location->createFolderStructure();
 
         RESTfulAPI::response(Bitmask::REQUEST_SUCCESS, 'Location inserted successfully', [], HTTP: 200);
     }

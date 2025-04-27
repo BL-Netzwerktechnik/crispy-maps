@@ -6,8 +6,11 @@ use blfilme\lostplaces\Enums\LocationProperties;
 use blfilme\lostplaces\Enums\LocationStatus;
 use blfilme\lostplaces\Interfaces\IconInterface;
 use Carbon\Carbon;
+use crisp\api\Config;
+use crisp\core;
 use crisp\core\Themes;
 use crisp\core\ThemeVariables;
+use Crispy\Helper;
 use Crispy\Models\UserModel;
 
 class LocationModel
@@ -37,8 +40,7 @@ class LocationModel
         private UserModel $author,
         private ?Carbon $createdAt = null,
         private ?Carbon $updatedAt = null,
-    )
-    {
+    ) {
         // Ensure properties are of type LocationProperties
         foreach ($this->properties as $property) {
             if (!$property instanceof LocationProperties) {
@@ -47,6 +49,38 @@ class LocationModel
         }
         $this->createdAt = $this->createdAt ?? Carbon::now($_ENV['TZ'] ?? 'UTC');
         $this->updatedAt = $this->updatedAt ?? Carbon::now($_ENV['TZ'] ?? 'UTC');
+    }
+
+    public function getUploadFilePath(): string
+    {
+        return sprintf(
+            "%s/lostplaces/%s/",
+            Config::get("LostPlaces_ProviderPath"),
+            $this->getId()
+        );
+    }
+
+    public function getUploadFilePathHash(): string
+    {
+        //ThemeVariables::set("elFinderUploadTargetHash", CrispyHelper::generateElFinderHash("testHash"));
+        return Helper::generateElFinderHash($this->getUploadFilePath());
+    }
+
+
+    public function createFolderStructure(): void
+    {
+        $path = sprintf("%s/files/%s", core::PERSISTENT_DATA, $this->getUploadFilePath());
+        if (!is_dir($path)) {
+            mkdir($path, 0777, true);
+        }
+    }
+
+    public function deleteFolderStructure(): void
+    {
+        $path = sprintf("%s/files/%s", core::PERSISTENT_DATA, $this->getUploadFilePath());
+        if (is_dir($path)) {
+            rmdir($path);
+        }
     }
 
     /**
@@ -387,5 +421,4 @@ class LocationModel
         $this->updatedAt = Carbon::now($_ENV['TZ'] ?? 'UTC');
         return $this;
     }
-
 }

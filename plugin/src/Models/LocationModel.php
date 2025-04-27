@@ -54,7 +54,7 @@ class LocationModel
     public function getUploadFilePath(): string
     {
         return sprintf(
-            "%s/lostplaces/%s/",
+            "%s/lostplaces/%s",
             Config::get("LostPlaces_ProviderPath"),
             $this->getId()
         );

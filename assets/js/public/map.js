@@ -50,7 +50,7 @@ function updateMap(config, map) {
             radius: 60,
             extent: 256,
             maxZoom: 11,
-            minPoints: 1
+            minPoints: 0
         }).load(data);
 
         const bbox = [

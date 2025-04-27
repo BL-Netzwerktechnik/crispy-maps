@@ -2,3 +2,4 @@ public/includes/vendor
 .env
 generated_theme
 vendor/
+node_modules/

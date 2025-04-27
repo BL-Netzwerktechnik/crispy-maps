@@ -47,7 +47,7 @@ function updateMap(config, map) {
             radius: 60,
             extent: 256,
             maxZoom: 11,
-            minPoints: 5
+            minPoints: 1
         }).load(data);
 
         const bbox = [

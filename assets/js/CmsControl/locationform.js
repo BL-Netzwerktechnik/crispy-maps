@@ -1,5 +1,25 @@
 let editorInstance;
 
+$("[role='delete-report']").on("click", function () {
+    $.ajax({
+        url: $(this).attr("href"),
+        type: "DELETE",
+        success: function (data) {
+            Swal.fire({
+                title: "Aktion erfolgreich",
+                icon: "success",
+            });
+            window.location.reload();
+        },
+        error: function (data) {
+            Swal.fire({
+                title: "Aktion fehlgeschlagen",
+                text: "Es gab ein Problem bei der Aktion. Bitte versuche es später erneut.",
+                icon: "error",
+            });
+        },
+    });
+});
 
 $("form").on("submit", function (e) {
     e.preventDefault();
@@ -31,9 +51,9 @@ $("form").on("submit", function (e) {
                 icon: "success",
             });
 
-            if($("#id").val() == "") {
+            if ($("#id").val() == "") {
                 window.location.href = "/admin/map";
-            }else{
+            } else {
                 window.location.reload();
             }
         },

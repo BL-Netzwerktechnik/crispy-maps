@@ -85,6 +85,30 @@ class ReportDatabaseController extends DatabaseController
         return $statement->rowCount() > 0;
     }
 
+    public function fetchReportsByLocation(LocationModel $locationModel): array
+    {
+        Logger::getLogger(__METHOD__)->debug('Called', debug_backtrace(!DEBUG_BACKTRACE_PROVIDE_OBJECT | DEBUG_BACKTRACE_IGNORE_ARGS, 2)[1] ?? []);
+        Logger::getLogger(__METHOD__)->debug('Fetching reports by location', ['location' => $locationModel->getId()]);
+
+        $statement = $this->getDatabaseConnector()->prepare(sprintf('SELECT * FROM %s WHERE location = :location ORDER BY created_at DESC;', self::tableName));
+
+        $statement->execute([
+            ':location' => $locationModel->getId(),
+        ]);
+
+        if ($statement->rowCount() === 0) {
+            return [];
+        }
+
+        $_rows = [];
+
+        foreach ($statement->fetchAll(PDO::FETCH_ASSOC) as $Row) {
+            $_rows[] = $this->ConvertRowToClass($Row);
+        }
+
+        return $_rows;
+    }
+
     public function reportExistByLocationAndIpAddress(LocationModel $locationModel, string $ipAddress): bool
     {
         Logger::getLogger(__METHOD__)->debug('Called', debug_backtrace(!DEBUG_BACKTRACE_PROVIDE_OBJECT | DEBUG_BACKTRACE_IGNORE_ARGS, 2)[1] ?? []);

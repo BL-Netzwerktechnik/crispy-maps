@@ -85,6 +85,16 @@ class NavbarEventSubscriber implements EventSubscriberInterface
                 permissionHaystack: $user->getPermissionArray(),
                 id: 'lostplaces_categories',
             ),
+            new \Crispy\Models\NavBarItemModel(
+                name: 'Meldungen',
+                url: "admin/lp/reports",
+                icon: 'fas fa-flag',
+                permissions: [
+                    Permissions::SUPERUSER->value,
+                ],
+                permissionHaystack: $user->getPermissionArray(),
+                id: 'lostplaces_reports',
+            ),
         );
     }
 }

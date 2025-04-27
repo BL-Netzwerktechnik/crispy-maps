@@ -16,6 +16,7 @@ namespace blfilme\lostplaces\PageControllers\CmsControl;
 use blfilme\lostplaces\Controllers\IconProviderController;
 use blfilme\lostplaces\DatabaseControllers\CategoryDatabaseController;
 use blfilme\lostplaces\DatabaseControllers\LocationDatabaseController;
+use blfilme\lostplaces\DatabaseControllers\ReportDatabaseController;
 use blfilme\lostplaces\Enums\LocationProperties;
 use blfilme\lostplaces\Enums\LocationStatus;
 use blfilme\lostplaces\Models\CategoryModel;
@@ -34,6 +35,7 @@ class EditLocationPageController
     private UserController $userController;
     private LocationDatabaseController $locationDatabaseController;
     private CategoryDatabaseController $categoryDatabaseController;
+    private ReportDatabaseController   $reportDatabaseController;
 
     private array $writePermissions = [
         Permissions::SUPERUSER->value,
@@ -45,6 +47,7 @@ class EditLocationPageController
         $this->userController = new UserController();
         $this->categoryDatabaseController = new CategoryDatabaseController();
         $this->locationDatabaseController = new LocationDatabaseController();
+        $this->reportDatabaseController = new ReportDatabaseController();
     }
 
 
@@ -155,6 +158,11 @@ class EditLocationPageController
             return;
         }
 
+        $Reports = $this->reportDatabaseController->fetchReportsByLocation($Location);
+
+        ThemeVariables::set("Reports", array_map(function ($report) {
+            return $report->toArray();
+        }, $Reports));
         ThemeVariables::set("Location", $Location->toArray());
         ThemeVariables::set("Categories", array_map(function (CategoryModel $category) {
             return $category->toArray();
@@ -163,6 +171,8 @@ class EditLocationPageController
 
         ThemeVariables::set("Statuses", LocationStatus::cases());
         ThemeVariables::set("Properties", LocationProperties::cases());
+
+
         echo Themes::render("lostplaces/templates/Views/CmsControl/LocationForm.twig");
     }
 }

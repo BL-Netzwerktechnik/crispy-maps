@@ -1,0 +1,42 @@
+{% extends "Base.twig" %}
+{% set pageTitle = "Lost Place Meldungen" %}
+{% set currentPage = 'admin/lp/reports' %}
+
+
+{% block Content %}
+
+	<div class="card mb-3">
+		<div class="card-body">
+			<div class="row mt-3">
+				<div class="col-12">
+					<table class="table table-striped">
+						<thead>
+							<tr>
+								<th>Location</th>
+								<th>Gründe</th>
+								<th>Beschreibung</th>
+								<th>Aktionen</th>
+							</tr>
+						</thead>
+						<tbody>
+							{% for Report in Reports %}
+								<tr>
+									<td>{{ Report.location.name }}</td>
+									<td>
+										{% for Reason in Report.reasonsLabels %}
+											<span class="badge bg-danger">{{ Reason }}</span>
+										{% endfor %}
+									</td>
+									<td>{{ Report.description|truncateText(100) }}</td>
+									<td>
+										<a href="/admin/location/{{ Report.location.id }}#reports" class="btn btn-warning">Meldungen</a>
+									</td>
+								</tr>
+							{% endfor %}
+						</tbody>
+					</table>
+				</div>
+			</div>
+		</div>
+	</div>
+{% endblock %}

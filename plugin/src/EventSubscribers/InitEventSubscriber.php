@@ -8,6 +8,7 @@ use blfilme\lostplaces\PageControllers\CmsControl\CreateLocationPageController;
 use blfilme\lostplaces\PageControllers\CmsControl\EditCategoriesPageController;
 use blfilme\lostplaces\PageControllers\CmsControl\EditLocationPageController;
 use blfilme\lostplaces\PageControllers\CmsControl\MapPageController;
+use blfilme\lostplaces\PageControllers\CmsControl\ReportsPageController;
 use blfilme\lostplaces\PageControllers\MapPageController as PageControllersMapPageController;
 use blfilme\lostplaces\PageControllers\Public\ConfigJsonPageController;
 use blfilme\lostplaces\PageControllers\Public\LocationRenderPageController;
@@ -80,6 +81,8 @@ class InitEventSubscriber implements EventSubscriberInterface
         Themes::addRendererDirectory("/plugins");
         Router::add(route: "/admin/map", routeType: RouteType::PUBLIC, class: MapPageController::class, method: Route::GET);
 
+        Router::add(route: "/admin/lp/reports", routeType: RouteType::PUBLIC, class: ReportsPageController::class, method: Route::GET);
+        Router::add(route: "/admin/lp/reports/{id:\d+}", routeType: RouteType::PUBLIC, class: ReportsPageController::class, method: Route::DELETE, callable: "processDELETERequest");
         Router::add(route: "/admin/lp/categories/{id:\d+}", routeType: RouteType::PUBLIC, class: EditCategoriesPageController::class, method: Route::GET);
         Router::add(route: "/admin/lp/categories/{id:\d+}", routeType: RouteType::PUBLIC, class: EditCategoriesPageController::class, method: Route::POST, callable: "processPOSTRequest");
         Router::add(route: "/admin/lp/categories/{id:\d+}", routeType: RouteType::PUBLIC, class: EditCategoriesPageController::class, method: Route::DELETE, callable: "processDELETERequest");

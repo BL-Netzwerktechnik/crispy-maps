@@ -13,8 +13,8 @@
 			<div id="map"></div>
 		{% endif %}
 		<div class="card-body">
-			<form method="POST">
-				<input type="hidden" name="id" value="{{ Location.id }}">
+			<form id="newlocation" method="POST">
+				<input type="hidden" name="id" id="id" value="{{ Location.id }}">
 				<div class="mb-3">
 					<label for="name" class="form-label">Name</label>
 					<input type="text" class="form-control" id="name" name="name" placeholder="Name der Location" required value="{{ Location.name }}">
@@ -76,7 +76,7 @@
 			</form>
 
 			<div class="mb-3">
-				<button type="submit" class="btn btn-primary">Absenden</button>
+				<button type="submit" form="newlocation" class="btn btn-primary">Absenden</button>
 				<a href="/admin/map" class="btn btn-secondary">Abbrechen</a>
 				<button role="delete" class="btn btn-danger">Löschen</button>
 			</div>

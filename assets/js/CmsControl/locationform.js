@@ -85,7 +85,7 @@ $("form").on("submit", function (e) {
                 icon: "success",
             });
 
-            if ($("#id").val() == "") {
+            if (!$("#id").val()) {
                 window.location.href = "/admin/map";
             } else {
                 window.location.reload();

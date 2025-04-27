@@ -6,6 +6,7 @@ use crisp\api\Helper as ApiHelper;
 use crisp\core\Logger;
 use crisp\core\Migrations;
 use crisp\core\Sessions;
+use crisp\core\ThemeVariables;
 use crisp\Events\MigrationEvents;
 use Crispy\DatabaseControllers\UserDatabaseController;
 use Crispy\Enums\Permissions;
@@ -48,8 +49,14 @@ class NavbarEventSubscriber implements EventSubscriberInterface
     {
 
         $user = Sessions::isSessionValid() ? $this->userDatabaseController->getUserById($_SESSION['crisp_session_login']["user"]) : false;
+        
 
         
+        if ($user && $user->getRole()->getId() == 3 && str_starts_with($_SERVER['REQUEST_URI'], "/admin") && !preg_match('#^/admin/(register|login)#', $_SERVER['REQUEST_URI'])) {
+            header("Location: /");
+            return;
+        }
+
         $event->getNavbar()->addItemsAfter(
             "files",
             new \Crispy\Models\NavbarDividerModel(

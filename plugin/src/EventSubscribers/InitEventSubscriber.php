@@ -12,6 +12,7 @@ use blfilme\lostplaces\PageControllers\CmsControl\ReportsPageController;
 use blfilme\lostplaces\PageControllers\MapPageController as PageControllersMapPageController;
 use blfilme\lostplaces\PageControllers\Public\ConfigJsonPageController;
 use blfilme\lostplaces\PageControllers\Public\LocationRenderPageController;
+use blfilme\lostplaces\PageControllers\Public\LogoutPageController;
 use blfilme\lostplaces\PageControllers\Public\MapJsonPageController;
 use blfilme\lostplaces\PageControllers\Public\ReportLocationPageController;
 use blfilme\lostplaces\PageControllers\Public\VoteLocationPageController;
@@ -79,6 +80,8 @@ class InitEventSubscriber implements EventSubscriberInterface
     public function onSetup(Event $event)
     {
         Themes::addRendererDirectory("/plugins");
+
+        Router::add(route: "/logout", routeType: RouteType::PUBLIC, class: LogoutPageController::class, method: Route::GET);
         Router::add(route: "/admin/map", routeType: RouteType::PUBLIC, class: MapPageController::class, method: Route::GET);
 
         Router::add(route: "/admin/lp/reports", routeType: RouteType::PUBLIC, class: ReportsPageController::class, method: Route::GET);

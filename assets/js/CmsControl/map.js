@@ -1,6 +1,24 @@
-let geoJsonLayer;
-let clusterLayer;
+let geoJsonLayer = [];
+let clusterLayer = [];
 let superClusterIndex;
+let markerCache = [];
+
+function cleanupGeoJsonLayer() {
+    if (geoJsonLayer) {
+        geoJsonLayer.forEach(function (layer) {
+            layer.remove();
+        });
+    }
+    markerCache = [];
+}
+
+function cleanupClusterLayer() {
+    if (clusterLayer) {
+        clusterLayer.forEach(function (layer) {
+            layer.remove();
+        });
+    }
+}
 
 function updateMap(config, map) {
 
@@ -14,21 +32,18 @@ function updateMap(config, map) {
         maxLon: bounds.getNorthEast().lng
     };
 
-    if (geoJsonLayer) {
-        map.removeLayer(geoJsonLayer);
-    }
-    if (clusterLayer) {
-        map.removeLayer(clusterLayer);
-    }
+    cleanupClusterLayer();
 
     if (zoom >= 10) {
         $.get(`${config.map.path}?editMode=true&minLat=${params.minLat}&minLon=${params.minLon}&maxLat=${params.maxLat}&maxLon=${params.maxLon}`, function (data) {
-
-            if (geoJsonLayer) {
-                map.removeLayer(geoJsonLayer);
-            }
-            geoJsonLayer = L.geoJSON(data, {
+            geoJsonLayer.push(L.geoJSON(data, {
                 pointToLayer: function (feature, latlng) {
+
+                    if (markerCache.includes(feature.properties.id)) {
+                        return;
+                    }
+
+                    markerCache.push(feature.properties.id);
                     return L.marker(latlng, {
                         icon: L.AwesomeMarkers.icon({
                             icon: feature.properties.icon.name,
@@ -42,52 +57,61 @@ function updateMap(config, map) {
                 onEachFeature: function (feature, layer) {
                     layer.bindPopup(feature.properties.popupContent);
                 }
-            }).addTo(map);
+            }).addTo(map));
+        });
+    } else {
+
+        $.get(`${config.map.path}?cluster=true`, function (data) {
+
+            superClusterIndex = new Supercluster({
+                log: false,
+                radius: 60,
+                extent: 256,
+                maxZoom: 11,
+                minPoints: 0
+            }).load(data);
+
+            const bbox = [
+                bounds.getWest(),
+                bounds.getSouth(),
+                bounds.getEast(),
+                bounds.getNorth()
+            ];
+
+
+            const clusters = superClusterIndex.getClusters(bbox, zoom);
+
+
+            cleanupGeoJsonLayer();
+
+            clusterLayer.push(L.geoJSON(clusters, {
+
+                pointToLayer: function (feature, latlng) {
+                    if (feature.properties.cluster) {
+                        return L.marker(latlng, {
+                            icon: L.divIcon({
+                                html: `<div class="cluster-marker">${feature.properties.point_count}</div>`,
+                                className: 'custom-cluster',
+                                iconSize: [40, 40]
+                            })
+                        });
+                    } else {
+                        return L.marker(latlng, {
+                            icon: L.divIcon({
+                                html: `<div class="cluster-marker">1</div>`,
+                                className: 'custom-cluster',
+                                iconSize: [40, 40]
+                            })
+                        });
+                    }
+                }
+            }).addTo(map));
         });
     }
-    $.get(`${config.map.path}?cluster=true`, function (data) {
-
-        superClusterIndex = new Supercluster({
-            log: false,
-            radius: 60,
-            extent: 256,
-            maxZoom: 11,
-            minPoints: 0
-        }).load(data);
-
-        const bbox = [
-            bounds.getWest(),
-            bounds.getSouth(),
-            bounds.getEast(),
-            bounds.getNorth()
-        ];
-
-
-        const clusters = superClusterIndex.getClusters(bbox, zoom);
-
-
-        if (clusterLayer) {
-            map.removeLayer(clusterLayer);
-        }
-
-        clusterLayer = L.geoJSON(clusters, {
-            pointToLayer: function (feature, latlng) {
-                if (feature.properties.cluster) {
-                    return L.marker(latlng, {
-                        icon: L.divIcon({
-                            html: `<div class="cluster-marker">${feature.properties.point_count}</div>`,
-                            className: 'custom-cluster',
-                            iconSize: [40, 40]
-                        })
-                    });
-                } else {
-                    return null;
-                }
-            }
-        }).addTo(map);
-    });
 
 }
+
+
 
 
 $(document).on("configLoaded", function (event, config) {

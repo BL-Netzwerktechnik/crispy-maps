@@ -253,6 +253,7 @@ class LocationModel
         ThemeVariables::set('AllLocationProperties', LocationProperties::cases());
 
         return [
+            'id' => $this->id,
             'category' => $this->category->toArray(),
             'icon' => $this->getIcon()->toArray(),
             'popupContent' => $editMarker ? Themes::render("lostplaces/templates/Components/CmsControl/MapPopup.twig") : Themes::render("lostplaces/templates/Components/MapPopup.twig"),

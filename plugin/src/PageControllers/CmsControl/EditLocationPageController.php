@@ -222,7 +222,6 @@ class EditLocationPageController
             return $category->toArray();
         }, $this->categoryDatabaseController->fetchAllCategories()));
 
-
         ThemeVariables::set("Statuses", LocationStatus::cases());
         ThemeVariables::set("Properties", LocationProperties::cases());
         ThemeVariables::set("elFinderUploadTargetHash", $Location->getUploadFilePathHash());

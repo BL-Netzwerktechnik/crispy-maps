@@ -8,6 +8,7 @@ use blfilme\lostplaces\Enums\LocationStatus;
 use blfilme\lostplaces\Enums\MarkerColors;
 use blfilme\lostplaces\Models\CategoryModel;
 use blfilme\lostplaces\Models\CoordinateModel;
+use blfilme\lostplaces\Models\LocationDistanceModel;
 use blfilme\lostplaces\Models\LocationModel;
 use Carbon\Carbon;
 use crisp\api\Translation;
@@ -52,6 +53,57 @@ class LocationDatabaseController extends DatabaseController
             updatedAt: Carbon::parse($row['updated_at'], $_ENV['TZ'] ?? 'UTC'),
         );
     }
+
+    /**
+     * Undocumented function
+     *
+     * @param LocationModel $locationModel
+     * @param integer $limit
+     * @param integer $maxDistanceInKilometers
+     * @return LocationDistanceModel[]
+     */
+    public function fetchNearestLocations(LocationModel $locationModel, int $limit = 10, int $maxDistanceInKilometers = 100): array
+    {
+        Logger::getLogger(__METHOD__)->debug('Called', debug_backtrace(!DEBUG_BACKTRACE_PROVIDE_OBJECT | DEBUG_BACKTRACE_IGNORE_ARGS, 2)[1] ?? []);
+        Logger::getLogger(__METHOD__)->debug('Fetching nearest locations', ['location' => $locationModel->getId(), 'limit' => $limit, 'maxDistance' => $maxDistanceInKilometers]);
+
+        $statement = $this->getDatabaseConnector()->prepare(sprintf('SELECT 
+  l.id,
+  ST_DistanceSphere(l.marker_location, ref.marker_location) / 1000 AS distance_km
+FROM 
+  %s l,
+  %s ref
+WHERE 
+  ref.id = :locationId
+  AND l.id != ref.id
+  AND ST_DistanceSphere(l.marker_location, ref.marker_location) <= :maxDistance * 1000
+ORDER BY 
+  distance_km
+LIMIT %s;', self::tableName, self::tableName, $limit));
+
+        $statement->execute([
+            ':locationId' => $locationModel->getId(),
+            ':maxDistance' => $maxDistanceInKilometers,
+        ]);
+
+        if ($statement->rowCount() === 0) {
+            return [];
+        }
+
+        $_rows = [];
+
+
+        foreach ($statement->fetchAll(PDO::FETCH_ASSOC) as $Row) {
+            $_rows[] = new LocationDistanceModel(
+                location: $this->getLocationById($Row['id']),
+                distance: $Row['distance_km'],
+            );
+        }
+
+        return $_rows;
+    }
+
+
     public function getLocationById(int $id): ?LocationModel
     {
         Logger::getLogger(__METHOD__)->debug('Called', debug_backtrace(!DEBUG_BACKTRACE_PROVIDE_OBJECT | DEBUG_BACKTRACE_IGNORE_ARGS, 2)[1] ?? []);
@@ -108,6 +160,21 @@ class LocationDatabaseController extends DatabaseController
         $statement = $this->getDatabaseConnector()->query(sprintf('SELECT * FROM %s', self::tableName));
 
         return $statement->rowCount();
+    }
+
+
+    public function moveAllLocationsToNewCategory(CategoryModel $oldCategory, CategoryModel $newCategory): bool
+    {
+        if ($this->getDatabaseConnector() && $this->getDatabaseConnector()->inTransaction() === false) {
+            throw new Exception('Cannot move locations, because no transaction is active.');
+        }
+
+        $statement = $this->getDatabaseConnector()->prepare(sprintf('UPDATE %s SET category = :category WHERE category = :oldCategory;', self::tableName));
+
+        $statement->bindValue(':category', $newCategory->getId());
+        $statement->bindValue(':oldCategory', $oldCategory->getId());
+
+        return $statement->execute();
     }
 
 

@@ -24,12 +24,16 @@
 				<tbody>
 					{% for Category in Categories %}
 						<tr>
-							<td><i class="{{ Category.icon.fullClass }} fa-2x"></i></td>
+							<td>
+								<i class="{{ Category.icon.fullClass }} fa-2x"></i>
+							</td>
 							<td>{{ Category.name }}</td>
 							<td>{{ Category.description|truncateText(100) }}</td>
 							<td>
-								<a href="/admin/lp/categories/{{ Category.id }}" class="btn btn-warning">Bearbeiten</a>
-								<button data-id="{{ Category.id }}" role="delete" class="btn btn-danger">Löschen</a>
+								{% if Category.id > 0 %}
+									<a href="/admin/lp/categories/{{ Category.id }}" class="btn btn-warning">Bearbeiten</a>
+									<button data-id="{{ Category.id }}" role="delete" class="btn btn-danger">Löschen</a>
+								{% endif %}
 							</td>
 						</tr>
 					{% endfor %}
@@ -37,4 +41,7 @@
 			</table>
 		</div>
 	</div>
+{% endblock %}
+{% block PageJs %}
+	<script src="{{ includeResource("lp/js/CmsControl/categories.js") }}"></script>
 {% endblock %}

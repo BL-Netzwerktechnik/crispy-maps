@@ -14,6 +14,7 @@
 namespace blfilme\lostplaces\PageControllers\CmsControl;
 
 use blfilme\lostplaces\DatabaseControllers\CategoryDatabaseController;
+use blfilme\lostplaces\DatabaseControllers\LocationDatabaseController;
 use crisp\api\Translation;
 use crisp\core\Bitmask;
 use crisp\core\RESTfulAPI;

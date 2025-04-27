@@ -15,6 +15,7 @@ namespace blfilme\lostplaces\PageControllers\CmsControl;
 
 use blfilme\lostplaces\Controllers\IconProviderController;
 use blfilme\lostplaces\DatabaseControllers\CategoryDatabaseController;
+use blfilme\lostplaces\DatabaseControllers\LocationDatabaseController;
 use blfilme\lostplaces\Models\CategoryModel;
 use Carbon\Carbon;
 use crisp\api\Translation;
@@ -30,18 +31,58 @@ class EditCategoriesPageController
 {
     private UserController $userController;
     private CategoryDatabaseController $categoryDatabaseController;
+    private LocationDatabaseController $locationDatabaseController;
 
     private array $writePermissions = [
         Permissions::SUPERUSER->value,
         Permissions::WRITE_CATEGORIES->value,
     ];
 
+    private array $deletePermissions = [
+        Permissions::SUPERUSER->value
+    ];
+
     public function __construct()
     {
         $this->userController = new UserController();
         $this->categoryDatabaseController = new CategoryDatabaseController();
+        $this->locationDatabaseController = new LocationDatabaseController();
     }
 
+    public function processDELETERequest(int $id): void
+    {
+        if (!$this->userController->isSessionValid()) {
+            http_response_code(401);
+            return;
+        }
+
+        if (!$this->userController->checkPermissionStack($this->deletePermissions)) {
+            RESTfulAPI::response(Bitmask::MISSING_PERMISSIONS, 'You do not have permission to delete categories', [], HTTP: 403);
+            return;
+        }
+
+        
+        $Category = $this->categoryDatabaseController->getCategoryById($id);
+
+        if ($Category === null) {
+            RESTfulAPI::response(Bitmask::INVALID_PARAMETER, 'Category not found', [], HTTP: 404);
+            return;
+        }
+
+        $this->categoryDatabaseController->beginTransaction();
+        $this->locationDatabaseController->moveAllLocationsToNewCategory(
+            $Category,
+            $this->categoryDatabaseController->createFallbackCategory()
+        );
+        if (!$this->categoryDatabaseController->deleteCategory($Category)) {
+            $this->categoryDatabaseController->rollbackTransaction();
+            RESTfulAPI::response(Bitmask::GENERIC_ERROR, 'Failed to delete category', [], HTTP: 500);
+            return;
+        }
+        $this->categoryDatabaseController->commitTransaction();
+        http_response_code(204);
+        return;
+    }
 
 
     public function processPOSTRequest(int $id): void
@@ -54,11 +95,6 @@ class EditCategoriesPageController
 
         if (!$this->userController->checkPermissionStack($this->writePermissions)) {
             RESTfulAPI::response(Bitmask::MISSING_PERMISSIONS, 'You do not have permission to read or write categories', [], HTTP: 403);
-            return;
-        }
-
-        if (empty($_POST['id'])) {
-            RESTfulAPI::response(Bitmask::INVALID_PARAMETER, 'Missing parameter "id"', [], HTTP: 400);
             return;
         }
 
@@ -78,7 +114,7 @@ class EditCategoriesPageController
             return;
         }
 
-        $Category = $this->categoryDatabaseController->getCategoryById((int)$_POST['id']);
+        $Category = $this->categoryDatabaseController->getCategoryById($id);
 
         if ($Category === null) {
             RESTfulAPI::response(Bitmask::INVALID_PARAMETER, 'Category not found', [], HTTP: 404);

@@ -16,6 +16,7 @@ namespace blfilme\lostplaces\PageControllers\Public;
 use blfilme\lostplaces\DatabaseControllers\LocationDatabaseController;
 use blfilme\lostplaces\DatabaseControllers\VoteDatabaseController;
 use blfilme\lostplaces\Enums\LocationProperties;
+use blfilme\lostplaces\Enums\ReportReasons;
 use crisp\api\Config;
 use crisp\api\Helper;
 use crisp\api\Translation;
@@ -89,6 +90,11 @@ class LocationRenderPageController
 
         ThemeVariables::set("Location", $Location->toArray());
         ThemeVariables::set('AllLocationProperties', LocationProperties::cases());
+        ThemeVariables::set("ReportReasons", ReportReasons::cases());
+        ThemeVariables::Set("NearbyLocations", array_map(
+            fn($location) => $location->toArray(),
+            $this->locationDatabaseController->fetchNearestLocations($Location, 5, 100)
+        ));
         ThemeVariables::set("PropertyBadgeShowLabels", true);
         ThemeVariables::set("hasUpVoted", Sessions::isSessionValid() ? $this->voteDatabaseController->upVoteExistsByLocationAndUser(
             $Location,

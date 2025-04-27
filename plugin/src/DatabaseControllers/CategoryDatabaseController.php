@@ -28,6 +28,10 @@ class CategoryDatabaseController extends DatabaseController
         Logger::getLogger(__METHOD__)->debug('Called', debug_backtrace(!DEBUG_BACKTRACE_PROVIDE_OBJECT | DEBUG_BACKTRACE_IGNORE_ARGS, 2)[1] ?? []);
         Logger::getLogger(__METHOD__)->debug('Converting row to class', $row);
 
+        if($row["id"] === -1) {
+            return $this->createFallbackCategory();
+        }
+
         return new CategoryModel(
             id: $row['id'],
             name: $row['name'],
@@ -41,6 +45,11 @@ class CategoryDatabaseController extends DatabaseController
     {
         Logger::getLogger(__METHOD__)->debug('Called', debug_backtrace(!DEBUG_BACKTRACE_PROVIDE_OBJECT | DEBUG_BACKTRACE_IGNORE_ARGS, 2)[1] ?? []);
         Logger::getLogger(__METHOD__)->debug('Getting category by ID', ['id' => $id]);
+
+        if($id === -1) {
+            return $this->createFallbackCategory();
+        }
+
 
         $statement = $this->getDatabaseConnector()->query(sprintf('SELECT * FROM %s WHERE id = %s LIMIT 1;', self::tableName, $id));
 
@@ -58,6 +67,13 @@ class CategoryDatabaseController extends DatabaseController
     {
         if ($this->isStrictTransaction() && $this->getDatabaseConnector()->inTransaction() === false) {
             throw new Exception('Cannot update category, because no transaction is active.');
+        }
+
+        if($categoryModel->getId() === null) {
+            throw new Exception('Category cannot be updated, because it does not contain an ID.');
+        }
+        if ($categoryModel->getId() < 0) {
+            throw new Exception('Category cannot be updated, because it contains an invalid ID.');
         }
 
         $SQLTemplate = 'UPDATE %s SET %s WHERE id = :id';
@@ -93,6 +109,17 @@ class CategoryDatabaseController extends DatabaseController
     }
 
 
+    public function hasLocations(CategoryModel $categoryModel): bool
+    {
+        if ($this->getDatabaseConnector() && $this->getDatabaseConnector()->inTransaction() === false) {
+            throw new Exception('Cannot check if category has locations, because no transaction is active.');
+        }
+
+        $statement = $this->getDatabaseConnector()->query(sprintf('SELECT * FROM %s WHERE category = %s;', self::tableName, $categoryModel->getId()));
+
+        return $statement->rowCount() > 0;
+    }
+
     /**
      * Undocumented function
      *
@@ -110,11 +137,29 @@ class CategoryDatabaseController extends DatabaseController
 
         $_rows = [];
 
+
+        // Fallback category
+        $_rows[] = $this->createFallbackCategory();
+
         foreach ($statement->fetchAll(PDO::FETCH_ASSOC) as $Row) {
             $_rows[] = $this->ConvertRowToClass($Row);
         }
 
         return $_rows;
+    }
+
+    public function createFallbackCategory(): CategoryModel
+    {
+        $categoryModel = new CategoryModel(
+            id: -1,
+            name: "Keine Kategorie",
+            description: "Locations ohne Kategorie",
+            icon: IconProviderController::fetchFromConfig("person-circle-question"),
+            createdAt: Carbon::now(),
+            updatedAt: Carbon::now(),
+        );
+
+        return $categoryModel;
     }
 
     public function insertCategory(CategoryModel $categoryModel): CategoryModel

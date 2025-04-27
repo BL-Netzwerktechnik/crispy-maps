@@ -42,6 +42,7 @@ class ConfigJsonPageController
 
         header('Content-Type: application/json');
         echo json_encode([
+            "netzdg_report_url" => Config::get("LostPlaces_NetzDGReportUrl"),
             "map" => [
                 "path" => Config::get("LostPlaces_MapPath"),
                 "bounds" => [

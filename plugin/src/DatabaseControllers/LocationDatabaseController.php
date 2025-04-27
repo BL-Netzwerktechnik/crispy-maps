@@ -243,10 +243,31 @@ LIMIT %s;', self::tableName, self::tableName, $limit));
         return $this->getLocationById($this->getDatabaseConnector()->lastInsertId());
     }
 
+    public function canDeleteLocation(LocationModel $locationModel): bool
+    {
+        if ($this->getDatabaseConnector() && $this->getDatabaseConnector()->inTransaction() === false) {
+            throw new Exception('Cannot delete template, because no transaction is active.');
+        }
+
+        if((new ReportDatabaseController())->locationHasReports($locationModel)) {
+            return false;
+        }
+
+        if((new VoteDatabaseController())->locationHasVotes($locationModel)) {
+            return false;
+        }
+
+        return true;
+    }
+
     public function deleteLocation(LocationModel $locationModel): bool
     {
         if ($this->getDatabaseConnector() && $this->getDatabaseConnector()->inTransaction() === false) {
             throw new Exception('Cannot delete template, because no transaction is active.');
+        }
+        
+        if (!$this->canDeleteLocation($locationModel)) {
+            throw new Exception('Cannot delete location, because it has reports or votes.');
         }
 
         $statement = $this->getDatabaseConnector()->prepare(sprintf('DELETE FROM %s WHERE id = :id;', self::tableName));

@@ -17,6 +17,7 @@ use blfilme\lostplaces\Controllers\IconProviderController;
 use blfilme\lostplaces\DatabaseControllers\CategoryDatabaseController;
 use blfilme\lostplaces\DatabaseControllers\LocationDatabaseController;
 use blfilme\lostplaces\DatabaseControllers\ReportDatabaseController;
+use blfilme\lostplaces\DatabaseControllers\VoteDatabaseController;
 use blfilme\lostplaces\Enums\LocationProperties;
 use blfilme\lostplaces\Enums\LocationStatus;
 use blfilme\lostplaces\Models\CategoryModel;
@@ -36,6 +37,7 @@ class EditLocationPageController
     private LocationDatabaseController $locationDatabaseController;
     private CategoryDatabaseController $categoryDatabaseController;
     private ReportDatabaseController   $reportDatabaseController;
+    private VoteDatabaseController     $voteDatabaseController;
 
     private array $writePermissions = [
         Permissions::SUPERUSER->value,
@@ -48,7 +50,54 @@ class EditLocationPageController
         $this->categoryDatabaseController = new CategoryDatabaseController();
         $this->locationDatabaseController = new LocationDatabaseController();
         $this->reportDatabaseController = new ReportDatabaseController();
+        $this->voteDatabaseController = new VoteDatabaseController();
     }
+
+    public function processDELETERequest(int $id): void
+    {
+        if (!$this->userController->isSessionValid()) {
+            http_response_code(401);
+            return;
+        }
+
+        if (!$this->userController->checkPermissionStack($this->writePermissions)) {
+            RESTfulAPI::response(Bitmask::MISSING_PERMISSIONS, 'You do not have permission to read or write categories', [], HTTP: 403);
+            return;
+        }
+
+        $Location = $this->locationDatabaseController->getLocationById($id);
+
+        if ($Location === null) {
+            RESTfulAPI::response(Bitmask::INVALID_PARAMETER, 'Location not found', [], HTTP: 404);
+            return;
+        }
+
+        $this->locationDatabaseController->beginTransaction();
+
+
+        if(!$this->reportDatabaseController->deleteByLocation($Location)) {
+            $this->locationDatabaseController->rollbackTransaction();
+            RESTfulAPI::response(Bitmask::GENERIC_ERROR, 'Failed to delete reports', [], HTTP: 500);
+            return;
+        }
+
+        if (!$this->voteDatabaseController->deleteByLocation($Location)) {
+            $this->locationDatabaseController->rollbackTransaction();
+            RESTfulAPI::response(Bitmask::GENERIC_ERROR, 'Failed to delete votes', [], HTTP: 500);
+            return;
+        }
+
+
+        if (!$this->locationDatabaseController->deleteLocation($Location)) {
+            $this->locationDatabaseController->rollbackTransaction();
+            RESTfulAPI::response(Bitmask::GENERIC_ERROR, 'Failed to delete Location', [], HTTP: 500);
+            return;
+        }
+        $this->locationDatabaseController->commitTransaction();
+
+        http_response_code(204);
+    }
+
 
 
 

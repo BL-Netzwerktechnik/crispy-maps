@@ -125,6 +125,20 @@ class VoteDatabaseController extends DatabaseController
         return $statement->rowCount() > 0;    
     }
 
+    public function locationHasVotes(LocationModel $locationModel): bool
+    {
+        Logger::getLogger(__METHOD__)->debug('Called', debug_backtrace(!DEBUG_BACKTRACE_PROVIDE_OBJECT | DEBUG_BACKTRACE_IGNORE_ARGS, 2)[1] ?? []);
+        Logger::getLogger(__METHOD__)->debug('Checking if location has votes', ['location' => $locationModel->getId()]);
+
+        $statement = $this->getDatabaseConnector()->prepare(sprintf('SELECT * FROM %s WHERE location = :location LIMIT 1;', self::tableName));
+
+        $statement->execute([
+            ':location' => $locationModel->getId(),
+        ]);
+
+        return $statement->rowCount() > 0;
+    }
+
     public function voteExistsByLocationAndUser(LocationModel $locationModel, UserModel $user): bool
     {
         Logger::getLogger(__METHOD__)->debug('Called', debug_backtrace(!DEBUG_BACKTRACE_PROVIDE_OBJECT | DEBUG_BACKTRACE_IGNORE_ARGS, 2)[1] ?? []);
@@ -295,6 +309,21 @@ class VoteDatabaseController extends DatabaseController
 
         return $this->getVoteyById($this->getDatabaseConnector()->lastInsertId());
     }
+
+
+    public function deleteByLocation(LocationModel $locationModel): bool
+    {
+        if ($this->getDatabaseConnector() && $this->getDatabaseConnector()->inTransaction() === false) {
+            throw new Exception('Cannot delete template, because no transaction is active.');
+        }
+
+        $statement = $this->getDatabaseConnector()->prepare(sprintf('DELETE FROM %s WHERE location = :location;', self::tableName));
+
+        $statement->bindValue(':location', $locationModel->getId());
+
+        return $statement->execute();
+    }
+    
 
     public function deleteVote(VoteModel $voteModel): bool
     {

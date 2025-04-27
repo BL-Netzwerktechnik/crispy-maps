@@ -89,6 +89,7 @@ class InitEventSubscriber implements EventSubscriberInterface
 
         Router::add(route: "/admin/location/{id:\d+}", routeType: RouteType::PUBLIC, class: EditLocationPageController::class, method: Route::GET);
         Router::add(route: "/admin/location/{id:\d+}", routeType: RouteType::PUBLIC, class: EditLocationPageController::class, method: Route::POST, callable: "processPOSTRequest");
+        Router::add(route: "/admin/location/{id:\d+}", routeType: RouteType::PUBLIC, class: EditLocationPageController::class, method: Route::DELETE, callable: "processDELETERequest");
 
         Router::add(route: "/admin/location/create", routeType: RouteType::PUBLIC, class: CreateLocationPageController::class, method: Route::GET);
         Router::add(route: "/admin/location/create", routeType: RouteType::PUBLIC, class: CreateLocationPageController::class, method: Route::POST, callable: "processPOSTRequest");

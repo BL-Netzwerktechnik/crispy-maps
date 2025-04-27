@@ -21,6 +21,40 @@ $("[role='delete-report']").on("click", function () {
     });
 });
 
+
+$("[role='delete']").on("click", function () {
+    Swal.fire({
+        title: "Löschen bestätigen",
+        text: "Möchten Sie diese Location wirklich löschen?",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "#3085d6",
+        cancelButtonColor: "#d33",
+        confirmButtonText: "Ja, löschen!",
+    }).then((result) => {
+        if (result.isConfirmed) {
+            $.ajax({
+                url: window.location.href,
+                type: "DELETE",
+                success: function (data) {
+                    Swal.fire({
+                        title: "Löschen erfolgreich",
+                        icon: "success",
+                    });
+                    window.location.href = "/admin/map";
+                },
+                error: function (data) {
+                    Swal.fire({
+                        title: "Aktion fehlgeschlagen",
+                        text: "Es gab ein Problem bei der Aktion. Bitte versuche es später erneut.",
+                        icon: "error",
+                    });
+                },
+            });
+        }
+    });
+});
+
 $("form").on("submit", function (e) {
     e.preventDefault();
     var form = $(this);

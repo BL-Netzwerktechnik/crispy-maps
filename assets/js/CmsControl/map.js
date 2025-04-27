@@ -23,7 +23,6 @@ function updateMap(config, map) {
             }
             geoJsonLayer = L.geoJSON(data, {
                 pointToLayer: function (feature, latlng) {
-                    console.log(feature);
                     return L.marker(latlng, {
                         icon: L.AwesomeMarkers.icon({
                             icon: feature.properties.icon.name,

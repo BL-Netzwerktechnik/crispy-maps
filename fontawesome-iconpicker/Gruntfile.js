@@ -40,12 +40,7 @@ module.exports = function(grunt) {
                             let icon = 'fa-' + key;
                             ele.styles.forEach(function(style) {
                                 style = style.toLowerCase();
-                                if (style.startsWith('brand')) {
-                                    targetJSON.icons.push({
-                                        title: 'fa-brand ' + icon,
-                                        searchTerms: ele.search.terms
-                                    });
-                                } else if (style.startsWith('solid')) {
+                                if (style.startsWith('solid')) {
                                     targetJSON.icons.push({
                                         title: 'fa-solid ' + icon,
                                         searchTerms: ele.search.terms

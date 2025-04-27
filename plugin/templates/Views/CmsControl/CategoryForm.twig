@@ -54,8 +54,16 @@
 	$("#iconpicker").on("iconpickerSetValue", function(event) {
 		var icon = event.iconpickerValue;
 
-		icon = icon.slice(7);
+		icon = icon.replace("fa-solid", "");
+		icon = icon.replace("fa-regular", "");
+		icon = icon.replace("fa-brands", "");
+		icon = icon.replace("fa-light", "");
+		icon = icon.replace("fa-duotone", "");
+		icon = icon.replace("fa-thin", "");
+		icon = icon.replace("fa-", "");
 		
+		icon = icon.trim();
+
 		$("#icon").val(icon);
 	});
 

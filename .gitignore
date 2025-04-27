@@ -3,3 +3,5 @@ public/includes/vendor
 generated_theme
 vendor/
 node_modules/
+plugin/tmp
+!plugin/tmp/.keep

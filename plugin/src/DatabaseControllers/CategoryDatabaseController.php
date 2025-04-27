@@ -18,6 +18,8 @@ class CategoryDatabaseController extends DatabaseController
     private const tableName = 'lostplaces_categories';
     public const rowsPerPage = 15;
 
+    private array $categoryCache = [];
+
     public function __construct()
     {
         parent::__construct();
@@ -32,7 +34,10 @@ class CategoryDatabaseController extends DatabaseController
             return $this->createFallbackCategory();
         }
 
-        return new CategoryModel(
+        Logger::getLogger(__METHOD__)->info('Saving to cache', $row);
+
+
+        $categoryCache[$row['id']] = new CategoryModel(
             id: $row['id'],
             name: $row['name'],
             description: $row['description'],
@@ -40,6 +45,8 @@ class CategoryDatabaseController extends DatabaseController
             createdAt: Carbon::parse($row['created_at'], $_ENV['TZ'] ?? 'UTC'),
             updatedAt: Carbon::parse($row['updated_at'], $_ENV['TZ'] ?? 'UTC'),
         );
+
+        return $categoryCache[$row['id']];
     }
     public function getCategoryById(int $id): ?CategoryModel
     {
@@ -50,6 +57,10 @@ class CategoryDatabaseController extends DatabaseController
             return $this->createFallbackCategory();
         }
 
+        if (isset($this->categoryCache[$id])) {
+            Logger::getLogger(__METHOD__)->debug('Category found in cache', ['id' => $id]);
+            return $this->categoryCache[$id];
+        }
 
         $statement = $this->getDatabaseConnector()->query(sprintf('SELECT * FROM %s WHERE id = %s LIMIT 1;', self::tableName, $id));
 

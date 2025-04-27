@@ -2,6 +2,7 @@
 
 namespace blfilme\lostplaces\EventSubscribers;
 
+use blfilme\lostplaces\CommandControllers\ImportCommandController;
 use blfilme\lostplaces\PageControllers\CmsControl\CategoriesPageController;
 use blfilme\lostplaces\PageControllers\CmsControl\CreateCategoriesPageController;
 use blfilme\lostplaces\PageControllers\CmsControl\CreateLocationPageController;
@@ -18,6 +19,7 @@ use blfilme\lostplaces\PageControllers\Public\ReportLocationPageController;
 use blfilme\lostplaces\PageControllers\Public\VoteLocationPageController;
 use crisp\api\Config;
 use crisp\api\Helper as ApiHelper;
+use crisp\core\CLI;
 use crisp\core\Logger;
 use crisp\core\Migrations;
 use crisp\core\Router;
@@ -41,7 +43,8 @@ class InitEventSubscriber implements EventSubscriberInterface
         return [
             MigrationEvents::THEME_MIGRATIONS_FINISHED => 'migrate',
             PluginActivatedEvent::class => 'migrate',
-            ThemeEvents::SETUP => 'onSetup'
+            ThemeEvents::SETUP => 'onSetup',
+            ThemeEvents::SETUP_CLI => 'onSetupCli'
         ];
     }
 
@@ -109,5 +112,16 @@ class InitEventSubscriber implements EventSubscriberInterface
 
         Router::add(route: "/config.json", routeType: RouteType::PUBLIC, class: ConfigJsonPageController::class, method: Route::GET);
         Router::add(route: Config::get("LostPlaces_MapPath"), routeType: RouteType::PUBLIC, class: MapJsonPageController::class, method: Route::GET);
+
+
     }
+
+
+    public function onSetupCli(Event $event): void
+    {
+
+        
+        CLI::get()->add(new ImportCommandController());
+    }
+
 }

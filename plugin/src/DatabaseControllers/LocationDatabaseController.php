@@ -8,6 +8,7 @@ use blfilme\lostplaces\Enums\LocationStatus;
 use blfilme\lostplaces\Enums\MarkerColors;
 use blfilme\lostplaces\Models\CategoryModel;
 use blfilme\lostplaces\Models\CoordinateModel;
+use blfilme\lostplaces\Models\HeatMapModel;
 use blfilme\lostplaces\Models\LocationDistanceModel;
 use blfilme\lostplaces\Models\LocationModel;
 use Carbon\Carbon;
@@ -38,7 +39,6 @@ class LocationDatabaseController extends DatabaseController
     private function ConvertRowToClass(array $row): LocationModel
     {
         Logger::getLogger(__METHOD__)->debug('Called', debug_backtrace(!DEBUG_BACKTRACE_PROVIDE_OBJECT | DEBUG_BACKTRACE_IGNORE_ARGS, 2)[1] ?? []);
-        Logger::getLogger(__METHOD__)->debug('Converting row to class', $row);
         return new LocationModel(
             id: $row['id'],
             name: $row['name'],
@@ -187,7 +187,7 @@ LIMIT %s;', self::tableName, self::tableName, $limit));
      */
     public function fetchAllLocations(string $Order = 'ASC', string $OrderCol = 'id'): array
     {
-        $statement = $this->getDatabaseConnector()->query(sprintf("SELECT *, ST_Y(marker_location) AS latitude, ST_X(marker_location) AS longitude FROM %s ORDER BY $OrderCol $Order;", self::tableName));
+        $statement = $this->getDatabaseConnector()->query(sprintf("SELECT *, ST_Y(marker_location) AS latitude, ST_X(marker_location) AS longitude FROM %s ORDER BY $OrderCol $Order LIMIT 500;", self::tableName));
 
         if ($statement->rowCount() === 0) {
             return [];
@@ -201,6 +201,116 @@ LIMIT %s;', self::tableName, self::tableName, $limit));
 
         return $_rows;
     }
+    
+
+    /**
+     * Undocumented function
+     *
+     * @return CoordinateModel[]
+     */
+    public function fetchAllLocationsCoordinates(): array
+    {
+        $statement = $this->getDatabaseConnector()->query(sprintf('SELECT ST_Y(marker_location) AS latitude, ST_X(marker_location) AS longitude FROM %s;', self::tableName));
+
+        if ($statement->rowCount() === 0) {
+            return [];
+        }
+
+        $_rows = [];
+
+        foreach ($statement->fetchAll(PDO::FETCH_ASSOC) as $Row) {
+            $_rows[] = new CoordinateModel($Row['latitude'], $Row['longitude']);
+        }
+
+        return $_rows;
+    }
+
+
+
+
+    /**
+     * Undocumented function
+     *
+     * @param float $minLat
+     * @param float $maxLat
+     * @param float $minLon
+     * @param float $maxLon
+     * @return HeatMapModel[]
+     */
+    public function fetchHeatmapByBoundary(float $minLat, float $maxLat, float $minLon, float $maxLon): array
+    {
+        Logger::getLogger(__METHOD__)->debug('Called', debug_backtrace(!DEBUG_BACKTRACE_PROVIDE_OBJECT | DEBUG_BACKTRACE_IGNORE_ARGS, 2)[1] ?? []);
+        Logger::getLogger(__METHOD__)->debug('Fetching all locations by boundary', ['minLat' => $minLat, 'maxLat' => $maxLat, 'minLon' => $minLon, 'maxLon' => $maxLon]);
+
+        $statement = $this->getDatabaseConnector()->prepare(sprintf('SELECT AVG(ST_Y(marker_location)) AS latitude, AVG(ST_X(marker_location)) AS longitude, COUNT(*) AS weight FROM %s WHERE ST_Intersects(marker_location,ST_MakeEnvelope(:minLon, :minLat, :maxLon, :maxLat, 4326)) GROUP BY ST_SnapToGrid(marker_location, 0.01, 0.01);', self::tableName));
+
+        $statement->execute([
+            ':minLat' => $minLat,
+            ':maxLat' => $maxLat,
+            ':minLon' => $minLon,
+            ':maxLon' => $maxLon,
+        ]);
+
+        if ($statement->rowCount() === 0) {
+            return [];
+        }
+
+        $_rows = [];
+
+        foreach ($statement->fetchAll(PDO::FETCH_ASSOC) as $Row) {
+            $_rows[] = new HeatMapModel(
+                coordinate: new CoordinateModel($Row['latitude'], $Row['longitude']),
+                weight: $Row['weight'],
+            );
+        }
+
+        return $_rows;
+    }
+
+    public function fetchAllLocationsByBoundary(float $minLat, float $maxLat, float $minLon, float $maxLon): array
+    {
+        Logger::getLogger(__METHOD__)->debug('Called', debug_backtrace(!DEBUG_BACKTRACE_PROVIDE_OBJECT | DEBUG_BACKTRACE_IGNORE_ARGS, 2)[1] ?? []);
+        Logger::getLogger(__METHOD__)->debug('Fetching all locations by boundary', ['minLat' => $minLat, 'maxLat' => $maxLat, 'minLon' => $minLon, 'maxLon' => $maxLon]);
+
+        $statement = $this->getDatabaseConnector()->prepare(sprintf('SELECT *, ST_Y(marker_location) AS latitude, ST_X(marker_location) AS longitude FROM %s WHERE ST_Intersects(marker_location, ST_MakeEnvelope(:minLon, :minLat, :maxLon, :maxLat, 4326)) LIMIT 1000;', self::tableName));
+
+        $statement->execute([
+            ':minLat' => $minLat,
+            ':maxLat' => $maxLat,
+            ':minLon' => $minLon,
+            ':maxLon' => $maxLon,
+        ]);
+
+        if ($statement->rowCount() === 0) {
+            return [];
+        }
+
+        $_rows = [];
+
+        foreach ($statement->fetchAll(PDO::FETCH_ASSOC) as $Row) {
+            $_rows[] = $this->ConvertRowToClass($Row);
+        }
+
+        return $_rows;
+    }
+
+    public function countAllLocationsByBoundary(float $minLat, float $maxLat, float $minLon, float $maxLon): int
+    {
+        Logger::getLogger(__METHOD__)->debug('Called', debug_backtrace(!DEBUG_BACKTRACE_PROVIDE_OBJECT | DEBUG_BACKTRACE_IGNORE_ARGS, 2)[1] ?? []);
+        Logger::getLogger(__METHOD__)->debug('Counting all locations by boundary', ['minLat' => $minLat, 'maxLat' => $maxLat, 'minLon' => $minLon, 'maxLon' => $maxLon]);
+
+        $statement = $this->getDatabaseConnector()->prepare(sprintf('SELECT COUNT(*) FROM %s WHERE ST_Intersects(marker_location, ST_MakeEnvelope(:minLon, :minLat, :maxLon, :maxLat, 4326));', self::tableName));
+
+        $statement->execute([
+            ':minLat' => $minLat,
+            ':maxLat' => $maxLat,
+            ':minLon' => $minLon,
+            ':maxLon' => $maxLon,
+        ]);
+
+        return (int)$statement->fetchColumn();
+    }
+
 
     public function insertLocation(LocationModel $locationModel): LocationModel
     {
@@ -231,8 +341,6 @@ LIMIT %s;', self::tableName, self::tableName, $limit));
             $Columns[] = substr($Column, 1);
             $ParsedValues[] = $Column;
         }
-
-        Logger::getLogger(__METHOD__)->info('SQL Query', [sprintf($SQLTemplate, self::tableName, implode(', ', $Columns), implode(', ', $ParsedValues), $locationModel->getCoordinates()->toPostGIS())]);
 
         $statement = $this->getDatabaseConnector()->prepare(sprintf($SQLTemplate, self::tableName, implode(', ', $Columns), implode(', ', $ParsedValues), $locationModel->getCoordinates()->toPostGIS()));
 
@@ -265,7 +373,7 @@ LIMIT %s;', self::tableName, self::tableName, $limit));
         if ($this->getDatabaseConnector() && $this->getDatabaseConnector()->inTransaction() === false) {
             throw new Exception('Cannot delete template, because no transaction is active.');
         }
-        
+
         if (!$this->canDeleteLocation($locationModel)) {
             throw new Exception('Cannot delete location, because it has reports or votes.');
         }

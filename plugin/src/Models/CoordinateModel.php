@@ -76,4 +76,16 @@ class CoordinateModel
     {
         return sprintf("ST_SetSRID(ST_MakePoint(%s, %s), 4326)", $this->longitude, $this->latitude);
     }
+
+    public function toGeoJsonFeature(): array
+    {
+        return [
+            'type' => 'Feature',
+            'geometry' => [
+                'type' => 'Point',
+                'coordinates' => [$this->longitude, $this->latitude],
+            ],
+            'properties' => [],
+        ];
+    }
 }

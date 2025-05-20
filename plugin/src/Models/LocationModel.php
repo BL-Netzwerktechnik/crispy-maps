@@ -256,7 +256,7 @@ class LocationModel
             'id' => $this->id,
             'category' => $this->category->toArray(),
             'icon' => $this->getIcon()->toArray(),
-            'popupContent' => $editMarker ? Themes::render("lostplaces/templates/Components/CmsControl/MapPopup.twig") : Themes::render("lostplaces/templates/Components/MapPopup.twig"),
+            'popupContent' => $editMarker ? Themes::render("maps/templates/Components/CmsControl/MapPopup.twig") : Themes::render("maps/templates/Components/MapPopup.twig"),
             'markerColor' => $this->status->getColor()->value,
         ];
     }

@@ -67,8 +67,8 @@ services:
         - THEME_GIT_COMMIT=${THEME_GIT_COMMIT}
     volumes:
       - crisp:/data
-      - ./plugin:/plugins/lostplaces
-      - ./nginx/assets.conf:/etc/nginx/crisp.conf.d/lostplaces_assets.conf
+      - ./plugin:/plugins/maps
+      - ./nginx/assets.conf:/etc/nginx/crisp.conf.d/maps_assets.conf
       - ./assets:/assets
       - ./.env:/var/www/crisp/.env
 

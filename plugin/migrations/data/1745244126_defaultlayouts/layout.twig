@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>{{ Page.name|default(title) }} - {{ config.CMSControl_SiteName }}</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  <link rel="stylesheet" href="{{ includeResource("vendor/libs/ckeditor5/ckeditor5-content.css") }}"/>
+  <link rel="stylesheet" href="{{ includeResource("ugc/assets/css/custom.css") }}"/>
+  <style>
+    .lostplaces-divider {
+	height: 1.5rem;
+	background-color: rgba(0, 0, 0, .1);
+	border: solid rgba(0, 0, 0, .15);
+	border-width: 1px 0;
+	box-shadow: inset 0 .5em 1.5em rgba(0, 0, 0, .1), inset 0 .125em .5em rgba(0, 0, 0, .15);
+}
+  </style>
+  {% block Stylesheets %}
+  {% endblock %}
+  {% block Head %}
+  {% endblock %}
+</head>
+<body>
+<nav class="navbar-expand-lg navbar navbar-dark bg-dark">
+  <div class="container-fluid">
+    <a class="navbar-brand" href="/">{{ config.CMSControl_SiteName }}</a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarNav">
+      <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+        <li class="nav-item">
+          <a class="nav-link active" aria-current="page" href="/map">Karte</a>
+        </li>
+      </ul>
+      {% if User is defined %}
+      <ul class="navbar-nav">
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+            {{ User.name }}
+          </a>
+          <ul class="dropdown-menu">
+            <li><a class="dropdown-item" href="/logout">Abmelden</a></li>
+          </ul>
+        </li>
+      </ul>
+	  {% else %}
+      <ul class="navbar-nav">
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+           	Konto
+          </a>
+          <ul class="dropdown-menu">
+            <li><a class="dropdown-item" href="/admin/register">Registrieren</a></li>
+            <li><a class="dropdown-item" href="/admin/login">Anmelden</a></li>
+          </ul>
+        </li>
+      </ul>
+	  {% endif %}
+    </div>
+  </div>
+</nav>
+  <div class="ck ck-content">{% block Content %}{% endblock %}</div> 
+  {% if not hideFooter %}
+	  <div class="lostplaces-divider mt-5"></div>
+  <div class="container">
+  <footer class="py-3 my-4">
+    <ul class="nav justify-content-center border-bottom pb-3 mb-3">
+      <li class="nav-item"><a href="/" class="nav-link px-2 text-muted">Home</a></li>
+    </ul>
+    <p class="text-center text-muted">© {{ date('Y') }} {{ config.CMSControl_SiteName }}</p>
+  </footer>
+</div>
+  {% endif %}
+</body>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js" integrity="sha512-v2CJ7UaYy4JwqLDIrZUI/4hqeoQieOmAZNXBeQyjo21dadnwR+8ZaIJVT8EE2iyI61OV8e6M8PP2/4hpQINQ/g==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+  {% block Scripts %}
+  {% endblock %}
+</html>

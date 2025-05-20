@@ -64,7 +64,7 @@ class CategoriesPageController
 
 
 
-        echo Themes::render("lostplaces/templates/Views/CmsControl/Categories.twig");
+        echo Themes::render("maps/templates/Views/CmsControl/Categories.twig");
     }
 
     public function postRender(): void {}

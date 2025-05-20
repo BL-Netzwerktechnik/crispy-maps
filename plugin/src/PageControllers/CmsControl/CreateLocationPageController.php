@@ -155,6 +155,6 @@ class CreateLocationPageController
         ThemeVariables::set("Statuses", LocationStatus::cases());
         ThemeVariables::set("Properties", LocationProperties::cases());
         ThemeVariables::set("hideMap", true);
-        echo Themes::render("lostplaces/templates/Views/CmsControl/LocationForm.twig");
+        echo Themes::render("maps/templates/Views/CmsControl/LocationForm.twig");
     }
 }

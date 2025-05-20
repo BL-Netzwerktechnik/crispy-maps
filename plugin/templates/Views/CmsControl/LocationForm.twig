@@ -1,5 +1,5 @@
 {% extends "Base.twig" %}
-{% set pageTitle = "Lost Place Location - " ~ Location.name %}
+{% set pageTitle = "Maps Location - " ~ Location.name %}
 {% set currentPage = 'admin/lp/locations' %}
 {% set load_quill = true %}
 
@@ -33,7 +33,7 @@
 
 				<div class="my-2">
 					<label class="form-label" for="location-description">Beschreibung</label>
-					{% include "lostplaces/templates/Components/CKEditor.twig" with {'Content': Location.description } %}
+					{% include "maps/templates/Components/CKEditor.twig" with {'Content': Location.description } %}
 				</div>
 
 				<div

@@ -92,7 +92,7 @@ class ReportsPageController
 
 
 
-        echo Themes::render("lostplaces/templates/Views/CmsControl/Reports.twig");
+        echo Themes::render("maps/templates/Views/CmsControl/Reports.twig");
     }
 
     public function postRender(): void {}

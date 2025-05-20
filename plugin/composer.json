@@ -1,6 +1,6 @@
 {
-    "name": "blfilme/lostplaces",
-    "description": "Lostplaces Map Plugin for Crispy",
+    "name": "blfilme/maps",
+    "description": "Map Plugin for Crispy",
     "version": "1.0.0",
     "autoload": {
           "psr-4": {

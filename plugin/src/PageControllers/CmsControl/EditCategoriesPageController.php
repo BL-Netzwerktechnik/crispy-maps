@@ -161,6 +161,6 @@ class EditCategoriesPageController
 
         ThemeVariables::set("Category", $Category->toArray());
 
-        echo Themes::render("lostplaces/templates/Views/CmsControl/CategoryForm.twig");
+        echo Themes::render("maps/templates/Views/CmsControl/CategoryForm.twig");
     }
 }

@@ -227,6 +227,6 @@ class EditLocationPageController
         ThemeVariables::set("elFinderUploadTargetHash", $Location->getUploadFilePathHash());
 
 
-        echo Themes::render("lostplaces/templates/Views/CmsControl/LocationForm.twig");
+        echo Themes::render("maps/templates/Views/CmsControl/LocationForm.twig");
     }
 }

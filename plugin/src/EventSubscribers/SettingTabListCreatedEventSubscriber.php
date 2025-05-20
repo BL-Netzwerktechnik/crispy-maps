@@ -52,7 +52,7 @@ class SettingTabListCreatedEventSubscriber implements EventSubscriberInterface
             text: "LostPlaces Karte",
             icon: "fas fa-map",
             tabPane: new SettingsTabPaneModel(
-                content: Themes::render("lostplaces/templates/Settings/TabContent.twig")
+                content: Themes::render("maps/templates/Settings/TabContent.twig")
             )
         ));
     }

@@ -107,6 +107,6 @@ class CreateCategoriesPageController
 
 
 
-        echo Themes::render("lostplaces/templates/Views/CmsControl/CategoryForm.twig");
+        echo Themes::render("maps/templates/Views/CmsControl/CategoryForm.twig");
     }
 }

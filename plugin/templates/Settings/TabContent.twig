@@ -3,6 +3,7 @@
         "type": "text",
         "id": "settings-lostplaces-map-path",
         "name": "LostPlaces_MapPath",
+        "required": true,
         "value": config.LostPlaces_MapPath,
         "label": "Kartenansicht: URL Pfad",
         "hint": "Der URL Pfad der Kartenansicht",
@@ -11,6 +12,7 @@
         "type": "text",
         "id": "settings-lostplaces-map-attribution",
         "name": "LostPlaces_MapAttribution",
+        "required": true,
         "value": config.LostPlaces_MapAttribution,
         "label": "Kartenansicht: Attribution",
         "hint": "Die Attribution die in der Kartenansicht angezeigt wird",
@@ -19,6 +21,7 @@
         "type": "text",
         "id": "settings-lostplaces-map-tileserver",
         "name": "LostPlaces_MapTileServer",
+        "required": true,
         "value": config.LostPlaces_MapTileServer,
         "label": "Kartenansicht: Tile Server",
         "hint": "Der Tile Server der für die Kartenansicht verwendet wird",
@@ -38,6 +41,7 @@
         "type": "select",
         "id": "settings-lostplaces-icon-class",
         "name": "LostPlaces_IconClass",
+        "required": true,
         "items": [
             {"value": "\blfilme\lostplaces\Models\IconModels\FontAwesomeSolidIconModel", "text": "Font Awesome Solid", selected: config.LostPlaces_IconClass == "FontAwesomeSolidIconModel"}
         ],	
@@ -49,6 +53,7 @@
         "type": "select",
         "id": "settings-lostplaces-fileprovider-class",
         "name": "LostPlaces_FileProvider",
+        "required": true,
         "items": [
             {"value": "LocalFileProvider", "text": "Lokal", selected: config.LostPlaces_FileProvider == "LocalFileProvider"}
         ],	
@@ -59,6 +64,7 @@
         "type": "select",
         "id": "settings-lostplaces-location-template",
         "name": "LostPlaces_LocationTemplate",
+        "required": true,
         "items": LostPlaces_LocationTemplateList,	
         "label": "Location Template",
         "hint": "Das Template das für die Location verwendet wird",
@@ -73,6 +79,7 @@
         "type": "text",
         "id": "settings-lostplaces-provider-path",
         "name": "LostPlaces_ProviderPath",
+        "required": true,
         "value": config.LostPlaces_ProviderPath,
         "label": "Lokaler Pfad",
         "hint": "Der lokale Pfad zu den Dateien, relativ zum /data Verzeichnis",

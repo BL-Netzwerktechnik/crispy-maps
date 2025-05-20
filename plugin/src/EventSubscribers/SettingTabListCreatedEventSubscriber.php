@@ -49,7 +49,7 @@ class SettingTabListCreatedEventSubscriber implements EventSubscriberInterface
 
         $settingsTabListModel = $event->getTabList();
         $settingsTabListModel->addNavItem(new SettingsNavItemModel(
-            text: "LostPlaces Karte",
+            text: "Crispy Maps",
             icon: "fas fa-map",
             tabPane: new SettingsTabPaneModel(
                 content: Themes::render("maps/templates/Settings/TabContent.twig")

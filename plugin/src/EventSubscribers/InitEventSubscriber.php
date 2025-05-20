@@ -54,30 +54,6 @@ class InitEventSubscriber implements EventSubscriberInterface
         $Migrations = new Migrations();
 
         $Migrations->migrate(__DIR__ . '/../../', 'bl-filme/lost-places');
-
-        if (!Config::exists("LostPlaces_MapPath") || empty(Config::get("LostPlaces_MapPath"))) {
-            Config::set("LostPlaces_MapPath", "/map.json");
-        }
-
-        if (!Config::exists("LostPlaces_IconClass") || empty(Config::get("LostPlaces_IconClass"))) {
-            Config::set("LostPlaces_IconClass", "\blfilme\lostplaces\Models\IconModels\FontAwesomeSolidIconModel");
-        }
-
-        if (!Config::exists("LostPlaces_ProviderPath") || empty(Config::get("LostPlaces_ProviderPath"))) {
-            Config::set("LostPlaces_ProviderPath", "uploads");
-        }
-
-        if (!Config::exists("LostPlaces_FileProvider") || empty(Config::get("LostPlaces_FileProvider"))) {
-            Config::set("LostPlaces_FileProvider", "LocalFileProvider");
-        }
-
-        if (!Config::exists("LostPlaces_MapAttribution") || empty(Config::get("LostPlaces_MapAttribution"))) {
-            Config::set("LostPlaces_MapAttribution", '&copy; <a href="https://openstreetmap.org">OpenStreetMap</a> Contributors');
-        }
-
-        if (!Config::exists("LostPlaces_MapTileServer") || empty(Config::get("LostPlaces_MapTileServer"))) {
-            Config::set("LostPlaces_MapTileServer", "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png");
-        }
     }
 
     public function onSetup(Event $event)

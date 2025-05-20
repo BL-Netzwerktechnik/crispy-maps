@@ -64,12 +64,15 @@ class defaultlayouts extends Migrations
                 $this->begin();
             }
 
-            $layout = $this->LayoutDatabaseController->insertLayout(new LayoutModel(
-                name: 'Default Maps Layout',
-                content: file_get_contents(__DIR__ . '/data/1745244126_defaultlayouts/layout.twig'),
-                slug: 'default-maps-layout-',
-                author: 0,
-            ));
+            $layout = $this->LayoutDatabaseController->getLayoutById(0);
+
+            if(!$layout){
+                return $this->end();
+            }
+
+            $layout->setContent(file_get_contents(__DIR__ . '/data/1745244126_defaultlayouts/layout.twig'));
+
+            $this->LayoutDatabaseController->updateLayout($layout);
 
             $this->TemplateDatabaseController->insertTemplates(new TemplateModel(
                 name: 'Default Location Container',

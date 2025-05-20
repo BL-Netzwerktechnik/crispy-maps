@@ -60,7 +60,7 @@ class NavbarEventSubscriber implements EventSubscriberInterface
         $event->getNavbar()->addItemsAfter(
             "files",
             new \Crispy\Models\NavbarDividerModel(
-                title: 'Lost Places',
+                title: 'Crispy Maps',
                 permissions: [
                     Permissions::READ_PAGES->value,
                     Permissions::SUPERUSER->value,

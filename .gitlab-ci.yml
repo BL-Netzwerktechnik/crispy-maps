@@ -138,7 +138,7 @@ Publish.Release:
   stage: release
   image: registry.gitlab.com/gitlab-org/release-cli:latest
   dependencies:
-      - Publish.Tag
+      - stable
   script:
     - 'echo "Releasing version ${CI_COMMIT_TAG}"'
   release:

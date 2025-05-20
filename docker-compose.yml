@@ -1,0 +1,30 @@
+services:
+
+  crisp:
+    build:
+      context: .
+      args:
+        - CRISP_VERSION=nightly
+    restart: always
+    ports:
+      - 80:80
+    environment:
+      - POSTGRES_URI=postgres://postgres:postgres@postgres:5432/postgres
+      - HOST=localhost
+      - PROTO=https
+    volumes:
+      - crisp:/data
+
+  postgres:
+    image: 'postgis/postgis:14-3.5-alpine'
+    restart: always
+    ports:
+      - 5432:5432
+    environment:
+      - POSTGRES_PASSWORD=postgres
+    volumes:
+      - postgres:/var/lib/postgresql/data
+
+volumes:
+  crisp:
+  postgres:

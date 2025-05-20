@@ -1,4 +1,4 @@
-
+# Crispy Maps
 
 **Crispy Maps** is a plugin for CrispyCMS that allows easy integration of interactive maps with categorized location markers.
 
@@ -34,7 +34,7 @@ Once Crispy CMS adds official support for plugin translations, we plan to offer 
 
 ## 🚀 Installation
 
-To get started quickly, use the included `docker-compose.yaml`:
+To get started quickly, use the included `docker-compose.yml`:
 
 ```bash
 git clone https://github.com/BL-Netzwerktechnik/crispy-maps.git

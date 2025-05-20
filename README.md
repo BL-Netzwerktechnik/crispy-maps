@@ -45,12 +45,15 @@ docker-compose up --build
 
 The app will be available at `http://localhost:80`.
 
----
 
 ## 🤝 Contributing & Issues
 
-This repository is a **mirror** of our internal Git server. As a result, changes, pull requests, or issue responses may not appear immediately.
+This repository is a **mirror** of our internal GitLab instance. As such, **GitHub pull requests cannot be merged directly** into the main codebase.
 
-We use **Jira** internally for issue tracking. If your GitHub issue is linked to a Jira ticket, don’t be surprised if public activity appears low — discussions are likely happening internally.
+If you would like to contribute, feel free to open a pull request or an issue here on GitHub. We **manually review and import** accepted changes into our internal GitLab repository, and they are later mirrored back to GitHub.
+
+> ✉️ **Important:** If your pull request is merged internally, we will ensure that your original **commit attribution is preserved**, so your contributions remain visible and credited in the commit history.
+
+We use **Jira** for internal issue tracking. If your GitHub issue is linked to a Jira ticket, don’t be surprised if there’s limited visible activity here — discussions may be ongoing internally.
 
 We still encourage contributions, bug reports, and feature suggestions — feel free to open a [GitHub Issue](https://github.com/BL-Netzwerktechnik/crispy-maps/issues)!

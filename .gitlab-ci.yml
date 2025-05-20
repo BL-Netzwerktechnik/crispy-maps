@@ -33,8 +33,8 @@ nightly:
   script:
   - /kaniko/executor --context "${CI_PROJECT_DIR}" --dockerfile "${CI_PROJECT_DIR}/Dockerfile"
     --destination "${CI_REGISTRY_IMAGE}:nightly"
-    --build-arg THEME_GIT_COMMIT=${CI_COMMIT_SHORT_SHA}
-    --build-arg THEME_GIT_TAG=nightly
+    --build-arg MAPS_THEME_GIT_COMMIT=${CI_COMMIT_SHORT_SHA}
+    --build-arg MAPS_THEME_GIT_TAG=nightly
 
   rules:
     - if: $CI_COMMIT_REF_NAME == $CI_DEFAULT_BRANCH
@@ -61,8 +61,8 @@ stable:
     --destination "${CI_REGISTRY_IMAGE}:${TAG_MAJOR}.${TAG_MINOR}.${TAG_PATCH}"
     --destination "${CI_REGISTRY_IMAGE}:stable"
     --destination "${CI_REGISTRY_IMAGE}:nightly"
-    --build-arg THEME_GIT_COMMIT=${CI_COMMIT_SHORT_SHA}
-    --build-arg THEME_GIT_TAG=${CI_COMMIT_TAG}
+    --build-arg MAPS_THEME_GIT_COMMIT=${CI_COMMIT_SHORT_SHA}
+    --build-arg MAPS_THEME_GIT_TAG=${CI_COMMIT_TAG}
 
   rules:
     - if: '$CI_COMMIT_TAG =~ /^\d+\.\d+\.\d+$/'
@@ -84,8 +84,8 @@ prerelease:
   - /kaniko/executor --context "${CI_PROJECT_DIR}" --dockerfile "${CI_PROJECT_DIR}/Dockerfile"
     --destination "${CI_REGISTRY_IMAGE}:${CI_COMMIT_TAG}"
     --destination "${CI_REGISTRY_IMAGE}:nightly"
-    --build-arg THEME_GIT_COMMIT=${CI_COMMIT_SHORT_SHA}
-    --build-arg THEME_GIT_TAG=${CI_COMMIT_TAG}
+    --build-arg MAPS_THEME_GIT_COMMIT=${CI_COMMIT_SHORT_SHA}
+    --build-arg MAPS_THEME_GIT_TAG=${CI_COMMIT_TAG}
   rules:
     - if: '$CI_COMMIT_TAG =~ /^\d+\.\d+\.\d+-[0-9A-Za-z.-]+$/'
 

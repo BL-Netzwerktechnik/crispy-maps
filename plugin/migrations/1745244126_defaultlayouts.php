@@ -24,12 +24,14 @@
 
 namespace crisp\migrations;
 
+use crisp\api\Config;
 use crisp\core\Bitmask;
 use crisp\core\Crypto;
 use crisp\core\Migrations;
 use crisp\core\RESTfulAPI;
 use Crispy\Controllers\TemplateGeneratorController;
 use Crispy\DatabaseControllers\LayoutDatabaseController;
+use Crispy\DatabaseControllers\PageDatabaseController;
 use Crispy\DatabaseControllers\TemplateDatabaseController;
 use Crispy\Enums\Permissions;
 use Crispy\Models\LayoutModel;
@@ -47,6 +49,7 @@ class defaultlayouts extends Migrations
     private LayoutDatabaseController $LayoutDatabaseController;
     private TemplateDatabaseController $TemplateDatabaseController;
     private TemplateGeneratorController $TemplateGeneratorController;
+    private PageDatabaseController $PageDatabaseController;
 
 
     public function __construct()
@@ -55,6 +58,7 @@ class defaultlayouts extends Migrations
         $this->LayoutDatabaseController = new LayoutDatabaseController();
         $this->TemplateDatabaseController = new TemplateDatabaseController();
         $this->TemplateGeneratorController = new TemplateGeneratorController();
+        $this->PageDatabaseController = new PageDatabaseController();
     }
 
     public function run()
@@ -74,21 +78,21 @@ class defaultlayouts extends Migrations
 
             $this->LayoutDatabaseController->updateLayout($layout);
 
-            $this->TemplateDatabaseController->insertTemplates(new TemplateModel(
+            $LocationTemplate = $this->TemplateDatabaseController->insertTemplates(new TemplateModel(
                 name: 'Default Location Container',
                 content: file_get_contents(__DIR__ . '/data/1745244126_defaultlayouts/locationcontainer.twig'),
                 author: 0,
                 directory: '',
-                slug: 'default-location-template-',
+                slug: 'default-location-template',
                 layout: $layout,
             ));
 
-            $this->TemplateDatabaseController->insertTemplates(new TemplateModel(
+            $MapTemplate = $this->TemplateDatabaseController->insertTemplates(new TemplateModel(
                 name: 'Default Map Container',
                 content: file_get_contents(__DIR__ . '/data/1745244126_defaultlayouts/mapcontainer.twig'),
                 author: 0,
                 directory: '',
-                slug: 'default-map-template-',
+                slug: 'default-map-template',
                 layout: $layout,
             ));
 
@@ -98,9 +102,20 @@ class defaultlayouts extends Migrations
                 content: file_get_contents(__DIR__ . '/data/1745244126_defaultlayouts/pagecontainer.twig'),
                 author: 0,
                 directory: '',
-                slug: 'default-page-template-',
+                slug: 'default-page-template',
                 layout: $layout,
             ));
+
+
+            $Page = $this->PageDatabaseController->getPageById(0);
+
+            if($Page){
+                $Page->setTemplate($MapTemplate);
+                $this->PageDatabaseController->updatePage($Page);
+            }
+
+            Config::set("LostPlaces_LocationTemplate", $LocationTemplate->getId());
+
 
             if ($this->Database->inTransaction()) {
                 $this->TemplateGeneratorController->generate();

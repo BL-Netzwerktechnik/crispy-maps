@@ -35,11 +35,8 @@ nightly:
     --destination "${CI_REGISTRY_IMAGE}:nightly"
     --build-arg MAPS_THEME_GIT_COMMIT=${CI_COMMIT_SHORT_SHA}
     --build-arg MAPS_THEME_GIT_TAG=nightly
-
   rules:
-    - if: $CI_COMMIT_REF_NAME == $CI_DEFAULT_BRANCH
-    - if: $CI_COMMIT_TAG
-      when: never
+    - if: '$CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH && $CI_COMMIT_TAG == null'
 
 stable:
   stage: publish

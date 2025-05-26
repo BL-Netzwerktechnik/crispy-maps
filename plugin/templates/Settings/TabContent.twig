@@ -27,17 +27,6 @@
         "hint": "Der Tile Server der für die Kartenansicht verwendet wird",
     } %}
 	{% include "Components/Input.twig" with {
-        "type": "text",
-        "id": "settings-lostplaces-netzdg-report-url",
-        "name": "LostPlaces_NetzDGReportUrl",
-        "value": config.LostPlaces_NetzDGReportUrl,
-        "label": "ReportModal: NetzDG URL",
-        "hint": "Die Weiterleitungs-URL die für die NetzDG Meldung verwendet wird",
-    } %}
-</div>
-<div class="row row-cols-2">
-
-	{% include "Components/Input.twig" with {
         "type": "select",
         "id": "settings-lostplaces-icon-class",
         "name": "LostPlaces_IconClass",
@@ -70,6 +59,29 @@
         "hint": "Das Template das für die Location verwendet wird",
     } %}
 </div>
+<div class="divider">
+	<div class="divider-text">Reporting</div>
+</div>
+<div class="row row-cols-2">
+	{% include "Components/Input.twig" with {
+        "type": "text",
+        "id": "settings-lostplaces-netzdg-report-url",
+        "name": "LostPlaces_NetzDGReportUrl",
+        "value": config.LostPlaces_NetzDGReportUrl,
+        "label": "ReportModal: NetzDG URL",
+        "hint": "Die Weiterleitungs-URL die für die NetzDG Meldung verwendet wird",
+    } %}
+	{% include "Components/Input.twig" with {
+        "type": "text",
+        "id": "settings-lostplaces-report-mail",
+        "name": "LostPlaces_ReportMail",
+        "placeholder": "max.mustermann@beispiel.tld,admin@beispiel.tld",
+        "items": LostPlaces_ReportMail,	
+        "label": "Report Modal: E-Mail",
+        "hint": "An diese E-Mail Adressen (Komma separiert) wird eine E-Mail gesendet, wenn ein Nutzer eine Location meldet",
+    } %}
+</div>
+
 <div class="divider">
 	<div class="divider-text">Lokaler Datei Provider</div>
 </div>

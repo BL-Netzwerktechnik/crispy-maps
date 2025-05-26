@@ -37,20 +37,10 @@ class NavbarEventSubscriber implements EventSubscriberInterface
         ];
     }
 
-    public function migrate(Event $event): void
-    {
-
-        $Migrations = new Migrations();
-
-        //$Migrations->migrate(__DIR__ . '/../', 'bl-filme/lost-places');
-    }
-
     public function onNavbarCreated(NavbarCreatedEvent $event): void
     {
 
-        $user = Sessions::isSessionValid() ? $this->userDatabaseController->getUserById($_SESSION['crisp_session_login']["user"]) : false;
-        
-
+        $user = Sessions::isSessionValid() ? $this->userDatabaseController->getUserById($_SESSION['crisp_session_login']["user"]) : false;      
         
         if ($user && $user->getRole()->getId() == 3 && str_starts_with($_SERVER['REQUEST_URI'], "/admin") && !preg_match('#^/admin/(register|login)#', $_SERVER['REQUEST_URI'])) {
             header("Location: /");

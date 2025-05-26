@@ -95,8 +95,6 @@ class InitEventSubscriber implements EventSubscriberInterface
 
     public function onSetupCli(Event $event): void
     {
-
-        
         CLI::get()->add(new ImportCommandController());
     }
 

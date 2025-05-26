@@ -44,7 +44,7 @@ services:
     build:
       context: .
       args:
-        - CRISP_VERSION=nightly
+        - CRISPY_VERSION=nightly
     container_name: crispcms
     links:
       - postgis

@@ -1,5 +1,7 @@
 <?php
 
+namespace maps;
+
 use crisp\Controllers\EventController;
 use crisp\core\Logger;
 use Crispy\Events\PluginActivatedEvent;

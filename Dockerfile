@@ -1,4 +1,6 @@
-FROM registry.jrbit.de/jrb-it/crispy:stable
+ARG CRISPY_VERSION=stable
+
+FROM registry.jrbit.de/jrb-it/crispy:$CRISPY_VERSION
 
 
 

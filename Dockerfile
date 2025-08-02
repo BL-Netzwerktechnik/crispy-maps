@@ -1,7 +1,6 @@
 ARG CRISPY_VERSION=stable
 
-FROM registry.jrbit.de/jrb-it/crispy:$CRISPY_VERSION
-
+FROM registry.jrbit.de/jrb-it/crispy/licensed:$CRISPY_VERSION
 
 
 ARG MAPS_THEME_GIT_COMMIT=NF_HASH

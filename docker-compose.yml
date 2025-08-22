@@ -12,11 +12,13 @@ services:
       - POSTGRES_URI=postgres://postgres:postgres@postgres:5432/postgres
       - HOST=localhost
       - PROTO=https
+    depends_on:
+      - postgres
     volumes:
       - crisp:/data
 
   postgres:
-    image: 'postgis/postgis:14-3.5-alpine'
+    image: 'supabase/postgres:17.4.1.032'
     restart: always
     ports:
       - 5432:5432

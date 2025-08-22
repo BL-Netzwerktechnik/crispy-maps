@@ -46,10 +46,7 @@ class ReportsPageController
 
     public function processDELETERequest(int $id): void
     {
-        if (!$this->userController->isSessionValid()) {
-            http_response_code(401);
-            return;
-        }
+        $this->userController->helperValidateBackendAccess(true);
 
         if (!$this->userController->checkPermissionStack($this->writePermissions)) {
             RESTfulAPI::response(Bitmask::GENERIC_ERROR, 'Permission denied', [], HTTP: 403);
@@ -75,10 +72,7 @@ class ReportsPageController
 
     public function preRender(): void
     {
-        if (!$this->userController->isSessionValid()) {
-            header("Location: /admin/login");
-            return;
-        }
+        $this->userController->helperValidateBackendAccess(false);
 
         if (!$this->userController->checkPermissionStack($this->readPermissions)) {
 

@@ -51,10 +51,7 @@ class EditCategoriesPageController
 
     public function processDELETERequest(int $id): void
     {
-        if (!$this->userController->isSessionValid()) {
-            http_response_code(401);
-            return;
-        }
+        $this->userController->helperValidateBackendAccess(true);
 
         if (!$this->userController->checkPermissionStack($this->deletePermissions)) {
             RESTfulAPI::response(Bitmask::MISSING_PERMISSIONS, 'You do not have permission to delete categories', [], HTTP: 403);
@@ -87,10 +84,7 @@ class EditCategoriesPageController
 
     public function processPOSTRequest(int $id): void
     {
-        if (!$this->userController->isSessionValid()) {
-            http_response_code(401);
-            return;
-        }
+        $this->userController->helperValidateBackendAccess(true);
 
 
         if (!$this->userController->checkPermissionStack($this->writePermissions)) {
@@ -138,10 +132,7 @@ class EditCategoriesPageController
 
     public function preRender(int $id): void
     {
-        if (!$this->userController->isSessionValid()) {
-            header("Location: /admin/login");
-            return;
-        }
+        $this->userController->helperValidateBackendAccess(false);
 
         if (!$this->userController->checkPermissionStack($this->writePermissions)) {
 

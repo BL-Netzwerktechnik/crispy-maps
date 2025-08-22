@@ -44,6 +44,9 @@ class locations extends Migrations
             if (!$this->Database->inTransaction()) {
                 $this->begin();
             }
+
+            $this->Database->query("CREATE EXTENSION IF NOT EXISTS postgis;");
+
             $this->createTable(
                 "lostplaces_locations",
                 array("id", $this::DB_INTEGER, "NOT NULL SERIAL"),

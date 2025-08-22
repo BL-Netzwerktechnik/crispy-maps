@@ -53,10 +53,7 @@ class CreateLocationPageController
 
     public function processPOSTRequest(): void
     {
-        if (!$this->userController->isSessionValid()) {
-            http_response_code(401);
-            return;
-        }
+        $this->userController->helperValidateBackendAccess(true);
 
 
         if (!$this->userController->checkPermissionStack($this->writePermissions)) {
@@ -135,10 +132,7 @@ class CreateLocationPageController
 
     public function preRender(): void
     {
-        if (!$this->userController->isSessionValid()) {
-            header("Location: /admin/login");
-            return;
-        }
+        $this->userController->helperValidateBackendAccess(false);
 
         if (!$this->userController->checkPermissionStack($this->writePermissions)) {
 

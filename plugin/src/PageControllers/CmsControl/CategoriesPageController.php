@@ -47,10 +47,7 @@ class CategoriesPageController
 
     public function preRender(): void
     {
-        if (!$this->userController->isSessionValid()) {
-            header("Location: /admin/login");
-            return;
-        }
+        $this->userController->helperValidateBackendAccess(false);
 
         if (!$this->userController->checkPermissionStack($this->readPermissions)) {
 

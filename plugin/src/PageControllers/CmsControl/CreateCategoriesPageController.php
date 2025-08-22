@@ -46,11 +46,7 @@ class CreateCategoriesPageController
 
     public function processPOSTRequest(): void
     {
-        if (!$this->userController->isSessionValid()) {
-            http_response_code(401);
-            return;
-        }
-
+        $this->userController->helperValidateBackendAccess(true);
 
         if (!$this->userController->checkPermissionStack($this->writePermissions)) {
             RESTfulAPI::response(Bitmask::MISSING_PERMISSIONS, 'You do not have permission to read or write categories', [], HTTP: 403);
@@ -93,10 +89,7 @@ class CreateCategoriesPageController
 
     public function preRender(): void
     {
-        if (!$this->userController->isSessionValid()) {
-            header("Location: /admin/login");
-            return;
-        }
+        $this->userController->helperValidateBackendAccess(false);
 
         if (!$this->userController->checkPermissionStack($this->writePermissions)) {
 

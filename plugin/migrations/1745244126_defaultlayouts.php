@@ -84,6 +84,7 @@ class defaultlayouts extends Migrations
                 author: 0,
                 directory: '',
                 slug: 'default-location-template',
+                properties: null,
                 layout: $layout,
             ));
 
@@ -93,6 +94,7 @@ class defaultlayouts extends Migrations
                 author: 0,
                 directory: '',
                 slug: 'default-map-template',
+                properties: null,
                 layout: $layout,
             ));
 
@@ -103,6 +105,7 @@ class defaultlayouts extends Migrations
                 author: 0,
                 directory: '',
                 slug: 'default-page-template',
+                properties: null,
                 layout: $layout,
             ));
 

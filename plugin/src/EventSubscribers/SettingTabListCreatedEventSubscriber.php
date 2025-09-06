@@ -36,13 +36,7 @@ class SettingTabListCreatedEventSubscriber implements EventSubscriberInterface
         
 
         $LostPlaces_LocationTemplateList = [];
-        $LostPlaces_MapPopupTemplateList = [
-            [
-                "value" => "",
-                "text" => "Standard (Crispy Maps)",
-                "selected" => Config::get("LostPlaces_MapPopupTemplate") == "" || !Config::exists("LostPlaces_MapPopupTemplate"),
-            ]
-        ];
+        $LostPlaces_MapPopupTemplateList = [];
 
         foreach($this->templateDatabaseController->fetchAllTemplates() as $template) {
             $LostPlaces_LocationTemplateList[] = [
@@ -54,7 +48,7 @@ class SettingTabListCreatedEventSubscriber implements EventSubscriberInterface
             $LostPlaces_MapPopupTemplateList[] = [
                 "value" => $template->getId(),
                 "text" => sprintf("[%s] %s", $template->getSlug(), $template->getName()),
-                "selected" => Config::exists("LostPlaces_MapPopupTemplate") && $template->getId() == Config::get("LostPlaces_MapPopupTemplate"),
+                "selected" => $template->getId() == Config::get("LostPlaces_MapPopupTemplate") ?? false,
             ];
         }
 

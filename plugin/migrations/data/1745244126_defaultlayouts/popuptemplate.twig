@@ -1,0 +1,29 @@
+<h4>{{ location.name }}</h4>
+<span>
+	<b>{{ location.category.name }}</b>
+</span>
+<hr>
+<p>{{ location.description|striptags|truncateText(200) }}</p>
+
+<span>
+	{% for property in AllLocationProperties %}
+		{% if property.value in location.properties %}
+			<span {% if not PropertyBadgeShowLabels %} title="{{property.getLabel() }}" {% endif %} class="badge bg-{{ property.getBadgeColor() }}">
+				<i class="{{ property.getBadgeIcon().getFullClass() }}"></i>
+				{% if PropertyBadgeShowLabels %}
+					{{ property.getLabel() }}
+				{% endif %}
+			</span>
+		{% endif %}
+	{% endfor %}
+</span>
+
+
+{% if not singleLocation %}
+	<hr>
+	<div class="d-grid gap-2">
+		<a href="/location/{{ location.id }}" class="btn btn-primary text-white">
+			Mehr Infos...
+		</a>
+	</div>
+{% endif %}

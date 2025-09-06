@@ -262,15 +262,13 @@ class LocationModel
             if ($template !== null) {
                 $popupContent = Themes::render($template->getFrontendCodePath(), [core::THEME_BASE_DIR . "/build", "/plugins"]);
             }
-        } else {
-            $popupContent = Themes::render("maps/templates/Components/CmsControl/MapPopup.twig");
         }
 
         return [
             'id' => $this->id,
             'category' => $this->category->toArray(),
             'icon' => $this->getIcon()->toArray(),
-            'popupContent' => $popupContent,
+            'popupContent' => $editMarker ? Themes::render("maps/templates/Components/CmsControl/MapPopup.twig") : ($popupContent ?? null),
             'markerColor' => $this->status->getColor()->value,
         ];
     }

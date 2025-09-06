@@ -255,16 +255,12 @@ class LocationModel
 
         if (!$editMarker) {
 
-            $TemplateId = Config::get("LostPlaces_MapPopupTemplate") ?? "";
+            $TemplateId = Config::get("LostPlaces_MapPopupTemplate");
 
-            if ($TemplateId !== "" && is_numeric($TemplateId)) {
-                $templateDatabaseController = new TemplateDatabaseController();
-                $template = $templateDatabaseController->getTemplateById((int)$TemplateId);
-                if ($template !== null) {
-                    $popupContent = Themes::render($template->getFrontendCodePath(), [core::THEME_BASE_DIR . "/build", "/plugins"]);
-                }
-            } else {
-                $popupContent = Themes::render("maps/templates/Components/MapPopup.twig");
+            $templateDatabaseController = new TemplateDatabaseController();
+            $template = $templateDatabaseController->getTemplateById((int)$TemplateId);
+            if ($template !== null) {
+                $popupContent = Themes::render($template->getFrontendCodePath(), [core::THEME_BASE_DIR . "/build", "/plugins"]);
             }
         } else {
             $popupContent = Themes::render("maps/templates/Components/CmsControl/MapPopup.twig");

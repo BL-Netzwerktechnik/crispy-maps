@@ -58,6 +58,14 @@
         "label": "Location Template",
         "hint": "Das Template das für die Location verwendet wird",
     } %}
+	{% include "Components/Input.twig" with {
+        "type": "select",
+        "id": "settings-lostplaces-popup-template",
+        "name": "LostPlaces_MapPopupTemplate",
+        "items": LostPlaces_MapPopupTemplateList,	
+        "label": "Popup Template",
+        "hint": "Das Template das für das Karten Popup verwendet wird, Crispy Maps stellt eine Standard Vorlage bereit",
+    } %}
 </div>
 <div class="divider">
 	<div class="divider-text">Reporting</div>

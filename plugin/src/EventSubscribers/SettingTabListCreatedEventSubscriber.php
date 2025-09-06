@@ -35,17 +35,31 @@ class SettingTabListCreatedEventSubscriber implements EventSubscriberInterface
     {
         
 
-        $ConvertedList = [];
+        $LostPlaces_LocationTemplateList = [];
+        $LostPlaces_MapPopupTemplateList = [
+            [
+                "value" => "",
+                "text" => "Standard (Crispy Maps)",
+                "selected" => Config::get("LostPlaces_MapPopupTemplate") == "" || !Config::exists("LostPlaces_MapPopupTemplate"),
+            ]
+        ];
 
         foreach($this->templateDatabaseController->fetchAllTemplates() as $template) {
-            $ConvertedList[] = [
+            $LostPlaces_LocationTemplateList[] = [
                 "value" => $template->getId(),
                 "text" => sprintf("[%s] %s", $template->getSlug(), $template->getName()),
                 "selected" => $template->getId() == Config::get("LostPlaces_LocationTemplate") ?? false,
             ];
+
+            $LostPlaces_MapPopupTemplateList[] = [
+                "value" => $template->getId(),
+                "text" => sprintf("[%s] %s", $template->getSlug(), $template->getName()),
+                "selected" => Config::exists("LostPlaces_MapPopupTemplate") && $template->getId() == Config::get("LostPlaces_MapPopupTemplate"),
+            ];
         }
 
-        ThemeVariables::set("LostPlaces_LocationTemplateList", $ConvertedList);
+        ThemeVariables::set("LostPlaces_LocationTemplateList", $LostPlaces_LocationTemplateList);
+        ThemeVariables::set("LostPlaces_MapPopupTemplateList", $LostPlaces_MapPopupTemplateList);
 
         $settingsTabListModel = $event->getTabList();
         $settingsTabListModel->addNavItem(new SettingsNavItemModel(

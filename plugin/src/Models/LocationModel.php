@@ -10,6 +10,7 @@ use crisp\api\Config;
 use crisp\core;
 use crisp\core\Themes;
 use crisp\core\ThemeVariables;
+use Crispy\DatabaseControllers\TemplateDatabaseController;
 use Crispy\Helper;
 use Crispy\Models\UserModel;
 
@@ -252,11 +253,28 @@ class LocationModel
         ThemeVariables::set('location', $this->toArray());
         ThemeVariables::set('AllLocationProperties', LocationProperties::cases());
 
+        if (!$editMarker) {
+
+            $TemplateId = Config::get("LostPlaces_MapPopupTemplate") ?? "";
+
+            if ($TemplateId !== "" && is_numeric($TemplateId)) {
+                $templateDatabaseController = new TemplateDatabaseController();
+                $template = $templateDatabaseController->getTemplateById((int)$TemplateId);
+                if ($template !== null) {
+                    $popupContent = Themes::render($template->getFrontendCodePath(), [core::THEME_BASE_DIR . "/build", "/plugins"]);
+                }
+            } else {
+                $popupContent = Themes::render("maps/templates/Components/MapPopup.twig");
+            }
+        } else {
+            $popupContent = Themes::render("maps/templates/Components/CmsControl/MapPopup.twig");
+        }
+
         return [
             'id' => $this->id,
             'category' => $this->category->toArray(),
             'icon' => $this->getIcon()->toArray(),
-            'popupContent' => $editMarker ? Themes::render("maps/templates/Components/CmsControl/MapPopup.twig") : Themes::render("maps/templates/Components/MapPopup.twig"),
+            'popupContent' => $popupContent,
             'markerColor' => $this->status->getColor()->value,
         ];
     }

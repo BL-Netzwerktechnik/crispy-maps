@@ -89,7 +89,7 @@
                           <div class="card-body">
                                 {% for property in AllLocationProperties %}
                                     {% if property.value in Location.properties %}
-                                        {% include "lostplaces/templates/Components/PropertyBadge.twig" with {'property': property} %}
+                                        {% include "maps/templates/Components/PropertyBadge.twig" with {'property': property} %}
                                     {% endif %}
                                 {% endfor %}
                           </div>
@@ -142,12 +142,12 @@
                     {% endif %}
                   
                     <div class="card mb-4">
-							{% include "lostplaces/templates/Components/LikeButtons.twig" %}
+							{% include "maps/templates/Components/LikeButtons.twig" %}
                     </div>
               	</div>
             </div>
         </div>
-{% include 'lostplaces/templates/Components/ReportModal.twig' %}
+{% include 'maps/templates/Components/ReportModal.twig' %}
 {% endblock %}
 
 {% block Scripts %}

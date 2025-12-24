@@ -2,17 +2,16 @@
 
 namespace blfilme\lostplaces\Enums;
 
-
 enum LocationStatus: int
 {
-    
+
     case ACTIVE = 0x1;
     case DEMOLISHED = 0x2;
     case UNKNOWN = 0x3;
 
-
     /**
-     * Get Label for the enum value in German
+     * Get Label for the enum value in German.
+     *
      * @todo Add Translation support
      *
      * @return string
@@ -27,7 +26,7 @@ enum LocationStatus: int
     }
 
     /**
-     * Gets the color for the enum value in hex format
+     * Gets the color for the enum value in hex format.
      *
      * @return MarkerColors
      */

@@ -19,15 +19,15 @@ class LocationModel
     /**
      * LocationModel constructor.
      *
-     * @param int|null $id
-     * @param string $name 
-     * @param string $description
+     * @param int|null             $id
+     * @param string               $name
+     * @param string               $description
      * @param LocationProperties[] $properties
-     * @param LocationStatus $status
-     * @param CoordinateModel $coordinates
-     * @param UserModel $author
-     * @param Carbon $createdAt
-     * @param Carbon $updatedAt
+     * @param LocationStatus       $status
+     * @param CoordinateModel      $coordinates
+     * @param UserModel            $author
+     * @param Carbon               $createdAt
+     * @param Carbon               $updatedAt
      */
     public function __construct(
         public ?int $id,
@@ -55,22 +55,21 @@ class LocationModel
     public function getUploadFilePath(): string
     {
         return sprintf(
-            "%s/lostplaces/%s",
-            Config::get("LostPlaces_ProviderPath"),
+            '%s/lostplaces/%s',
+            Config::get('LostPlaces_ProviderPath'),
             $this->getId()
         );
     }
 
     public function getUploadFilePathHash(): string
     {
-        //ThemeVariables::set("elFinderUploadTargetHash", CrispyHelper::generateElFinderHash("testHash"));
+        // ThemeVariables::set("elFinderUploadTargetHash", CrispyHelper::generateElFinderHash("testHash"));
         return Helper::generateElFinderHash($this->getUploadFilePath());
     }
 
-
     public function createFolderStructure(): void
     {
-        $path = sprintf("%s/files/%s", core::PERSISTENT_DATA, $this->getUploadFilePath());
+        $path = sprintf('%s/files/%s', core::PERSISTENT_DATA, $this->getUploadFilePath());
         if (!is_dir($path)) {
             mkdir($path, 0777, true);
         }
@@ -78,14 +77,14 @@ class LocationModel
 
     public function deleteFolderStructure(): void
     {
-        $path = sprintf("%s/files/%s", core::PERSISTENT_DATA, $this->getUploadFilePath());
+        $path = sprintf('%s/files/%s', core::PERSISTENT_DATA, $this->getUploadFilePath());
         if (is_dir($path)) {
             rmdir($path);
         }
     }
 
     /**
-     * Get the name of the location
+     * Get the name of the location.
      *
      * @return string
      */
@@ -94,9 +93,8 @@ class LocationModel
         return $this->name;
     }
 
-
     /**
-     * Get the YouTube link of the location
+     * Get the YouTube link of the location.
      *
      * @return string|null
      */
@@ -108,11 +106,12 @@ class LocationModel
     public function setYoutube(?string $youtube): self
     {
         $this->youtube = $youtube;
+
         return $this;
     }
 
     /**
-     * Get the description of the location
+     * Get the description of the location.
      *
      * @return string
      */
@@ -122,7 +121,7 @@ class LocationModel
     }
 
     /**
-     * Get the coordinates of the location
+     * Get the coordinates of the location.
      *
      * @return CoordinateModel
      */
@@ -132,7 +131,7 @@ class LocationModel
     }
 
     /**
-     * Get the category of the location
+     * Get the category of the location.
      *
      * @return CategoryModel
      */
@@ -142,7 +141,7 @@ class LocationModel
     }
 
     /**
-     * Get the icon of the location
+     * Get the icon of the location.
      *
      * @return IconInterface
      */
@@ -152,7 +151,7 @@ class LocationModel
     }
 
     /**
-     * Get the images of the location
+     * Get the images of the location.
      *
      * @todo Implement this method to return actual images
      * @return ImageModel[]
@@ -163,7 +162,7 @@ class LocationModel
     }
 
     /**
-     * Get the image count of the location
+     * Get the image count of the location.
      *
      * @todo Implement this method to return actual image count
      * @return int
@@ -174,7 +173,7 @@ class LocationModel
     }
 
     /**
-     * Get the properties of the location
+     * Get the properties of the location.
      *
      * @return LocationProperties[]
      */
@@ -184,7 +183,7 @@ class LocationModel
     }
 
     /**
-     * Get the status of the location
+     * Get the status of the location.
      *
      * @return LocationStatus
      */
@@ -194,7 +193,7 @@ class LocationModel
     }
 
     /**
-     * Get the author of the location
+     * Get the author of the location.
      *
      * @return UserModel
      */
@@ -204,7 +203,7 @@ class LocationModel
     }
 
     /**
-     * Get the created at timestamp of the location
+     * Get the created at timestamp of the location.
      *
      * @return Carbon
      */
@@ -214,7 +213,7 @@ class LocationModel
     }
 
     /**
-     * Get the updated at timestamp of the location
+     * Get the updated at timestamp of the location.
      *
      * @return Carbon
      */
@@ -224,7 +223,7 @@ class LocationModel
     }
 
     /**
-     * Get the ID of the location
+     * Get the ID of the location.
      *
      * @return int|null
      */
@@ -255,12 +254,12 @@ class LocationModel
 
         if (!$editMarker) {
 
-            $TemplateId = Config::get("LostPlaces_MapPopupTemplate");
+            $TemplateId = Config::get('LostPlaces_MapPopupTemplate');
 
             $templateDatabaseController = new TemplateDatabaseController();
-            $template = $templateDatabaseController->getTemplateById((int)$TemplateId);
+            $template = $templateDatabaseController->getTemplateById((int) $TemplateId);
             if ($template !== null) {
-                $popupContent = Themes::render($template->getFrontendCodePath(), [core::THEME_BASE_DIR . "/build", "/plugins"]);
+                $popupContent = Themes::render($template->getFrontendCodePath(), [core::THEME_BASE_DIR . '/build', '/plugins']);
             }
         }
 
@@ -268,13 +267,13 @@ class LocationModel
             'id' => $this->id,
             'category' => $this->category->toArray(),
             'icon' => $this->getIcon()->toArray(),
-            'popupContent' => $editMarker ? Themes::render("maps/templates/Components/CmsControl/MapPopup.twig") : ($popupContent ?? null),
+            'popupContent' => $editMarker ? Themes::render('maps/templates/Components/CmsControl/MapPopup.twig') : ($popupContent ?? null),
             'markerColor' => $this->status->getColor()->value,
         ];
     }
 
     /**
-     * Get the properties of the location as an array
+     * Get the properties of the location as an array.
      *
      * @return array
      */
@@ -284,7 +283,7 @@ class LocationModel
             'id' => $this->id,
             'name' => $this->name,
             'description' => $this->description,
-            'properties' => array_map(fn($property) => $property->value, $this->properties),
+            'properties' => array_map(fn ($property) => $property->value, $this->properties),
             'category' => $this->category->toArray(),
             'coordinates' => $this->coordinates->toArray(),
             'icon' => $this->getIcon()->toArray(),
@@ -298,69 +297,74 @@ class LocationModel
     }
 
     /**
-     * Set the name of the location
+     * Set the name of the location.
      *
-     * @param string $name
+     * @param  string $name
      * @return self
      */
     public function setName(string $name): self
     {
         $this->name = $name;
+
         return $this;
     }
 
     /**
-     * Set the description of the location
+     * Set the description of the location.
      *
-     * @param string $description
+     * @param  string $description
      * @return self
      */
     public function setDescription(string $description): self
     {
         $this->description = $description;
+
         return $this;
     }
 
     /**
-     * Set the coordinates of the location
+     * Set the coordinates of the location.
      *
-     * @param CoordinateModel $coordinates
+     * @param  CoordinateModel $coordinates
      * @return self
      */
     public function setCoordinates(CoordinateModel $coordinates): self
     {
         $this->coordinates = $coordinates;
+
         return $this;
     }
 
     /**
-     * Set the category of the location
+     * Set the category of the location.
      *
-     * @param CategoryModel $category
+     * @param  CategoryModel $category
      * @return self
      */
     public function setCategory(CategoryModel $category): self
     {
         $this->category = $category;
+
         return $this;
     }
 
     /**
-     * Set the icon of the location
+     * Set the icon of the location.
      *
-     * @param IconInterface $icon
+     * @param  IconInterface $icon
      * @return self
      */
     public function setIcon(IconInterface $icon): self
     {
         $this->category->setIcon($icon);
+
         return $this;
     }
 
     /**
-     * Set the properties of the location
+     * Set the properties of the location.
      *
-     * @param LocationProperties[] $properties
+     * @param  LocationProperties[] $properties
      * @return self
      */
     public function setProperties(array $properties): self
@@ -371,13 +375,14 @@ class LocationModel
             }
         }
         $this->properties = $properties;
+
         return $this;
     }
 
     /**
-     * Add a property to the location
+     * Add a property to the location.
      *
-     * @param LocationProperties $property
+     * @param  LocationProperties $property
      * @return self
      */
     public function addProperty(LocationProperties $property): self
@@ -385,53 +390,58 @@ class LocationModel
         if (!in_array($property, $this->properties)) {
             $this->properties[] = $property;
         }
+
         return $this;
     }
 
     /**
-     * Remove a property from the location
+     * Remove a property from the location.
      *
-     * @param LocationProperties $property
+     * @param  LocationProperties $property
      * @return self
      */
     public function removeProperty(LocationProperties $property): self
     {
-        $this->properties = array_filter($this->properties, fn($p) => $p !== $property);
+        $this->properties = array_filter($this->properties, fn ($p) => $p !== $property);
+
         return $this;
     }
 
     /**
-     * Set the status of the location
+     * Set the status of the location.
      *
-     * @param LocationStatus $status
+     * @param  LocationStatus $status
      * @return self
      */
     public function setStatus(LocationStatus $status): self
     {
         $this->status = $status;
+
         return $this;
     }
 
     /**
-     * Set the author of the location
+     * Set the author of the location.
      *
-     * @param UserModel $author
+     * @param  UserModel $author
      * @return self
      */
     public function setAuthor(UserModel $author): self
     {
         $this->author = $author;
+
         return $this;
     }
 
     /**
-     * Set the updated at timestamp of the location
+     * Set the updated at timestamp of the location.
      *
      * @return self
      */
     public function setUpdatedAt(): self
     {
         $this->updatedAt = Carbon::now($_ENV['TZ'] ?? 'UTC');
+
         return $this;
     }
 }

@@ -10,7 +10,6 @@
  *
  */
 
-
 namespace blfilme\lostplaces\PageControllers\Public;
 
 use blfilme\lostplaces\DatabaseControllers\LocationDatabaseController;
@@ -19,29 +18,13 @@ use blfilme\lostplaces\Enums\LocationProperties;
 use blfilme\lostplaces\Enums\ReportReasons;
 use crisp\api\Config;
 use crisp\api\Helper;
-use crisp\api\Translation;
 use crisp\core;
-use crisp\core\Bitmask;
-use crisp\core\RESTfulAPI;
 use crisp\core\Sessions;
-use crisp\models\ThemePage;
 use crisp\core\Themes;
 use crisp\core\ThemeVariables;
-use Crispy\Controllers\TemplateGeneratorController;
 use Crispy\Controllers\UserController;
-use Crispy\DatabaseControllers\CategoryDatabaseController;
-use Crispy\DatabaseControllers\LayoutDatabaseController;
-use Crispy\DatabaseControllers\PageDatabaseController;
 use Crispy\DatabaseControllers\TemplateDatabaseController;
-use Crispy\DatabaseControllers\UserDatabaseController;
-use Crispy\Enums\CategoryProperties;
 use Crispy\Enums\Permissions;
-use Crispy\Helper as CrispyHelper;
-use Crispy\Models\CategoryModel;
-use Crispy\Models\LayoutModel;
-use JetBrains\PhpStorm\ArrayShape;
-use Twig\Environment;
-
 
 class LocationRenderPageController
 {
@@ -67,36 +50,38 @@ class LocationRenderPageController
     {
 
         if (Sessions::isSessionValid()) {
-            ThemeVariables::set("HasWritePermission", $this->userController->checkPermissionStack($this->writePermissions));
+            ThemeVariables::set('HasWritePermission', $this->userController->checkPermissionStack($this->writePermissions));
         }
-        if (!Config::exists("LostPlaces_LocationTemplate")) {
-            ThemeVariables::set("ErrorMessage", "Die Vorlage für die Location-Seite ist nicht gesetzt. Bitte setze die Vorlage in den Plugin-Einstellungen.");
-            echo Themes::render("Views/ErrorPage.twig");
+        if (!Config::exists('LostPlaces_LocationTemplate')) {
+            ThemeVariables::set('ErrorMessage', 'Die Vorlage für die Location-Seite ist nicht gesetzt. Bitte setze die Vorlage in den Plugin-Einstellungen.');
+            echo Themes::render('Views/ErrorPage.twig');
+
             return;
         }
 
-        $Template = $this->templateDatabaseController->getTemplateById(Config::get("LostPlaces_LocationTemplate"));
+        $Template = $this->templateDatabaseController->getTemplateById(Config::get('LostPlaces_LocationTemplate'));
         if ($Template === null) {
-            ThemeVariables::set("ErrorMessage", "Die Vorlage für die Location-Seite existiert nicht. Bitte setze die Vorlage in den Plugin-Einstellungen.");
-            echo Themes::render("Views/ErrorPage.twig");
+            ThemeVariables::set('ErrorMessage', 'Die Vorlage für die Location-Seite existiert nicht. Bitte setze die Vorlage in den Plugin-Einstellungen.');
+            echo Themes::render('Views/ErrorPage.twig');
+
             return;
         }
-
 
         if (!$Location = $this->locationDatabaseController->getLocationById($id)) {
-            header(("Location: /404"));
+            header(('Location: /404'));
+
             return;
         }
 
-        ThemeVariables::set("Location", $Location->toArray());
+        ThemeVariables::set('Location', $Location->toArray());
         ThemeVariables::set('AllLocationProperties', LocationProperties::cases());
-        ThemeVariables::set("ReportReasons", ReportReasons::cases());
-        ThemeVariables::Set("NearbyLocations", array_map(
-            fn($location) => $location->toArray(),
+        ThemeVariables::set('ReportReasons', ReportReasons::cases());
+        ThemeVariables::Set('NearbyLocations', array_map(
+            fn ($location) => $location->toArray(),
             $this->locationDatabaseController->fetchNearestLocations($Location, 5, 100)
         ));
-        ThemeVariables::set("PropertyBadgeShowLabels", true);
-        ThemeVariables::set("hasUpVoted", Sessions::isSessionValid() ? $this->voteDatabaseController->upVoteExistsByLocationAndUser(
+        ThemeVariables::set('PropertyBadgeShowLabels', true);
+        ThemeVariables::set('hasUpVoted', Sessions::isSessionValid() ? $this->voteDatabaseController->upVoteExistsByLocationAndUser(
             $Location,
             $this->userController->getUser()
         ) : $this->voteDatabaseController->upVoteExistsByLocationAndIpAddress(
@@ -104,7 +89,7 @@ class LocationRenderPageController
             Helper::getRealIpAddr()
         ));
 
-        ThemeVariables::set("hasDownVoted", Sessions::isSessionValid() ? $this->voteDatabaseController->downVoteExistsByLocationAndUser(
+        ThemeVariables::set('hasDownVoted', Sessions::isSessionValid() ? $this->voteDatabaseController->downVoteExistsByLocationAndUser(
             $Location,
             $this->userController->getUser()
         ) : $this->voteDatabaseController->downVoteExistsByLocationAndIpAddress(
@@ -112,9 +97,9 @@ class LocationRenderPageController
             Helper::getRealIpAddr()
         ));
 
-        ThemeVariables::set("upVoteCount", $this->voteDatabaseController->countAllUpVotesForLocation($Location));
-        ThemeVariables::set("downVoteCount", $this->voteDatabaseController->countAllDownVotesForLocation($Location));
+        ThemeVariables::set('upVoteCount', $this->voteDatabaseController->countAllUpVotesForLocation($Location));
+        ThemeVariables::set('downVoteCount', $this->voteDatabaseController->countAllDownVotesForLocation($Location));
 
-        echo Themes::render($Template->getFrontendCodePath(), [core::THEME_BASE_DIR . "/build", "/plugins"]);
+        echo Themes::render($Template->getFrontendCodePath(), [core::THEME_BASE_DIR . '/build', '/plugins']);
     }
 }

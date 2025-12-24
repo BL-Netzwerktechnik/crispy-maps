@@ -3,8 +3,6 @@
 namespace maps;
 
 use crisp\Controllers\EventController;
-use crisp\core\Logger;
-use Crispy\Events\PluginActivatedEvent;
 use blfilme\lostplaces\EventSubscribers\NavbarEventSubscriber;
 use blfilme\lostplaces\EventSubscribers\SettingTabListCreatedEventSubscriber;
 use blfilme\lostplaces\EventSubscribers\InitEventSubscriber;

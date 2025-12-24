@@ -2,7 +2,6 @@
 
 namespace blfilme\lostplaces\Enums;
 
-
 enum MarkerColors: string
 {
     case RED = 'red';
@@ -10,7 +9,6 @@ enum MarkerColors: string
     case BLUE = 'blue';
     case PURPLE = 'purple';
     case ORANGE = 'orange';
-
 
     public function getLabel(): string
     {

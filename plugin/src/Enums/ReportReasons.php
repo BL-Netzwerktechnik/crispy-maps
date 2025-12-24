@@ -2,19 +2,18 @@
 
 namespace blfilme\lostplaces\Enums;
 
-
 enum ReportReasons: int
 {
-     case INVALID_DETAILS = 0x1;
-     case INVALID_LOCATION = 0x2;
-     case NETZDG_VIOLATION = 0x4;
-     case LOCATION_CLOSED = 0x8;
-     case MISCELLANEOUS = 0x10;
-     case INAPPROPRIATE_CONTENT = 0x20;
-
+    case INVALID_DETAILS = 0x1;
+    case INVALID_LOCATION = 0x2;
+    case NETZDG_VIOLATION = 0x4;
+    case LOCATION_CLOSED = 0x8;
+    case MISCELLANEOUS = 0x10;
+    case INAPPROPRIATE_CONTENT = 0x20;
 
     /**
-     * Get Label for the enum value in German
+     * Get Label for the enum value in German.
+     *
      * @todo Add Translation support
      *
      * @return string
@@ -31,8 +30,6 @@ enum ReportReasons: int
         };
     }
 
-    
-
     public static function fromIntToArray(int $value): array
     {
         $result = [];
@@ -41,6 +38,7 @@ enum ReportReasons: int
                 $result[] = $case;
             }
         }
+
         return $result;
     }
 
@@ -52,6 +50,7 @@ enum ReportReasons: int
                 $result |= $property->value;
             }
         }
+
         return $result;
     }
 }

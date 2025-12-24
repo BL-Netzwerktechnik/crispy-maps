@@ -10,37 +10,19 @@
  *
  */
 
-
 namespace blfilme\lostplaces\PageControllers\CmsControl;
 
-use crisp\api\Helper;
 use crisp\api\Translation;
 use crisp\core\Bitmask;
 use crisp\core\RESTfulAPI;
-use crisp\core\Sessions;
-use crisp\models\ThemePage;
 use crisp\core\Themes;
 use crisp\core\ThemeVariables;
-use Crispy\Controllers\TemplateGeneratorController;
 use Crispy\Controllers\UserController;
-use Crispy\DatabaseControllers\CategoryDatabaseController;
-use Crispy\DatabaseControllers\LayoutDatabaseController;
-use Crispy\DatabaseControllers\PageDatabaseController;
-use Crispy\DatabaseControllers\TemplateDatabaseController;
-use Crispy\DatabaseControllers\UserDatabaseController;
-use Crispy\Enums\CategoryProperties;
 use Crispy\Enums\Permissions;
-use Crispy\Helper as CrispyHelper;
-use Crispy\Models\CategoryModel;
-use Crispy\Models\LayoutModel;
-use JetBrains\PhpStorm\ArrayShape;
-use Twig\Environment;
-
 
 class MapPageController
 {
     private UserController $userController;
-
 
     private array $writePermissions = [
         Permissions::SUPERUSER->value,
@@ -52,26 +34,25 @@ class MapPageController
         $this->userController = new UserController();
     }
 
-
     public function processPOSTRequest(): void
     {
         $this->userController->helperValidateBackendAccess(true);
 
-
         if (!$this->userController->checkPermissionStack($this->writePermissions)) {
             RESTfulAPI::response(Bitmask::MISSING_PERMISSIONS, 'You do not have permission to read or write categories', [], HTTP: 403);
+
             return;
         }
-
 
         if (empty($_POST['name'])) {
             RESTfulAPI::response(Bitmask::INVALID_PARAMETER, 'Missing parameter "name"', [], HTTP: 400);
+
             return;
         }
 
-
         if (empty($_POST['content'])) {
             RESTfulAPI::response(Bitmask::INVALID_PARAMETER, 'Missing parameter "content"', [], HTTP: 400);
+
             return;
         }
     }
@@ -82,15 +63,18 @@ class MapPageController
 
         if (!$this->userController->checkPermissionStack($this->writePermissions)) {
 
-            ThemeVariables::set("ErrorMessage", Translation::fetch('CMSControl.Views.ErrorPage.Permissions'));
-            echo Themes::render("Views/ErrorPage.twig");
+            ThemeVariables::set('ErrorMessage', Translation::fetch('CMSControl.Views.ErrorPage.Permissions'));
+            echo Themes::render('Views/ErrorPage.twig');
+
             return;
         }
 
-        ThemeVariables::set("HasWritePermission", $this->userController->checkPermissionStack($this->writePermissions));
+        ThemeVariables::set('HasWritePermission', $this->userController->checkPermissionStack($this->writePermissions));
 
-        echo Themes::render("maps/templates/Views/CmsControl/Map.twig");
+        echo Themes::render('maps/templates/Views/CmsControl/Map.twig');
     }
 
-    public function postRender(): void {}
+    public function postRender(): void
+    {
+    }
 }

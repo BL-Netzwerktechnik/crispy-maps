@@ -4,17 +4,13 @@ namespace blfilme\lostplaces\CommandControllers;
 
 use blfilme\lostplaces\DatabaseControllers\CategoryDatabaseController;
 use blfilme\lostplaces\DatabaseControllers\LocationDatabaseController;
-use blfilme\lostplaces\Enums\LocationProperties;
 use blfilme\lostplaces\Enums\LocationStatus;
 use blfilme\lostplaces\Models\CategoryModel;
 use blfilme\lostplaces\Models\CoordinateModel;
 use blfilme\lostplaces\Models\LocationModel;
 use Carbon\Carbon;
-use crisp\api\Helper as ApiHelper;
 use crisp\core\Logger;
 use Crispy\DatabaseControllers\UserDatabaseController;
-use Crispy\FileControllers\LayoutFileController;
-use Crispy\Helper;
 use Crispy\Models\UserModel;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Helper\ProgressBar;
@@ -48,7 +44,7 @@ class ImportCommandController extends Command
 
     public function getCategoryMapping(int $id): CategoryModel
     {
-        return match($id){
+        return match ($id) {
             1 => $this->categoryDatabaseController->getCategoryById(4),
             2 => $this->categoryDatabaseController->getCategoryById(5),
             3 => $this->categoryDatabaseController->getCategoryById(6),
@@ -68,7 +64,6 @@ class ImportCommandController extends Command
         $io = new SymfonyStyle($input, $output);
 
         $path = $input->getOption('path');
-
 
         if (empty($path)) {
             $io->error('Path is required.');
@@ -104,7 +99,6 @@ class ImportCommandController extends Command
             return Command::FAILURE;
         }
 
-        
         $progressBar = new ProgressBar($output, count($data));
 
         $this->locationDatabaseController->beginTransaction();
@@ -128,16 +122,15 @@ class ImportCommandController extends Command
                 author: UserModel::fetchSystemUser(),
             );
 
-            if(!$this->locationDatabaseController->insertLocation($location)) {
+            if (!$this->locationDatabaseController->insertLocation($location)) {
                 $this->locationDatabaseController->rollbackTransaction();
                 $io->error('Failed to insert location: ' . $location->getName());
 
                 return Command::FAILURE;
-            }  
+            }
 
             $progressBar->advance();
         }
-
 
         $this->locationDatabaseController->commitTransaction();
         $progressBar->finish();

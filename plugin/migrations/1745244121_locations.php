@@ -21,14 +21,9 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-
 namespace crisp\migrations;
 
-use crisp\core\Bitmask;
 use crisp\core\Migrations;
-use crisp\core\RESTfulAPI;
-use Crispy\Enums\Permissions;
-use Exception;
 
 if (!defined('CRISP_HOOKED')) {
     echo 'Illegal File access';
@@ -37,7 +32,6 @@ if (!defined('CRISP_HOOKED')) {
 
 class locations extends Migrations
 {
-
     public function run()
     {
         try {
@@ -45,30 +39,32 @@ class locations extends Migrations
                 $this->begin();
             }
 
-            $this->Database->query("CREATE EXTENSION IF NOT EXISTS postgis;");
+            $this->Database->query('CREATE EXTENSION IF NOT EXISTS postgis;');
 
             $this->createTable(
-                "lostplaces_locations",
-                array("id", $this::DB_INTEGER, "NOT NULL SERIAL"),
-                array("name", $this::DB_VARCHAR, "NOT NULL"),
-                array("description", $this::DB_TEXT, "NOT NULL"),
-                array("category", $this::DB_INTEGER, "NOT NULL"),
-                array("youtube", $this::DB_VARCHAR, "DEFAULT NULL"),
-                array("marker_location", "GEOMETRY(Point, 4326)", "NOT NULL"),
-                array("author", $this::DB_INTEGER, "NOT NULL"),
-                array("status", $this::DB_INTEGER, "NOT NULL DEFAULT 0"),
-                array("properties", $this::DB_INTEGER, "NOT NULL DEFAULT 0"),
-                array("created_at", $this::DB_TIMESTAMP, "NOT NULL DEFAULT CURRENT_TIMESTAMP"),
-                array("updated_at", $this::DB_TIMESTAMP, "NOT NULL DEFAULT CURRENT_TIMESTAMP"),
+                'lostplaces_locations',
+                ['id', $this::DB_INTEGER, 'NOT NULL SERIAL'],
+                ['name', $this::DB_VARCHAR, 'NOT NULL'],
+                ['description', $this::DB_TEXT, 'NOT NULL'],
+                ['category', $this::DB_INTEGER, 'NOT NULL'],
+                ['youtube', $this::DB_VARCHAR, 'DEFAULT NULL'],
+                ['marker_location', 'GEOMETRY(Point, 4326)', 'NOT NULL'],
+                ['author', $this::DB_INTEGER, 'NOT NULL'],
+                ['status', $this::DB_INTEGER, 'NOT NULL DEFAULT 0'],
+                ['properties', $this::DB_INTEGER, 'NOT NULL DEFAULT 0'],
+                ['created_at', $this::DB_TIMESTAMP, 'NOT NULL DEFAULT CURRENT_TIMESTAMP'],
+                ['updated_at', $this::DB_TIMESTAMP, 'NOT NULL DEFAULT CURRENT_TIMESTAMP'],
             );
 
             if ($this->Database->inTransaction()) {
                 return $this->end();
             }
+
             return true;
-        } catch (Exception $ex) {
+        } catch (\Exception $ex) {
             echo $ex->getMessage() . PHP_EOL;
             $this->rollback();
+
             return false;
         }
     }

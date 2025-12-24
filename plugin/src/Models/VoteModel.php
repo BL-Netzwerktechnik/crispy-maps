@@ -2,8 +2,6 @@
 
 namespace blfilme\lostplaces\Models;
 
-use blfilme\lostplaces\Enums\MarkerColors;
-use blfilme\lostplaces\Interfaces\IconInterface;
 use Carbon\Carbon;
 use Crispy\Models\UserModel;
 
@@ -18,12 +16,12 @@ class VoteModel
         private ?Carbon $createdAt = null,
         private ?Carbon $updatedAt = null,
     ) {
-        $this->createdAt = $this->createdAt ?? Carbon::now($_ENV["TZ"] ?? 'UTC');
-        $this->updatedAt = $this->updatedAt ?? Carbon::now($_ENV["TZ"] ?? 'UTC');
+        $this->createdAt = $this->createdAt ?? Carbon::now($_ENV['TZ'] ?? 'UTC');
+        $this->updatedAt = $this->updatedAt ?? Carbon::now($_ENV['TZ'] ?? 'UTC');
     }
 
     /**
-     * Get the ID of the category
+     * Get the ID of the category.
      *
      * @return int|null
      */
@@ -31,8 +29,9 @@ class VoteModel
     {
         return $this->id;
     }
+
     /**
-     * Get the location of the vote
+     * Get the location of the vote.
      *
      * @return LocationModel
      */
@@ -42,7 +41,7 @@ class VoteModel
     }
 
     /**
-     * Get the user who voted
+     * Get the user who voted.
      *
      * @return UserModel|null
      */
@@ -52,7 +51,7 @@ class VoteModel
     }
 
     /**
-     * Get the IP address of the user who voted
+     * Get the IP address of the user who voted.
      *
      * @return string|null
      */
@@ -62,7 +61,7 @@ class VoteModel
     }
 
     /**
-     * Get the vote value
+     * Get the vote value.
      *
      * @return bool
      */
@@ -72,7 +71,7 @@ class VoteModel
     }
 
     /**
-     * Convert the model to an array
+     * Convert the model to an array.
      *
      * @return array
      */
@@ -90,7 +89,7 @@ class VoteModel
     }
 
     /**
-     * Get the created at date of the category
+     * Get the created at date of the category.
      *
      * @return Carbon|null
      */
@@ -100,11 +99,10 @@ class VoteModel
     }
 
     /**
-     * Get the updated at date of the category
+     * Get the updated at date of the category.
      *
      * @return Carbon|null
      */
-
     public function getUpdatedAt(): ?Carbon
     {
         return $this->updatedAt;
@@ -112,7 +110,8 @@ class VoteModel
 
     public function setUpdatedAt(): self
     {
-        $this->updatedAt = Carbon::now($_ENV["TZ"] ?? 'UTC');
+        $this->updatedAt = Carbon::now($_ENV['TZ'] ?? 'UTC');
+
         return $this;
     }
 }

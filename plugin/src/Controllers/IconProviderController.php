@@ -27,10 +27,11 @@ class IconProviderController
 
     public static function fetchFromConfig(?string $name = null, ?string $color = null): IconInterface
     {
-        $iconProvider = Config::get("LostPlaces_IconClass");
+        $iconProvider = Config::get('LostPlaces_IconClass');
         if (is_null($iconProvider)) {
             throw new \InvalidArgumentException('Icon provider is not set in the config');
         }
+
         return (new self($iconProvider))->getProvider()->setName($name)
             ->setColor($color);
     }

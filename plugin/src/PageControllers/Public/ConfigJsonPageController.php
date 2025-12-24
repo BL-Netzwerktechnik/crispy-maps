@@ -10,7 +10,6 @@
  *
  */
 
-
 namespace blfilme\lostplaces\PageControllers\Public;
 
 use blfilme\lostplaces\Controllers\IconProviderController;
@@ -42,21 +41,21 @@ class ConfigJsonPageController
 
         header('Content-Type: application/json');
         echo json_encode([
-            "netzdg_report_url" => Config::get("LostPlaces_NetzDGReportUrl"),
-            "map" => [
-                "path" => Config::get("LostPlaces_MapPath"),
-                "bounds" => [
+            'netzdg_report_url' => Config::get('LostPlaces_NetzDGReportUrl'),
+            'map' => [
+                'path' => Config::get('LostPlaces_MapPath'),
+                'bounds' => [
                     [48.603931996685255, -1.6040039062500002],
-                    [53.57952828271051, 25.290527343750004]
+                    [53.57952828271051, 25.290527343750004],
                 ],
-                "tileLayer" => [
-                    "server" => Config::get("LostPlaces_MapTileServer"),
-                    "maxZoom" => 18,
-                    "attribution" => Config::get("LostPlaces_MapAttribution"),
-                ]
+                'tileLayer' => [
+                    'server' => Config::get('LostPlaces_MapTileServer'),
+                    'maxZoom' => 18,
+                    'attribution' => Config::get('LostPlaces_MapAttribution'),
+                ],
             ],
-            "iconProvider" => $this->iconProvider->toArray(),
-            "categories" => $categoriesArray,
+            'iconProvider' => $this->iconProvider->toArray(),
+            'categories' => $categoriesArray,
         ]);
     }
 }

@@ -10,19 +10,14 @@
  *
  */
 
-
 namespace blfilme\lostplaces\PageControllers\CmsControl;
 
 use blfilme\lostplaces\DatabaseControllers\CategoryDatabaseController;
-use blfilme\lostplaces\DatabaseControllers\LocationDatabaseController;
 use crisp\api\Translation;
-use crisp\core\Bitmask;
-use crisp\core\RESTfulAPI;
 use crisp\core\Themes;
 use crisp\core\ThemeVariables;
 use Crispy\Controllers\UserController;
 use Crispy\Enums\Permissions;
-
 
 class CategoriesPageController
 {
@@ -51,18 +46,19 @@ class CategoriesPageController
 
         if (!$this->userController->checkPermissionStack($this->readPermissions)) {
 
-            ThemeVariables::set("ErrorMessage", Translation::fetch('CMSControl.Views.ErrorPage.Permissions'));
-            echo Themes::render("Views/ErrorPage.twig");
+            ThemeVariables::set('ErrorMessage', Translation::fetch('CMSControl.Views.ErrorPage.Permissions'));
+            echo Themes::render('Views/ErrorPage.twig');
+
             return;
         }
 
-        ThemeVariables::set("HasWritePermission", $this->userController->checkPermissionStack($this->writePermissions));
-        ThemeVariables::set("Categories", array_map(fn($category) => $category->toArray(), $this->categoryDatabaseController->fetchAllCategories()));
+        ThemeVariables::set('HasWritePermission', $this->userController->checkPermissionStack($this->writePermissions));
+        ThemeVariables::set('Categories', array_map(fn ($category) => $category->toArray(), $this->categoryDatabaseController->fetchAllCategories()));
 
-
-
-        echo Themes::render("maps/templates/Views/CmsControl/Categories.twig");
+        echo Themes::render('maps/templates/Views/CmsControl/Categories.twig');
     }
 
-    public function postRender(): void {}
+    public function postRender(): void
+    {
+    }
 }

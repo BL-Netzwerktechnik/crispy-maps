@@ -3,16 +3,11 @@
 namespace blfilme\lostplaces\EventSubscribers;
 
 use crisp\api\Config;
-use crisp\api\Translation;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use crisp\core\Themes;
 use crisp\core\ThemeVariables;
 use Crispy\DatabaseControllers\TemplateDatabaseController;
 use Crispy\Events\SettingsTabListCreatedEvent;
-use Crispy\Helper;
-use Crispy\Models\CmsControlNavbarModel;
-use Crispy\Models\NavbarDividerModel;
-use Crispy\Models\NavBarItemModel;
 use Crispy\Models\SettingsNavItemModel;
 use Crispy\Models\SettingsTabPaneModel;
 
@@ -24,6 +19,7 @@ class SettingTabListCreatedEventSubscriber implements EventSubscriberInterface
     {
         $this->templateDatabaseController = new TemplateDatabaseController();
     }
+
     public static function getSubscribedEvents(): array
     {
         return [
@@ -33,34 +29,33 @@ class SettingTabListCreatedEventSubscriber implements EventSubscriberInterface
 
     public function onSettingsTabListCreated(SettingsTabListCreatedEvent $event): void
     {
-        
 
         $LostPlaces_LocationTemplateList = [];
         $LostPlaces_MapPopupTemplateList = [];
 
-        foreach($this->templateDatabaseController->fetchAllTemplates() as $template) {
+        foreach ($this->templateDatabaseController->fetchAllTemplates() as $template) {
             $LostPlaces_LocationTemplateList[] = [
-                "value" => $template->getId(),
-                "text" => sprintf("[%s] %s", $template->getSlug(), $template->getName()),
-                "selected" => $template->getId() == Config::get("LostPlaces_LocationTemplate") ?? false,
+                'value' => $template->getId(),
+                'text' => sprintf('[%s] %s', $template->getSlug(), $template->getName()),
+                'selected' => $template->getId() == Config::get('LostPlaces_LocationTemplate') ?? false,
             ];
 
             $LostPlaces_MapPopupTemplateList[] = [
-                "value" => $template->getId(),
-                "text" => sprintf("[%s] %s", $template->getSlug(), $template->getName()),
-                "selected" => $template->getId() == Config::get("LostPlaces_MapPopupTemplate") ?? false,
+                'value' => $template->getId(),
+                'text' => sprintf('[%s] %s', $template->getSlug(), $template->getName()),
+                'selected' => $template->getId() == Config::get('LostPlaces_MapPopupTemplate') ?? false,
             ];
         }
 
-        ThemeVariables::set("LostPlaces_LocationTemplateList", $LostPlaces_LocationTemplateList);
-        ThemeVariables::set("LostPlaces_MapPopupTemplateList", $LostPlaces_MapPopupTemplateList);
+        ThemeVariables::set('LostPlaces_LocationTemplateList', $LostPlaces_LocationTemplateList);
+        ThemeVariables::set('LostPlaces_MapPopupTemplateList', $LostPlaces_MapPopupTemplateList);
 
         $settingsTabListModel = $event->getTabList();
         $settingsTabListModel->addNavItem(new SettingsNavItemModel(
-            text: "Crispy Maps",
-            icon: "fas fa-map",
+            text: 'Crispy Maps',
+            icon: 'fas fa-map',
             tabPane: new SettingsTabPaneModel(
-                content: Themes::render("maps/templates/Settings/TabContent.twig")
+                content: Themes::render('maps/templates/Settings/TabContent.twig')
             )
         ));
     }

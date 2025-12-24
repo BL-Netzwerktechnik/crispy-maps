@@ -7,7 +7,8 @@ class HeatMapModel
     public function __construct(
         private CoordinateModel $coordinate,
         private int $weight,
-    ) {}
+    ) {
+    }
 
     public function getCoordinate(): CoordinateModel
     {

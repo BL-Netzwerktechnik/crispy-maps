@@ -2,7 +2,6 @@
 
 namespace blfilme\lostplaces\Models;
 
-use blfilme\lostplaces\Enums\MarkerColors;
 use blfilme\lostplaces\Interfaces\IconInterface;
 use Carbon\Carbon;
 
@@ -16,12 +15,12 @@ class CategoryModel
         private ?Carbon $createdAt = null,
         private ?Carbon $updatedAt = null,
     ) {
-        $this->createdAt = $this->createdAt ?? Carbon::now($_ENV["TZ"] ?? 'UTC');
-        $this->updatedAt = $this->updatedAt ?? Carbon::now($_ENV["TZ"] ?? 'UTC');
+        $this->createdAt = $this->createdAt ?? Carbon::now($_ENV['TZ'] ?? 'UTC');
+        $this->updatedAt = $this->updatedAt ?? Carbon::now($_ENV['TZ'] ?? 'UTC');
     }
 
     /**
-     * Get the ID of the category
+     * Get the ID of the category.
      *
      * @return int|null
      */
@@ -31,7 +30,7 @@ class CategoryModel
     }
 
     /**
-     * Get the name of the category
+     * Get the name of the category.
      *
      * @return string
      */
@@ -41,7 +40,7 @@ class CategoryModel
     }
 
     /**
-     * Get the description of the category
+     * Get the description of the category.
      *
      * @return string
      */
@@ -51,7 +50,7 @@ class CategoryModel
     }
 
     /**
-     * Get the icon of the category
+     * Get the icon of the category.
      *
      * @return IconInterface
      */
@@ -60,46 +59,47 @@ class CategoryModel
         return $this->icon;
     }
 
-
     /**
-     * Set the name of the category
-     * 
-     * @param string $name
+     * Set the name of the category.
+     *
+     * @param  string $name
      * @return self
      */
     public function setName(string $name): self
     {
         $this->name = $name;
+
         return $this;
     }
 
     /**
-     * Set the description of the category
-     * 
-     * @param string $description
+     * Set the description of the category.
+     *
+     * @param  string $description
      * @return self
      */
-
     public function setDescription(string $description): self
     {
         $this->description = $description;
+
         return $this;
     }
 
     /**
-     * Set the icon of the category
-     * 
-     * @param IconInterface $icon
+     * Set the icon of the category.
+     *
+     * @param  IconInterface $icon
      * @return self
      */
     public function setIcon(IconInterface $icon): self
     {
         $this->icon = $icon;
+
         return $this;
     }
 
     /**
-     * Convert the category to an array
+     * Convert the category to an array.
      *
      * @return array
      */
@@ -114,7 +114,7 @@ class CategoryModel
     }
 
     /**
-     * Get the created at date of the category
+     * Get the created at date of the category.
      *
      * @return Carbon|null
      */
@@ -124,11 +124,10 @@ class CategoryModel
     }
 
     /**
-     * Get the updated at date of the category
+     * Get the updated at date of the category.
      *
      * @return Carbon|null
      */
-
     public function getUpdatedAt(): ?Carbon
     {
         return $this->updatedAt;
@@ -136,7 +135,8 @@ class CategoryModel
 
     public function setUpdatedAt(): self
     {
-        $this->updatedAt = Carbon::now($_ENV["TZ"] ?? 'UTC');
+        $this->updatedAt = Carbon::now($_ENV['TZ'] ?? 'UTC');
+
         return $this;
     }
 }

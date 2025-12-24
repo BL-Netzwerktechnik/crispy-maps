@@ -2,18 +2,16 @@
 
 namespace blfilme\lostplaces\Models;
 
-use blfilme\lostplaces\Interfaces\CategoryInterface;
-use blfilme\lostplaces\Interfaces\CoordinateInterface;
-
 class PointModel
 {
     public function __construct(
         private int $x,
         private int $y,
-    ) {}
+    ) {
+    }
 
     /**
-     * Get the x coordinate of the point
+     * Get the x coordinate of the point.
      *
      * @return int
      */
@@ -23,7 +21,7 @@ class PointModel
     }
 
     /**
-     * Get the y coordinate of the point
+     * Get the y coordinate of the point.
      *
      * @return int
      */

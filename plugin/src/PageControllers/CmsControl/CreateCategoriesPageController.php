@@ -10,13 +10,11 @@
  *
  */
 
-
 namespace blfilme\lostplaces\PageControllers\CmsControl;
 
 use blfilme\lostplaces\Controllers\IconProviderController;
 use blfilme\lostplaces\DatabaseControllers\CategoryDatabaseController;
 use blfilme\lostplaces\Models\CategoryModel;
-use Carbon\Carbon;
 use crisp\api\Translation;
 use crisp\core\Bitmask;
 use crisp\core\RESTfulAPI;
@@ -24,7 +22,6 @@ use crisp\core\Themes;
 use crisp\core\ThemeVariables;
 use Crispy\Controllers\UserController;
 use Crispy\Enums\Permissions;
-
 
 class CreateCategoriesPageController
 {
@@ -42,31 +39,31 @@ class CreateCategoriesPageController
         $this->categoryDatabaseController = new CategoryDatabaseController();
     }
 
-
-
     public function processPOSTRequest(): void
     {
         $this->userController->helperValidateBackendAccess(true);
 
         if (!$this->userController->checkPermissionStack($this->writePermissions)) {
             RESTfulAPI::response(Bitmask::MISSING_PERMISSIONS, 'You do not have permission to read or write categories', [], HTTP: 403);
+
             return;
         }
-
 
         if (empty($_POST['name'])) {
             RESTfulAPI::response(Bitmask::INVALID_PARAMETER, 'Missing parameter "name"', [], HTTP: 400);
+
             return;
         }
 
-
         if (empty($_POST['description'])) {
             RESTfulAPI::response(Bitmask::INVALID_PARAMETER, 'Missing parameter "description"', [], HTTP: 400);
+
             return;
         }
 
         if (empty($_POST['icon'])) {
             RESTfulAPI::response(Bitmask::INVALID_PARAMETER, 'Missing parameter "icon"', [], HTTP: 400);
+
             return;
         }
 
@@ -77,9 +74,10 @@ class CreateCategoriesPageController
             icon: IconProviderController::fetchFromConfig($_POST['icon'])
         );
         $this->categoryDatabaseController->beginTransaction();
-        if(!$this->categoryDatabaseController->insertCategory($Category)) {
+        if (!$this->categoryDatabaseController->insertCategory($Category)) {
             $this->categoryDatabaseController->rollbackTransaction();
             RESTfulAPI::response(Bitmask::GENERIC_ERROR, 'Failed to create category', [], HTTP: 500);
+
             return;
         }
         $this->categoryDatabaseController->commitTransaction();
@@ -93,13 +91,12 @@ class CreateCategoriesPageController
 
         if (!$this->userController->checkPermissionStack($this->writePermissions)) {
 
-            ThemeVariables::set("ErrorMessage", Translation::fetch('CMSControl.Views.ErrorPage.Permissions'));
-            echo Themes::render("Views/ErrorPage.twig");
+            ThemeVariables::set('ErrorMessage', Translation::fetch('CMSControl.Views.ErrorPage.Permissions'));
+            echo Themes::render('Views/ErrorPage.twig');
+
             return;
         }
 
-
-
-        echo Themes::render("maps/templates/Views/CmsControl/CategoryForm.twig");
+        echo Themes::render('maps/templates/Views/CmsControl/CategoryForm.twig');
     }
 }

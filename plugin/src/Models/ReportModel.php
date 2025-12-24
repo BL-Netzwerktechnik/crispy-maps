@@ -2,9 +2,7 @@
 
 namespace blfilme\lostplaces\Models;
 
-use blfilme\lostplaces\Enums\MarkerColors;
 use blfilme\lostplaces\Enums\ReportReasons;
-use blfilme\lostplaces\Interfaces\IconInterface;
 use Carbon\Carbon;
 use Crispy\Models\UserModel;
 
@@ -20,12 +18,12 @@ class ReportModel
         private ?Carbon $createdAt = null,
         private ?Carbon $updatedAt = null,
     ) {
-        $this->createdAt = $this->createdAt ?? Carbon::now($_ENV["TZ"] ?? 'UTC');
-        $this->updatedAt = $this->updatedAt ?? Carbon::now($_ENV["TZ"] ?? 'UTC');
+        $this->createdAt = $this->createdAt ?? Carbon::now($_ENV['TZ'] ?? 'UTC');
+        $this->updatedAt = $this->updatedAt ?? Carbon::now($_ENV['TZ'] ?? 'UTC');
     }
 
     /**
-     * Get the ID of the category
+     * Get the ID of the category.
      *
      * @return int|null
      */
@@ -33,8 +31,9 @@ class ReportModel
     {
         return $this->id;
     }
+
     /**
-     * Get the location of the vote
+     * Get the location of the vote.
      *
      * @return LocationModel
      */
@@ -44,7 +43,7 @@ class ReportModel
     }
 
     /**
-     * Get the user who voted
+     * Get the user who voted.
      *
      * @return UserModel|null
      */
@@ -54,7 +53,7 @@ class ReportModel
     }
 
     /**
-     * Get the IP address of the user who voted
+     * Get the IP address of the user who voted.
      *
      * @return string|null
      */
@@ -64,7 +63,7 @@ class ReportModel
     }
 
     /**
-     * Get the report description
+     * Get the report description.
      *
      * @return string
      */
@@ -74,11 +73,10 @@ class ReportModel
     }
 
     /**
-     * Get the report reasons
+     * Get the report reasons.
      *
      * @return ReportReasons[]
      */
-
     public function getReasons(): array
     {
         return $this->reasons;
@@ -90,7 +88,7 @@ class ReportModel
     }
 
     /**
-     * Convert the model to an array
+     * Convert the model to an array.
      *
      * @return array
      */
@@ -102,15 +100,15 @@ class ReportModel
             'author' => $this->user ? $this->user->toArray() : null,
             'ipAddress' => $this->ipAddress,
             'description' => $this->description,
-            'reasons' => array_map(fn($reason) => $reason->value, $this->reasons),
-            'reasonsLabels' => array_map(fn($reason) => $reason->getLabel(), $this->reasons),
+            'reasons' => array_map(fn ($reason) => $reason->value, $this->reasons),
+            'reasonsLabels' => array_map(fn ($reason) => $reason->getLabel(), $this->reasons),
             'createdAt' => $this->createdAt ? $this->createdAt->toDateTimeString() : null,
             'updatedAt' => $this->updatedAt ? $this->updatedAt->toDateTimeString() : null,
         ];
     }
 
     /**
-     * Get the created at date of the category
+     * Get the created at date of the category.
      *
      * @return Carbon|null
      */
@@ -120,11 +118,10 @@ class ReportModel
     }
 
     /**
-     * Get the updated at date of the category
+     * Get the updated at date of the category.
      *
      * @return Carbon|null
      */
-
     public function getUpdatedAt(): ?Carbon
     {
         return $this->updatedAt;
@@ -132,7 +129,8 @@ class ReportModel
 
     public function setUpdatedAt(): self
     {
-        $this->updatedAt = Carbon::now($_ENV["TZ"] ?? 'UTC');
+        $this->updatedAt = Carbon::now($_ENV['TZ'] ?? 'UTC');
+
         return $this;
     }
 }

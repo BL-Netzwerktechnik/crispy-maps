@@ -21,22 +21,15 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-
 namespace crisp\migrations;
 
 use crisp\api\Config;
-use crisp\core\Bitmask;
-use crisp\core\Crypto;
 use crisp\core\Migrations;
-use crisp\core\RESTfulAPI;
 use Crispy\Controllers\TemplateGeneratorController;
 use Crispy\DatabaseControllers\LayoutDatabaseController;
 use Crispy\DatabaseControllers\PageDatabaseController;
 use Crispy\DatabaseControllers\TemplateDatabaseController;
-use Crispy\Enums\Permissions;
-use Crispy\Models\LayoutModel;
 use Crispy\Models\TemplateModel;
-use Exception;
 
 if (!defined('CRISP_HOOKED')) {
     echo 'Illegal File access';
@@ -50,7 +43,6 @@ class defaultlayouts extends Migrations
     private TemplateDatabaseController $TemplateDatabaseController;
     private TemplateGeneratorController $TemplateGeneratorController;
     private PageDatabaseController $PageDatabaseController;
-
 
     public function __construct()
     {
@@ -70,7 +62,7 @@ class defaultlayouts extends Migrations
 
             $layout = $this->LayoutDatabaseController->getLayoutById(0);
 
-            if(!$layout){
+            if (!$layout) {
                 return $this->end();
             }
 
@@ -98,7 +90,6 @@ class defaultlayouts extends Migrations
                 layout: $layout,
             ));
 
-
             $this->TemplateDatabaseController->insertTemplates(new TemplateModel(
                 name: 'Default Page Container',
                 content: file_get_contents(__DIR__ . '/data/1745244126_defaultlayouts/pagecontainer.twig'),
@@ -109,25 +100,26 @@ class defaultlayouts extends Migrations
                 layout: $layout,
             ));
 
-
             $Page = $this->PageDatabaseController->getPageById(0);
 
-            if($Page){
+            if ($Page) {
                 $Page->setTemplate($MapTemplate);
                 $this->PageDatabaseController->updatePage($Page);
             }
 
-            Config::set("LostPlaces_LocationTemplate", $LocationTemplate->getId());
-
+            Config::set('LostPlaces_LocationTemplate', $LocationTemplate->getId());
 
             if ($this->Database->inTransaction()) {
                 $this->TemplateGeneratorController->generate();
+
                 return $this->end();
             }
+
             return true;
-        } catch (Exception $ex) {
+        } catch (\Exception $ex) {
             echo $ex->getMessage() . PHP_EOL;
             $this->rollback();
+
             return false;
         }
     }

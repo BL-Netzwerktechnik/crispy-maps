@@ -22,9 +22,8 @@ enum LocationProperties: int
     case VIDEO_FORBIDDEN = 0x1000;
     case VIDEO_ALLOWED = 0x2000;
 
-
     /**
-     * Bootstrap Badge color for the enum value
+     * Bootstrap Badge color for the enum value.
      *
      * @return string
      */
@@ -51,7 +50,7 @@ enum LocationProperties: int
 
     public function getBadgeIcon(): IconInterface
     {
-        return match ($this){
+        return match ($this) {
             self::ACCESS_WITH_PERMISSION => IconProviderController::fetchFromConfig('envelope'),
             self::CAMERAS_PRESENT => IconProviderController::fetchFromConfig('camera'),
             self::FENCED => IconProviderController::fetchFromConfig('xmarks-lines'),
@@ -71,7 +70,8 @@ enum LocationProperties: int
     }
 
     /**
-     * Get Label for the enum value in German
+     * Get Label for the enum value in German.
+     *
      * @todo Add Translation support
      *
      * @return string
@@ -105,6 +105,7 @@ enum LocationProperties: int
                 $result[] = $case;
             }
         }
+
         return $result;
     }
 
@@ -116,6 +117,7 @@ enum LocationProperties: int
                 $result |= $property->value;
             }
         }
+
         return $result;
     }
 }

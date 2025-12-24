@@ -10,34 +10,18 @@
  *
  */
 
-
 namespace blfilme\lostplaces\PageControllers\Public;
 
-use blfilme\lostplaces\Controllers\IconProviderController;
-use blfilme\lostplaces\DatabaseControllers\CategoryDatabaseController;
 use blfilme\lostplaces\DatabaseControllers\LocationDatabaseController;
 use blfilme\lostplaces\DatabaseControllers\ReportDatabaseController;
-use blfilme\lostplaces\DatabaseControllers\VoteDatabaseController;
-use blfilme\lostplaces\Enums\LocationProperties;
-use blfilme\lostplaces\Enums\LocationStatus;
 use blfilme\lostplaces\Enums\ReportReasons;
-use blfilme\lostplaces\Models\CategoryModel;
-use blfilme\lostplaces\Models\CoordinateModel;
-use blfilme\lostplaces\Models\LocationModel;
 use blfilme\lostplaces\Models\ReportModel;
-use blfilme\lostplaces\Models\VoteModel;
-use Carbon\Carbon;
 use crisp\api\Helper;
-use crisp\api\Translation;
 use crisp\core\Bitmask;
 use crisp\core\Logger;
 use crisp\core\RESTfulAPI;
 use crisp\core\Sessions;
-use crisp\core\Themes;
-use crisp\core\ThemeVariables;
 use Crispy\Controllers\UserController;
-use Crispy\Enums\Permissions;
-
 
 class ReportLocationPageController
 {
@@ -52,36 +36,37 @@ class ReportLocationPageController
         $this->locationDatabaseController = new LocationDatabaseController();
     }
 
-
-
     public function processPOSTRequest(int $id): void
     {
         $Location = $this->locationDatabaseController->getLocationById($id);
 
         if ($Location === null) {
             RESTfulAPI::response(Bitmask::INVALID_PARAMETER, 'Location not found', [], HTTP: 404);
+
             return;
         }
 
         $this->reportDatabaseController->beginTransaction();
 
-        if(Sessions::isSessionValid()){
+        if (Sessions::isSessionValid()) {
             $hasReported = $this->reportDatabaseController->reportExistsByLocationAndUser($Location, $this->userController->getUser());
-        }else{
+        } else {
             $hasReported = $this->reportDatabaseController->reportExistByLocationAndIpAddress($Location, Helper::getRealIpAddr());
         }
 
-        if($hasReported){
+        if ($hasReported) {
             // Report already exists, silently ignore
             http_response_code(201);
+
             return;
         }
 
         $reasons = [];
 
-        if(isset($_POST['reason']) && is_array($_POST['reason'])){
+        if (isset($_POST['reason']) && is_array($_POST['reason'])) {
             foreach ($_POST['reason'] as $reason) {
-                if (is_numeric($reason) && ReportReasons::tryFrom($reason) !== null) {;
+                if (is_numeric($reason) && ReportReasons::tryFrom($reason) !== null) {
+                    ;
                     $reasons[] = ReportReasons::tryFrom($reason);
                 }
             }
@@ -93,10 +78,9 @@ class ReportLocationPageController
             'description' => $_POST['description'] ?? '',
         ]);
 
-
-
-        if(empty($reasons)){
+        if (empty($reasons)) {
             RESTfulAPI::response(Bitmask::INVALID_PARAMETER, 'Invalid parameter "reasons"', [], HTTP: 400);
+
             return;
         }
 
@@ -109,14 +93,16 @@ class ReportLocationPageController
             reasons: $reasons,
         );
 
-        if(!$this->reportDatabaseController->insertReport($reportModel)) {
+        if (!$this->reportDatabaseController->insertReport($reportModel)) {
             $this->reportDatabaseController->rollbackTransaction();
             RESTfulAPI::response(Bitmask::GENERIC_ERROR, 'Failed to Report', [], HTTP: 500);
+
             return;
         }
         $this->reportDatabaseController->commitTransaction();
 
         http_response_code(201);
+
         return;
     }
 }

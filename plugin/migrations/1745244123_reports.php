@@ -21,14 +21,9 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-
 namespace crisp\migrations;
 
-use crisp\core\Bitmask;
 use crisp\core\Migrations;
-use crisp\core\RESTfulAPI;
-use Crispy\Enums\Permissions;
-use Exception;
 
 if (!defined('CRISP_HOOKED')) {
     echo 'Illegal File access';
@@ -37,7 +32,6 @@ if (!defined('CRISP_HOOKED')) {
 
 class reports extends Migrations
 {
-
     public function run()
     {
         try {
@@ -45,24 +39,26 @@ class reports extends Migrations
                 $this->begin();
             }
             $this->createTable(
-                "lostplaces_reports",
-                array("id", $this::DB_INTEGER, "NOT NULL SERIAL"),
-                array("location", $this::DB_INTEGER, "NOT NULL"),
-                array("reason", $this::DB_BIGINT, "NOT NULL"),
-                array("description", $this::DB_TEXT, "NOT NULL"),
-                array("author", $this::DB_INTEGER, "DEFAULT NULL"),
-                array("ip_address", $this::DB_VARCHAR, "DEFAULT NULL"),
-                array("created_at", $this::DB_TIMESTAMP, "NOT NULL DEFAULT CURRENT_TIMESTAMP"),
-                array("updated_at", $this::DB_TIMESTAMP, "NOT NULL DEFAULT CURRENT_TIMESTAMP"),
+                'lostplaces_reports',
+                ['id', $this::DB_INTEGER, 'NOT NULL SERIAL'],
+                ['location', $this::DB_INTEGER, 'NOT NULL'],
+                ['reason', $this::DB_BIGINT, 'NOT NULL'],
+                ['description', $this::DB_TEXT, 'NOT NULL'],
+                ['author', $this::DB_INTEGER, 'DEFAULT NULL'],
+                ['ip_address', $this::DB_VARCHAR, 'DEFAULT NULL'],
+                ['created_at', $this::DB_TIMESTAMP, 'NOT NULL DEFAULT CURRENT_TIMESTAMP'],
+                ['updated_at', $this::DB_TIMESTAMP, 'NOT NULL DEFAULT CURRENT_TIMESTAMP'],
             );
 
             if ($this->Database->inTransaction()) {
                 return $this->end();
             }
+
             return true;
-        } catch (Exception $ex) {
+        } catch (\Exception $ex) {
             echo $ex->getMessage() . PHP_EOL;
             $this->rollback();
+
             return false;
         }
     }

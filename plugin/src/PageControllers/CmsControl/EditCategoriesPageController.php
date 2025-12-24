@@ -10,14 +10,11 @@
  *
  */
 
-
 namespace blfilme\lostplaces\PageControllers\CmsControl;
 
 use blfilme\lostplaces\Controllers\IconProviderController;
 use blfilme\lostplaces\DatabaseControllers\CategoryDatabaseController;
 use blfilme\lostplaces\DatabaseControllers\LocationDatabaseController;
-use blfilme\lostplaces\Models\CategoryModel;
-use Carbon\Carbon;
 use crisp\api\Translation;
 use crisp\core\Bitmask;
 use crisp\core\RESTfulAPI;
@@ -25,7 +22,6 @@ use crisp\core\Themes;
 use crisp\core\ThemeVariables;
 use Crispy\Controllers\UserController;
 use Crispy\Enums\Permissions;
-
 
 class EditCategoriesPageController
 {
@@ -39,7 +35,7 @@ class EditCategoriesPageController
     ];
 
     private array $deletePermissions = [
-        Permissions::SUPERUSER->value
+        Permissions::SUPERUSER->value,
     ];
 
     public function __construct()
@@ -55,14 +51,15 @@ class EditCategoriesPageController
 
         if (!$this->userController->checkPermissionStack($this->deletePermissions)) {
             RESTfulAPI::response(Bitmask::MISSING_PERMISSIONS, 'You do not have permission to delete categories', [], HTTP: 403);
+
             return;
         }
 
-        
         $Category = $this->categoryDatabaseController->getCategoryById($id);
 
         if ($Category === null) {
             RESTfulAPI::response(Bitmask::INVALID_PARAMETER, 'Category not found', [], HTTP: 404);
+
             return;
         }
 
@@ -74,37 +71,40 @@ class EditCategoriesPageController
         if (!$this->categoryDatabaseController->deleteCategory($Category)) {
             $this->categoryDatabaseController->rollbackTransaction();
             RESTfulAPI::response(Bitmask::GENERIC_ERROR, 'Failed to delete category', [], HTTP: 500);
+
             return;
         }
         $this->categoryDatabaseController->commitTransaction();
         http_response_code(204);
+
         return;
     }
-
 
     public function processPOSTRequest(int $id): void
     {
         $this->userController->helperValidateBackendAccess(true);
 
-
         if (!$this->userController->checkPermissionStack($this->writePermissions)) {
             RESTfulAPI::response(Bitmask::MISSING_PERMISSIONS, 'You do not have permission to read or write categories', [], HTTP: 403);
+
             return;
         }
 
         if (empty($_POST['name'])) {
             RESTfulAPI::response(Bitmask::INVALID_PARAMETER, 'Missing parameter "name"', [], HTTP: 400);
+
             return;
         }
 
-
         if (empty($_POST['description'])) {
             RESTfulAPI::response(Bitmask::INVALID_PARAMETER, 'Missing parameter "description"', [], HTTP: 400);
+
             return;
         }
 
         if (empty($_POST['icon'])) {
             RESTfulAPI::response(Bitmask::INVALID_PARAMETER, 'Missing parameter "icon"', [], HTTP: 400);
+
             return;
         }
 
@@ -112,6 +112,7 @@ class EditCategoriesPageController
 
         if ($Category === null) {
             RESTfulAPI::response(Bitmask::INVALID_PARAMETER, 'Category not found', [], HTTP: 404);
+
             return;
         }
 
@@ -120,9 +121,10 @@ class EditCategoriesPageController
         $Category->setIcon(IconProviderController::fetchFromConfig($_POST['icon']));
 
         $this->categoryDatabaseController->beginTransaction();
-        if(!$this->categoryDatabaseController->updateCategory($Category)) {
+        if (!$this->categoryDatabaseController->updateCategory($Category)) {
             $this->categoryDatabaseController->rollbackTransaction();
             RESTfulAPI::response(Bitmask::GENERIC_ERROR, 'Failed to update category', [], HTTP: 500);
+
             return;
         }
         $this->categoryDatabaseController->commitTransaction();
@@ -136,22 +138,23 @@ class EditCategoriesPageController
 
         if (!$this->userController->checkPermissionStack($this->writePermissions)) {
 
-            ThemeVariables::set("ErrorMessage", Translation::fetch('CMSControl.Views.ErrorPage.Permissions'));
-            echo Themes::render("Views/ErrorPage.twig");
+            ThemeVariables::set('ErrorMessage', Translation::fetch('CMSControl.Views.ErrorPage.Permissions'));
+            echo Themes::render('Views/ErrorPage.twig');
+
             return;
         }
-
 
         $Category = $this->categoryDatabaseController->getCategoryById($id);
 
         if ($Category === null) {
-            ThemeVariables::set("ErrorMessage", "Kategorie nicht gefunden");
-            echo Themes::render("Views/ErrorPage.twig");
+            ThemeVariables::set('ErrorMessage', 'Kategorie nicht gefunden');
+            echo Themes::render('Views/ErrorPage.twig');
+
             return;
         }
 
-        ThemeVariables::set("Category", $Category->toArray());
+        ThemeVariables::set('Category', $Category->toArray());
 
-        echo Themes::render("maps/templates/Views/CmsControl/CategoryForm.twig");
+        echo Themes::render('maps/templates/Views/CmsControl/CategoryForm.twig');
     }
 }

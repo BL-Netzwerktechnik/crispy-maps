@@ -2,21 +2,15 @@
 
 namespace blfilme\lostplaces\DatabaseControllers;
 
-use blfilme\lostplaces\Controllers\IconProviderController;
-use blfilme\lostplaces\Enums\MarkerColors;
 use blfilme\lostplaces\Enums\ReportReasons;
-use blfilme\lostplaces\Models\CategoryModel;
 use blfilme\lostplaces\Models\LocationModel;
 use blfilme\lostplaces\Models\ReportModel;
 use blfilme\lostplaces\Models\VoteModel;
 use Carbon\Carbon;
-use crisp\api\Translation;
 use crisp\core\Logger;
 use Crispy\DatabaseControllers\DatabaseController;
 use Crispy\DatabaseControllers\UserDatabaseController;
 use Crispy\Models\UserModel;
-use Exception;
-use PDO;
 
 class ReportDatabaseController extends DatabaseController
 {
@@ -39,10 +33,9 @@ class ReportDatabaseController extends DatabaseController
         Logger::getLogger(__METHOD__)->debug('Called', debug_backtrace(!DEBUG_BACKTRACE_PROVIDE_OBJECT | DEBUG_BACKTRACE_IGNORE_ARGS, 2)[1] ?? []);
         Logger::getLogger(__METHOD__)->debug('Converting row to class', $row);
 
-
         return new ReportModel(
             id: $row['id'],
-            user: $row["author"] ? $this->userDatabaseController->getUserById($row['author']) : null,
+            user: $row['author'] ? $this->userDatabaseController->getUserById($row['author']) : null,
             location: $this->locationDatabaseController->getLocationById($row['location']),
             ipAddress: $row['ip_address'],
             description: $row['description'],
@@ -70,7 +63,7 @@ class ReportDatabaseController extends DatabaseController
     public function deleteReportByLocationAndUser(LocationModel $locationModel, UserModel $user): bool
     {
         if ($this->getDatabaseConnector() && $this->getDatabaseConnector()->inTransaction() === false) {
-            throw new Exception('Cannot delete template, because no transaction is active.');
+            throw new \Exception('Cannot delete template, because no transaction is active.');
         }
         Logger::getLogger(__METHOD__)->debug('Called', debug_backtrace(!DEBUG_BACKTRACE_PROVIDE_OBJECT | DEBUG_BACKTRACE_IGNORE_ARGS, 2)[1] ?? []);
         Logger::getLogger(__METHOD__)->debug('Deleting report by location and user', ['location' => $locationModel->getId(), 'userId' => $user->getId()]);
@@ -116,7 +109,7 @@ class ReportDatabaseController extends DatabaseController
 
         $_rows = [];
 
-        foreach ($statement->fetchAll(PDO::FETCH_ASSOC) as $Row) {
+        foreach ($statement->fetchAll(\PDO::FETCH_ASSOC) as $Row) {
             $_rows[] = $this->ConvertRowToClass($Row);
         }
 
@@ -135,7 +128,7 @@ class ReportDatabaseController extends DatabaseController
             ':ip_address' => $ipAddress,
         ]);
 
-        return $statement->rowCount() > 0;    
+        return $statement->rowCount() > 0;
     }
 
     public function getReportById(int $id): ?ReportModel
@@ -149,20 +142,19 @@ class ReportDatabaseController extends DatabaseController
             return null;
         }
 
-        $row = $statement->fetch(PDO::FETCH_ASSOC);
+        $row = $statement->fetch(\PDO::FETCH_ASSOC);
 
         return $this->ConvertRowToClass($row);
     }
-
 
     public function countAllReportsForLocation(LocationModel $locationModel): int
     {
         $statement = $this->getDatabaseConnector()->prepare(sprintf('SELECT * FROM %s WHERE location = :location', self::tableName));
 
-
-        $statement->execute(   [
+        $statement->execute([
             ':location' => $locationModel->getId(),
         ]);
+
         return $statement->rowCount();
     }
 
@@ -176,12 +168,11 @@ class ReportDatabaseController extends DatabaseController
         return $statement->rowCount();
     }
 
-
     /**
-     * Undocumented function
+     * Undocumented function.
      *
-     * @param string $Order
-     * @param string $OrderCol
+     * @param  string      $Order
+     * @param  string      $OrderCol
      * @return VoteModel[]
      */
     public function fetchAllReports(string $Order = 'ASC', string $OrderCol = 'id'): array
@@ -194,7 +185,7 @@ class ReportDatabaseController extends DatabaseController
 
         $_rows = [];
 
-        foreach ($statement->fetchAll(PDO::FETCH_ASSOC) as $Row) {
+        foreach ($statement->fetchAll(\PDO::FETCH_ASSOC) as $Row) {
             $_rows[] = $this->ConvertRowToClass($Row);
         }
 
@@ -204,16 +195,15 @@ class ReportDatabaseController extends DatabaseController
     public function insertReport(ReportModel $reportModel): ReportModel
     {
         if ($this->getDatabaseConnector() && $this->getDatabaseConnector()->inTransaction() === false) {
-            throw new Exception('Cannot create report, because no transaction is active.');
+            throw new \Exception('Cannot create report, because no transaction is active.');
         }
 
         if ($reportModel->getId() !== null) {
-            throw new Exception('Report cannot be created, because it contains an ID.');
+            throw new \Exception('Report cannot be created, because it contains an ID.');
         }
 
         $SQLTemplate = 'INSERT INTO %s (%s) VALUES (%s)';
         $Values = [];
-
 
         $Values[':location'] = $reportModel->getLocation()->getId();
         $Values[':author'] = $reportModel->getUser() !== null ? $reportModel->getUser()->getId() : null;
@@ -235,7 +225,7 @@ class ReportDatabaseController extends DatabaseController
         $statement = $this->getDatabaseConnector()->prepare(sprintf($SQLTemplate, self::tableName, implode(', ', $Columns), implode(', ', $ParsedValues)));
 
         if (!$statement->execute($Values)) {
-            throw new Exception('Report could not be created.');
+            throw new \Exception('Report could not be created.');
         }
 
         return $this->getReportById($this->getDatabaseConnector()->lastInsertId());
@@ -244,7 +234,7 @@ class ReportDatabaseController extends DatabaseController
     public function deleteByLocation(LocationModel $locationModel): bool
     {
         if ($this->getDatabaseConnector() && $this->getDatabaseConnector()->inTransaction() === false) {
-            throw new Exception('Cannot delete report, because no transaction is active.');
+            throw new \Exception('Cannot delete report, because no transaction is active.');
         }
 
         $statement = $this->getDatabaseConnector()->prepare(sprintf('DELETE FROM %s WHERE location = :location;', self::tableName));
@@ -257,7 +247,7 @@ class ReportDatabaseController extends DatabaseController
     public function deleteReport(ReportModel $reportModel): bool
     {
         if ($this->getDatabaseConnector() && $this->getDatabaseConnector()->inTransaction() === false) {
-            throw new Exception('Cannot delete report, because no transaction is active.');
+            throw new \Exception('Cannot delete report, because no transaction is active.');
         }
 
         $statement = $this->getDatabaseConnector()->prepare(sprintf('DELETE FROM %s WHERE id = :id;', self::tableName));

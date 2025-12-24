@@ -2,19 +2,13 @@
 
 namespace blfilme\lostplaces\DatabaseControllers;
 
-use blfilme\lostplaces\Controllers\IconProviderController;
-use blfilme\lostplaces\Enums\MarkerColors;
-use blfilme\lostplaces\Models\CategoryModel;
 use blfilme\lostplaces\Models\LocationModel;
 use blfilme\lostplaces\Models\VoteModel;
 use Carbon\Carbon;
-use crisp\api\Translation;
 use crisp\core\Logger;
 use Crispy\DatabaseControllers\DatabaseController;
 use Crispy\DatabaseControllers\UserDatabaseController;
 use Crispy\Models\UserModel;
-use Exception;
-use PDO;
 
 class VoteDatabaseController extends DatabaseController
 {
@@ -39,7 +33,7 @@ class VoteDatabaseController extends DatabaseController
 
         return new VoteModel(
             id: $row['id'],
-            user: $row["author"] ? $this->userDatabaseController->getUserById($row['author']) : null,
+            user: $row['author'] ? $this->userDatabaseController->getUserById($row['author']) : null,
             location: $this->locationDatabaseController->getLocationById($row['location']),
             ipAddress: $row['ip_address'],
             vote: $row['vote'] === '1',
@@ -51,7 +45,7 @@ class VoteDatabaseController extends DatabaseController
     public function deleteVoteByLocationAndIpAddress(LocationModel $locationModel, string $ipAddress): bool
     {
         if ($this->getDatabaseConnector() && $this->getDatabaseConnector()->inTransaction() === false) {
-            throw new Exception('Cannot delete template, because no transaction is active.');
+            throw new \Exception('Cannot delete template, because no transaction is active.');
         }
         Logger::getLogger(__METHOD__)->debug('Called', debug_backtrace(!DEBUG_BACKTRACE_PROVIDE_OBJECT | DEBUG_BACKTRACE_IGNORE_ARGS, 2)[1] ?? []);
         Logger::getLogger(__METHOD__)->debug('Deleting vote by location and IP address', ['location' => $locationModel->getId(), 'ipAddress' => $ipAddress]);
@@ -80,6 +74,7 @@ class VoteDatabaseController extends DatabaseController
 
         return $statement->rowCount() > 0;
     }
+
     public function downVoteExistsByLocationAndUser(LocationModel $locationModel, UserModel $user): bool
     {
         Logger::getLogger(__METHOD__)->debug('Called', debug_backtrace(!DEBUG_BACKTRACE_PROVIDE_OBJECT | DEBUG_BACKTRACE_IGNORE_ARGS, 2)[1] ?? []);
@@ -107,7 +102,7 @@ class VoteDatabaseController extends DatabaseController
             ':ip_address' => $ipAddress,
         ]);
 
-        return $statement->rowCount() > 0;    
+        return $statement->rowCount() > 0;
     }
 
     public function downVoteExistsByLocationAndIpAddress(LocationModel $locationModel, string $ipAddress): bool
@@ -122,7 +117,7 @@ class VoteDatabaseController extends DatabaseController
             ':ip_address' => $ipAddress,
         ]);
 
-        return $statement->rowCount() > 0;    
+        return $statement->rowCount() > 0;
     }
 
     public function locationHasVotes(LocationModel $locationModel): bool
@@ -157,7 +152,7 @@ class VoteDatabaseController extends DatabaseController
     public function deleteVoteByLocationAndUser(LocationModel $locationModel, UserModel $user): bool
     {
         if ($this->getDatabaseConnector() && $this->getDatabaseConnector()->inTransaction() === false) {
-            throw new Exception('Cannot delete template, because no transaction is active.');
+            throw new \Exception('Cannot delete template, because no transaction is active.');
         }
         Logger::getLogger(__METHOD__)->debug('Called', debug_backtrace(!DEBUG_BACKTRACE_PROVIDE_OBJECT | DEBUG_BACKTRACE_IGNORE_ARGS, 2)[1] ?? []);
         Logger::getLogger(__METHOD__)->debug('Deleting vote by location and user', ['location' => $locationModel->getId(), 'userId' => $user->getId()]);
@@ -184,7 +179,7 @@ class VoteDatabaseController extends DatabaseController
             ':ip_address' => $ipAddress,
         ]);
 
-        return $statement->rowCount() > 0;    
+        return $statement->rowCount() > 0;
     }
 
     public function getVoteyById(int $id): ?VoteModel
@@ -198,20 +193,19 @@ class VoteDatabaseController extends DatabaseController
             return null;
         }
 
-        $row = $statement->fetch(PDO::FETCH_ASSOC);
+        $row = $statement->fetch(\PDO::FETCH_ASSOC);
 
         return $this->ConvertRowToClass($row);
     }
-
 
     public function countAllUpVotesForLocation(LocationModel $locationModel): int
     {
         $statement = $this->getDatabaseConnector()->prepare(sprintf('SELECT * FROM %s WHERE location = :location AND vote = 1', self::tableName));
 
-
-        $statement->execute(   [
+        $statement->execute([
             ':location' => $locationModel->getId(),
         ]);
+
         return $statement->rowCount();
     }
 
@@ -219,9 +213,10 @@ class VoteDatabaseController extends DatabaseController
     {
         $statement = $this->getDatabaseConnector()->prepare(sprintf('SELECT * FROM %s WHERE location = :location AND vote = 0', self::tableName));
 
-        $statement->execute(   [
+        $statement->execute([
             ':location' => $locationModel->getId(),
         ]);
+
         return $statement->rowCount();
     }
 
@@ -229,12 +224,12 @@ class VoteDatabaseController extends DatabaseController
     {
         $statement = $this->getDatabaseConnector()->prepare(sprintf('SELECT * FROM %s WHERE location = :location', self::tableName));
 
-        $statement->execute(   [
+        $statement->execute([
             ':location' => $locationModel->getId(),
         ]);
+
         return $statement->rowCount();
     }
-
 
     /**
      * @return int
@@ -246,12 +241,11 @@ class VoteDatabaseController extends DatabaseController
         return $statement->rowCount();
     }
 
-
     /**
-     * Undocumented function
+     * Undocumented function.
      *
-     * @param string $Order
-     * @param string $OrderCol
+     * @param  string      $Order
+     * @param  string      $OrderCol
      * @return VoteModel[]
      */
     public function fetchAllVotes(string $Order = 'ASC', string $OrderCol = 'id'): array
@@ -264,7 +258,7 @@ class VoteDatabaseController extends DatabaseController
 
         $_rows = [];
 
-        foreach ($statement->fetchAll(PDO::FETCH_ASSOC) as $Row) {
+        foreach ($statement->fetchAll(\PDO::FETCH_ASSOC) as $Row) {
             $_rows[] = $this->ConvertRowToClass($Row);
         }
 
@@ -274,16 +268,15 @@ class VoteDatabaseController extends DatabaseController
     public function insertVote(VoteModel $voteModel): VoteModel
     {
         if ($this->getDatabaseConnector() && $this->getDatabaseConnector()->inTransaction() === false) {
-            throw new Exception('Cannot create vote, because no transaction is active.');
+            throw new \Exception('Cannot create vote, because no transaction is active.');
         }
 
         if ($voteModel->getId() !== null) {
-            throw new Exception('Navbar cannot be created, because it contains an ID.');
+            throw new \Exception('Navbar cannot be created, because it contains an ID.');
         }
 
         $SQLTemplate = 'INSERT INTO %s (%s) VALUES (%s)';
         $Values = [];
-
 
         $Values[':location'] = $voteModel->getLocation()->getId();
         $Values[':author'] = $voteModel->getUser() !== null ? $voteModel->getUser()->getId() : null;
@@ -304,17 +297,16 @@ class VoteDatabaseController extends DatabaseController
         $statement = $this->getDatabaseConnector()->prepare(sprintf($SQLTemplate, self::tableName, implode(', ', $Columns), implode(', ', $ParsedValues)));
 
         if (!$statement->execute($Values)) {
-            throw new Exception('Layout could not be created.');
+            throw new \Exception('Layout could not be created.');
         }
 
         return $this->getVoteyById($this->getDatabaseConnector()->lastInsertId());
     }
 
-
     public function deleteByLocation(LocationModel $locationModel): bool
     {
         if ($this->getDatabaseConnector() && $this->getDatabaseConnector()->inTransaction() === false) {
-            throw new Exception('Cannot delete template, because no transaction is active.');
+            throw new \Exception('Cannot delete template, because no transaction is active.');
         }
 
         $statement = $this->getDatabaseConnector()->prepare(sprintf('DELETE FROM %s WHERE location = :location;', self::tableName));
@@ -323,12 +315,11 @@ class VoteDatabaseController extends DatabaseController
 
         return $statement->execute();
     }
-    
 
     public function deleteVote(VoteModel $voteModel): bool
     {
         if ($this->getDatabaseConnector() && $this->getDatabaseConnector()->inTransaction() === false) {
-            throw new Exception('Cannot delete template, because no transaction is active.');
+            throw new \Exception('Cannot delete template, because no transaction is active.');
         }
 
         $statement = $this->getDatabaseConnector()->prepare(sprintf('DELETE FROM %s WHERE id = :id;', self::tableName));

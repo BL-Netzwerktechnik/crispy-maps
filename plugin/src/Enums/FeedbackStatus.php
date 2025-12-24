@@ -2,7 +2,6 @@
 
 namespace blfilme\lostplaces\Enums;
 
-
 enum FeedbackStatus: int
 {
     case MISCELLANEOUS = 0x0;
@@ -13,9 +12,9 @@ enum FeedbackStatus: int
     case CATEGORY_INCORRECT = 0x5;
     case SECURITY_PRESENCE = 0x6;
 
-
     /**
-     * Get Label for the enum value in German
+     * Get Label for the enum value in German.
+     *
      * @todo Add Translation support
      *
      * @return string

@@ -10,10 +10,8 @@
  *
  */
 
-
 namespace blfilme\lostplaces\PageControllers\CmsControl;
 
-use blfilme\lostplaces\Controllers\IconProviderController;
 use blfilme\lostplaces\DatabaseControllers\CategoryDatabaseController;
 use blfilme\lostplaces\DatabaseControllers\LocationDatabaseController;
 use blfilme\lostplaces\DatabaseControllers\ReportDatabaseController;
@@ -21,7 +19,6 @@ use blfilme\lostplaces\DatabaseControllers\VoteDatabaseController;
 use blfilme\lostplaces\Enums\LocationProperties;
 use blfilme\lostplaces\Enums\LocationStatus;
 use blfilme\lostplaces\Models\CategoryModel;
-use Carbon\Carbon;
 use crisp\api\Translation;
 use crisp\core\Bitmask;
 use crisp\core\RESTfulAPI;
@@ -29,8 +26,6 @@ use crisp\core\Themes;
 use crisp\core\ThemeVariables;
 use Crispy\Controllers\UserController;
 use Crispy\Enums\Permissions;
-use Crispy\Helper;
-use GeoIp2\Record\Location;
 
 class EditLocationPageController
 {
@@ -60,6 +55,7 @@ class EditLocationPageController
 
         if (!$this->userController->checkPermissionStack($this->writePermissions)) {
             RESTfulAPI::response(Bitmask::MISSING_PERMISSIONS, 'You do not have permission to read or write categories', [], HTTP: 403);
+
             return;
         }
 
@@ -67,28 +63,30 @@ class EditLocationPageController
 
         if ($Location === null) {
             RESTfulAPI::response(Bitmask::INVALID_PARAMETER, 'Location not found', [], HTTP: 404);
+
             return;
         }
 
         $this->locationDatabaseController->beginTransaction();
 
-
-        if(!$this->reportDatabaseController->deleteByLocation($Location)) {
+        if (!$this->reportDatabaseController->deleteByLocation($Location)) {
             $this->locationDatabaseController->rollbackTransaction();
             RESTfulAPI::response(Bitmask::GENERIC_ERROR, 'Failed to delete reports', [], HTTP: 500);
+
             return;
         }
 
         if (!$this->voteDatabaseController->deleteByLocation($Location)) {
             $this->locationDatabaseController->rollbackTransaction();
             RESTfulAPI::response(Bitmask::GENERIC_ERROR, 'Failed to delete votes', [], HTTP: 500);
+
             return;
         }
-
 
         if (!$this->locationDatabaseController->deleteLocation($Location)) {
             $this->locationDatabaseController->rollbackTransaction();
             RESTfulAPI::response(Bitmask::GENERIC_ERROR, 'Failed to delete Location', [], HTTP: 500);
+
             return;
         }
         $this->locationDatabaseController->commitTransaction();
@@ -98,37 +96,37 @@ class EditLocationPageController
         http_response_code(204);
     }
 
-
-
-
     public function processPOSTRequest(int $id): void
     {
         $this->userController->helperValidateBackendAccess(true);
 
-
         if (!$this->userController->checkPermissionStack($this->writePermissions)) {
             RESTfulAPI::response(Bitmask::MISSING_PERMISSIONS, 'You do not have permission to read or write categories', [], HTTP: 403);
+
             return;
         }
 
         if (empty($_POST['name'])) {
             RESTfulAPI::response(Bitmask::INVALID_PARAMETER, 'Missing parameter "name"', [], HTTP: 400);
+
             return;
         }
 
-
         if (empty($_POST['description'])) {
             RESTfulAPI::response(Bitmask::INVALID_PARAMETER, 'Missing parameter "description"', [], HTTP: 400);
+
             return;
         }
 
         if (empty($_POST['category'])) {
             RESTfulAPI::response(Bitmask::INVALID_PARAMETER, 'Missing parameter "category"', [], HTTP: 400);
+
             return;
         }
 
         if (empty($_POST['status'])) {
             RESTfulAPI::response(Bitmask::INVALID_PARAMETER, 'Missing parameter "status"', [], HTTP: 400);
+
             return;
         }
 
@@ -136,13 +134,15 @@ class EditLocationPageController
 
         if ($Location === null) {
             RESTfulAPI::response(Bitmask::INVALID_PARAMETER, 'Location not found', [], HTTP: 404);
+
             return;
         }
 
-        $Category = $this->categoryDatabaseController->getCategoryById((int)$_POST['category']);
+        $Category = $this->categoryDatabaseController->getCategoryById((int) $_POST['category']);
 
         if ($Category === null) {
             RESTfulAPI::response(Bitmask::INVALID_PARAMETER, 'Category not found', [], HTTP: 404);
+
             return;
         }
 
@@ -155,12 +155,13 @@ class EditLocationPageController
             foreach ($_POST['properties'] as $property) {
                 if (!LocationProperties::tryFrom($property)) {
                     RESTfulAPI::response(Bitmask::INVALID_PARAMETER, 'Invalid property', [], HTTP: 400);
+
                     return;
                 }
                 $convertedProperties[] = LocationProperties::from($property);
             }
-        }else{
-            $convertedProperties = LocationProperties::fromIntToArray((int)$_POST['properties']);
+        } else {
+            $convertedProperties = LocationProperties::fromIntToArray((int) $_POST['properties']);
         }
 
         $Location->setName($_POST['name']);
@@ -174,6 +175,7 @@ class EditLocationPageController
         if (!$this->locationDatabaseController->updateLocation($Location)) {
             $this->locationDatabaseController->rollbackTransaction();
             RESTfulAPI::response(Bitmask::GENERIC_ERROR, 'Failed to update Location', [], HTTP: 500);
+
             return;
         }
         $this->locationDatabaseController->commitTransaction();
@@ -184,40 +186,40 @@ class EditLocationPageController
     public function preRender(int $id): void
     {
         $this->userController->helperValidateBackendAccess(false);
-        
+
         if (!$this->userController->checkPermissionStack($this->writePermissions)) {
 
-            ThemeVariables::set("ErrorMessage", Translation::fetch('CMSControl.Views.ErrorPage.Permissions'));
-            echo Themes::render("Views/ErrorPage.twig");
+            ThemeVariables::set('ErrorMessage', Translation::fetch('CMSControl.Views.ErrorPage.Permissions'));
+            echo Themes::render('Views/ErrorPage.twig');
+
             return;
         }
-
 
         $Location = $this->locationDatabaseController->getLocationById($id);
 
         $Location->createFolderStructure();
 
         if ($Location === null) {
-            ThemeVariables::set("ErrorMessage", "Location nicht gefunden");
-            echo Themes::render("Views/ErrorPage.twig");
+            ThemeVariables::set('ErrorMessage', 'Location nicht gefunden');
+            echo Themes::render('Views/ErrorPage.twig');
+
             return;
         }
 
         $Reports = $this->reportDatabaseController->fetchReportsByLocation($Location);
 
-        ThemeVariables::set("Reports", array_map(function ($report) {
+        ThemeVariables::set('Reports', array_map(function ($report) {
             return $report->toArray();
         }, $Reports));
-        ThemeVariables::set("Location", $Location->toArray());
-        ThemeVariables::set("Categories", array_map(function (CategoryModel $category) {
+        ThemeVariables::set('Location', $Location->toArray());
+        ThemeVariables::set('Categories', array_map(function (CategoryModel $category) {
             return $category->toArray();
         }, $this->categoryDatabaseController->fetchAllCategories()));
 
-        ThemeVariables::set("Statuses", LocationStatus::cases());
-        ThemeVariables::set("Properties", LocationProperties::cases());
-        ThemeVariables::set("elFinderUploadTargetHash", $Location->getUploadFilePathHash());
+        ThemeVariables::set('Statuses', LocationStatus::cases());
+        ThemeVariables::set('Properties', LocationProperties::cases());
+        ThemeVariables::set('elFinderUploadTargetHash', $Location->getUploadFilePathHash());
 
-
-        echo Themes::render("maps/templates/Views/CmsControl/LocationForm.twig");
+        echo Themes::render('maps/templates/Views/CmsControl/LocationForm.twig');
     }
 }

@@ -21,14 +21,9 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-
 namespace crisp\migrations;
 
-use crisp\core\Bitmask;
 use crisp\core\Migrations;
-use crisp\core\RESTfulAPI;
-use Crispy\Enums\Permissions;
-use Exception;
 
 if (!defined('CRISP_HOOKED')) {
     echo 'Illegal File access';
@@ -37,22 +32,23 @@ if (!defined('CRISP_HOOKED')) {
 
 class markerindex extends Migrations
 {
-
     public function run()
     {
         try {
             if (!$this->Database->inTransaction()) {
                 $this->begin();
             }
-            $this->Database->query("CREATE INDEX idx_lostplaces_locations_marker_location ON lostplaces_locations USING GIST (marker_location);");
+            $this->Database->query('CREATE INDEX idx_lostplaces_locations_marker_location ON lostplaces_locations USING GIST (marker_location);');
 
             if ($this->Database->inTransaction()) {
                 return $this->end();
             }
+
             return true;
-        } catch (Exception $ex) {
+        } catch (\Exception $ex) {
             echo $ex->getMessage() . PHP_EOL;
             $this->rollback();
+
             return false;
         }
     }

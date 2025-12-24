@@ -3,14 +3,10 @@
 namespace blfilme\lostplaces\DatabaseControllers;
 
 use blfilme\lostplaces\Controllers\IconProviderController;
-use blfilme\lostplaces\Enums\MarkerColors;
 use blfilme\lostplaces\Models\CategoryModel;
 use Carbon\Carbon;
-use crisp\api\Translation;
 use crisp\core\Logger;
 use Crispy\DatabaseControllers\DatabaseController;
-use Exception;
-use PDO;
 
 class CategoryDatabaseController extends DatabaseController
 {
@@ -30,12 +26,11 @@ class CategoryDatabaseController extends DatabaseController
         Logger::getLogger(__METHOD__)->debug('Called', debug_backtrace(!DEBUG_BACKTRACE_PROVIDE_OBJECT | DEBUG_BACKTRACE_IGNORE_ARGS, 2)[1] ?? []);
         Logger::getLogger(__METHOD__)->debug('Converting row to class', $row);
 
-        if($row["id"] === -1) {
+        if ($row['id'] === -1) {
             return $this->createFallbackCategory();
         }
 
         Logger::getLogger(__METHOD__)->info('Saving to cache', $row);
-
 
         $categoryCache[$row['id']] = new CategoryModel(
             id: $row['id'],
@@ -48,17 +43,19 @@ class CategoryDatabaseController extends DatabaseController
 
         return $categoryCache[$row['id']];
     }
+
     public function getCategoryById(int $id): ?CategoryModel
     {
         Logger::getLogger(__METHOD__)->debug('Called', debug_backtrace(!DEBUG_BACKTRACE_PROVIDE_OBJECT | DEBUG_BACKTRACE_IGNORE_ARGS, 2)[1] ?? []);
         Logger::getLogger(__METHOD__)->debug('Getting category by ID', ['id' => $id]);
 
-        if($id === -1) {
+        if ($id === -1) {
             return $this->createFallbackCategory();
         }
 
         if (isset($this->categoryCache[$id])) {
             Logger::getLogger(__METHOD__)->debug('Category found in cache', ['id' => $id]);
+
             return $this->categoryCache[$id];
         }
 
@@ -68,23 +65,22 @@ class CategoryDatabaseController extends DatabaseController
             return null;
         }
 
-        $row = $statement->fetch(PDO::FETCH_ASSOC);
+        $row = $statement->fetch(\PDO::FETCH_ASSOC);
 
         return $this->ConvertRowToClass($row);
     }
 
-
     public function updateCategory(CategoryModel $categoryModel): bool
     {
         if ($this->isStrictTransaction() && $this->getDatabaseConnector()->inTransaction() === false) {
-            throw new Exception('Cannot update category, because no transaction is active.');
+            throw new \Exception('Cannot update category, because no transaction is active.');
         }
 
-        if($categoryModel->getId() === null) {
-            throw new Exception('Category cannot be updated, because it does not contain an ID.');
+        if ($categoryModel->getId() === null) {
+            throw new \Exception('Category cannot be updated, because it does not contain an ID.');
         }
         if ($categoryModel->getId() < 0) {
-            throw new Exception('Category cannot be updated, because it contains an invalid ID.');
+            throw new \Exception('Category cannot be updated, because it contains an invalid ID.');
         }
 
         $SQLTemplate = 'UPDATE %s SET %s WHERE id = :id';
@@ -95,7 +91,6 @@ class CategoryDatabaseController extends DatabaseController
         $Values[':description'] = $categoryModel->getDescription();
         $Values[':icon'] = $categoryModel->getIcon()->getName();
         $Values[':updated_at'] = $categoryModel->getUpdatedAt()->toDateTimeString();
-
 
         $Columns = [];
         foreach ($Values as $Column => $Value) {
@@ -119,11 +114,10 @@ class CategoryDatabaseController extends DatabaseController
         return $statement->rowCount();
     }
 
-
     public function hasLocations(CategoryModel $categoryModel): bool
     {
         if ($this->getDatabaseConnector() && $this->getDatabaseConnector()->inTransaction() === false) {
-            throw new Exception('Cannot check if category has locations, because no transaction is active.');
+            throw new \Exception('Cannot check if category has locations, because no transaction is active.');
         }
 
         $statement = $this->getDatabaseConnector()->query(sprintf('SELECT * FROM %s WHERE category = %s;', self::tableName, $categoryModel->getId()));
@@ -132,10 +126,10 @@ class CategoryDatabaseController extends DatabaseController
     }
 
     /**
-     * Undocumented function
+     * Undocumented function.
      *
-     * @param string $Order
-     * @param string $OrderCol
+     * @param  string          $Order
+     * @param  string          $OrderCol
      * @return CategoryModel[]
      */
     public function fetchAllCategories(string $Order = 'ASC', string $OrderCol = 'id'): array
@@ -148,11 +142,10 @@ class CategoryDatabaseController extends DatabaseController
 
         $_rows = [];
 
-
         // Fallback category
         $_rows[] = $this->createFallbackCategory();
 
-        foreach ($statement->fetchAll(PDO::FETCH_ASSOC) as $Row) {
+        foreach ($statement->fetchAll(\PDO::FETCH_ASSOC) as $Row) {
             $_rows[] = $this->ConvertRowToClass($Row);
         }
 
@@ -163,9 +156,9 @@ class CategoryDatabaseController extends DatabaseController
     {
         $categoryModel = new CategoryModel(
             id: -1,
-            name: "Keine Kategorie",
-            description: "Locations ohne Kategorie",
-            icon: IconProviderController::fetchFromConfig("person-circle-question"),
+            name: 'Keine Kategorie',
+            description: 'Locations ohne Kategorie',
+            icon: IconProviderController::fetchFromConfig('person-circle-question'),
             createdAt: Carbon::now(),
             updatedAt: Carbon::now(),
         );
@@ -176,16 +169,15 @@ class CategoryDatabaseController extends DatabaseController
     public function insertCategory(CategoryModel $categoryModel): CategoryModel
     {
         if ($this->getDatabaseConnector() && $this->getDatabaseConnector()->inTransaction() === false) {
-            throw new Exception('Cannot create category, because no transaction is active.');
+            throw new \Exception('Cannot create category, because no transaction is active.');
         }
 
         if ($categoryModel->getId() !== null) {
-            throw new Exception('Navbar cannot be created, because it contains an ID.');
+            throw new \Exception('Navbar cannot be created, because it contains an ID.');
         }
 
         $SQLTemplate = 'INSERT INTO %s (%s) VALUES (%s)';
         $Values = [];
-
 
         $Values[':name'] = $categoryModel->getName();
         $Values[':description'] = $categoryModel->getDescription();
@@ -205,7 +197,7 @@ class CategoryDatabaseController extends DatabaseController
         $statement = $this->getDatabaseConnector()->prepare(sprintf($SQLTemplate, self::tableName, implode(', ', $Columns), implode(', ', $ParsedValues)));
 
         if (!$statement->execute($Values)) {
-            throw new Exception('Layout could not be created.');
+            throw new \Exception('Layout could not be created.');
         }
 
         return $this->getCategoryById($this->getDatabaseConnector()->lastInsertId());
@@ -214,7 +206,7 @@ class CategoryDatabaseController extends DatabaseController
     public function deleteCategory(CategoryModel $categoryModel): bool
     {
         if ($this->getDatabaseConnector() && $this->getDatabaseConnector()->inTransaction() === false) {
-            throw new Exception('Cannot delete template, because no transaction is active.');
+            throw new \Exception('Cannot delete template, because no transaction is active.');
         }
 
         $statement = $this->getDatabaseConnector()->prepare(sprintf('DELETE FROM %s WHERE id = :id;', self::tableName));

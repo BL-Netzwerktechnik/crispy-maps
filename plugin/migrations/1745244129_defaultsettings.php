@@ -21,22 +21,10 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-
 namespace crisp\migrations;
 
 use crisp\api\Config;
-use crisp\core\Bitmask;
-use crisp\core\Crypto;
 use crisp\core\Migrations;
-use crisp\core\RESTfulAPI;
-use Crispy\Controllers\TemplateGeneratorController;
-use Crispy\DatabaseControllers\LayoutDatabaseController;
-use Crispy\DatabaseControllers\PageDatabaseController;
-use Crispy\DatabaseControllers\TemplateDatabaseController;
-use Crispy\Enums\Permissions;
-use Crispy\Models\LayoutModel;
-use Crispy\Models\TemplateModel;
-use Exception;
 
 if (!defined('CRISP_HOOKED')) {
     echo 'Illegal File access';
@@ -45,7 +33,6 @@ if (!defined('CRISP_HOOKED')) {
 
 class defaultsettings extends Migrations
 {
-
     public function run()
     {
         try {
@@ -53,42 +40,43 @@ class defaultsettings extends Migrations
                 $this->begin();
             }
 
-
-            if (!Config::exists("LostPlaces_MapPath") || empty(Config::get("LostPlaces_MapPath"))) {
-                Config::set("LostPlaces_MapPath", "/map.json");
+            if (!Config::exists('LostPlaces_MapPath') || empty(Config::get('LostPlaces_MapPath'))) {
+                Config::set('LostPlaces_MapPath', '/map.json');
             }
 
-            if (!Config::exists("LostPlaces_IconClass") || empty(Config::get("LostPlaces_IconClass"))) {
-                Config::set("LostPlaces_IconClass", "\blfilme\lostplaces\Models\IconModels\FontAwesomeSolidIconModel");
+            if (!Config::exists('LostPlaces_IconClass') || empty(Config::get('LostPlaces_IconClass'))) {
+                Config::set('LostPlaces_IconClass', "\blfilme\lostplaces\Models\IconModels\FontAwesomeSolidIconModel");
             }
 
-            if (!Config::exists("LostPlaces_ProviderPath") || empty(Config::get("LostPlaces_ProviderPath"))) {
-                Config::set("LostPlaces_ProviderPath", "uploads");
+            if (!Config::exists('LostPlaces_ProviderPath') || empty(Config::get('LostPlaces_ProviderPath'))) {
+                Config::set('LostPlaces_ProviderPath', 'uploads');
             }
 
-            if (!Config::exists("LostPlaces_FileProvider") || empty(Config::get("LostPlaces_FileProvider"))) {
-                Config::set("LostPlaces_FileProvider", "LocalFileProvider");
+            if (!Config::exists('LostPlaces_FileProvider') || empty(Config::get('LostPlaces_FileProvider'))) {
+                Config::set('LostPlaces_FileProvider', 'LocalFileProvider');
             }
 
-            if (!Config::exists("LostPlaces_MapAttribution") || empty(Config::get("LostPlaces_MapAttribution"))) {
-                Config::set("LostPlaces_MapAttribution", '&copy; <a href="https://openstreetmap.org">OpenStreetMap</a> Contributors | <a href="https://crispycms.de">Crispy Maps</a>');
+            if (!Config::exists('LostPlaces_MapAttribution') || empty(Config::get('LostPlaces_MapAttribution'))) {
+                Config::set('LostPlaces_MapAttribution', '&copy; <a href="https://openstreetmap.org">OpenStreetMap</a> Contributors | <a href="https://crispycms.de">Crispy Maps</a>');
             }
 
-            if (!Config::exists("LostPlaces_MapTileServer") || empty(Config::get("LostPlaces_MapTileServer"))) {
-                Config::set("LostPlaces_MapTileServer", "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png");
+            if (!Config::exists('LostPlaces_MapTileServer') || empty(Config::get('LostPlaces_MapTileServer'))) {
+                Config::set('LostPlaces_MapTileServer', 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png');
             }
 
-            if (!Config::exists("CMSControl_SiteName") || empty(Config::get("CMSControl_SiteName"))) {
-                Config::set("CMSControl_SiteName", "Crispy Maps");
+            if (!Config::exists('CMSControl_SiteName') || empty(Config::get('CMSControl_SiteName'))) {
+                Config::set('CMSControl_SiteName', 'Crispy Maps');
             }
 
             if ($this->Database->inTransaction()) {
                 return $this->end();
             }
+
             return true;
-        } catch (Exception $ex) {
+        } catch (\Exception $ex) {
             echo $ex->getMessage() . PHP_EOL;
             $this->rollback();
+
             return false;
         }
     }

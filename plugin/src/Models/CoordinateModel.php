@@ -7,10 +7,11 @@ class CoordinateModel
     public function __construct(
         private float $latitude,
         private float $longitude,
-    ) {}
+    ) {
+    }
 
     /**
-     * Get the latitude of the coordinate
+     * Get the latitude of the coordinate.
      *
      * @return float
      */
@@ -20,7 +21,7 @@ class CoordinateModel
     }
 
     /**
-     * Get the longitude of the coordinate
+     * Get the longitude of the coordinate.
      *
      * @return float
      */
@@ -74,7 +75,7 @@ class CoordinateModel
 
     public function toPostGIS(): string
     {
-        return sprintf("ST_SetSRID(ST_MakePoint(%s, %s), 4326)", $this->longitude, $this->latitude);
+        return sprintf('ST_SetSRID(ST_MakePoint(%s, %s), 4326)', $this->longitude, $this->latitude);
     }
 
     public function toGeoJsonFeature(): array

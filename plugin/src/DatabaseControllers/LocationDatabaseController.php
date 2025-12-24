@@ -2,22 +2,17 @@
 
 namespace blfilme\lostplaces\DatabaseControllers;
 
-use blfilme\lostplaces\Controllers\IconProviderController;
 use blfilme\lostplaces\Enums\LocationProperties;
 use blfilme\lostplaces\Enums\LocationStatus;
-use blfilme\lostplaces\Enums\MarkerColors;
 use blfilme\lostplaces\Models\CategoryModel;
 use blfilme\lostplaces\Models\CoordinateModel;
 use blfilme\lostplaces\Models\HeatMapModel;
 use blfilme\lostplaces\Models\LocationDistanceModel;
 use blfilme\lostplaces\Models\LocationModel;
 use Carbon\Carbon;
-use crisp\api\Translation;
 use crisp\core\Logger;
 use Crispy\DatabaseControllers\DatabaseController;
 use Crispy\DatabaseControllers\UserDatabaseController;
-use Exception;
-use PDO;
 
 class LocationDatabaseController extends DatabaseController
 {
@@ -39,6 +34,7 @@ class LocationDatabaseController extends DatabaseController
     private function ConvertRowToClass(array $row): LocationModel
     {
         Logger::getLogger(__METHOD__)->debug('Called', debug_backtrace(!DEBUG_BACKTRACE_PROVIDE_OBJECT | DEBUG_BACKTRACE_IGNORE_ARGS, 2)[1] ?? []);
+
         return new LocationModel(
             id: $row['id'],
             name: $row['name'],
@@ -55,11 +51,11 @@ class LocationDatabaseController extends DatabaseController
     }
 
     /**
-     * Undocumented function
+     * Undocumented function.
      *
-     * @param LocationModel $locationModel
-     * @param integer $limit
-     * @param integer $maxDistanceInKilometers
+     * @param  LocationModel           $locationModel
+     * @param  int                     $limit
+     * @param  int                     $maxDistanceInKilometers
      * @return LocationDistanceModel[]
      */
     public function fetchNearestLocations(LocationModel $locationModel, int $limit = 10, int $maxDistanceInKilometers = 100): array
@@ -92,8 +88,7 @@ LIMIT %s;', self::tableName, self::tableName, $limit));
 
         $_rows = [];
 
-
-        foreach ($statement->fetchAll(PDO::FETCH_ASSOC) as $Row) {
+        foreach ($statement->fetchAll(\PDO::FETCH_ASSOC) as $Row) {
             $_rows[] = new LocationDistanceModel(
                 location: $this->getLocationById($Row['id']),
                 distance: $Row['distance_km'],
@@ -102,7 +97,6 @@ LIMIT %s;', self::tableName, self::tableName, $limit));
 
         return $_rows;
     }
-
 
     public function getLocationById(int $id): ?LocationModel
     {
@@ -115,16 +109,15 @@ LIMIT %s;', self::tableName, self::tableName, $limit));
             return null;
         }
 
-        $row = $statement->fetch(PDO::FETCH_ASSOC);
+        $row = $statement->fetch(\PDO::FETCH_ASSOC);
 
         return $this->ConvertRowToClass($row);
     }
 
-
     public function updateLocation(LocationModel $locationModel): bool
     {
         if ($this->isStrictTransaction() && $this->getDatabaseConnector()->inTransaction() === false) {
-            throw new Exception('Cannot update category, because no transaction is active.');
+            throw new \Exception('Cannot update category, because no transaction is active.');
         }
 
         $SQLTemplate = 'UPDATE %s SET %s, marker_location = %s WHERE id = :id';
@@ -162,11 +155,10 @@ LIMIT %s;', self::tableName, self::tableName, $limit));
         return $statement->rowCount();
     }
 
-
     public function moveAllLocationsToNewCategory(CategoryModel $oldCategory, CategoryModel $newCategory): bool
     {
         if ($this->getDatabaseConnector() && $this->getDatabaseConnector()->inTransaction() === false) {
-            throw new Exception('Cannot move locations, because no transaction is active.');
+            throw new \Exception('Cannot move locations, because no transaction is active.');
         }
 
         $statement = $this->getDatabaseConnector()->prepare(sprintf('UPDATE %s SET category = :category WHERE category = :oldCategory;', self::tableName));
@@ -177,12 +169,11 @@ LIMIT %s;', self::tableName, self::tableName, $limit));
         return $statement->execute();
     }
 
-
     /**
-     * Undocumented function
+     * Undocumented function.
      *
-     * @param string $Order
-     * @param string $OrderCol
+     * @param  string          $Order
+     * @param  string          $OrderCol
      * @return CategoryModel[]
      */
     public function fetchAllLocations(string $Order = 'ASC', string $OrderCol = 'id'): array
@@ -195,16 +186,15 @@ LIMIT %s;', self::tableName, self::tableName, $limit));
 
         $_rows = [];
 
-        foreach ($statement->fetchAll(PDO::FETCH_ASSOC) as $Row) {
+        foreach ($statement->fetchAll(\PDO::FETCH_ASSOC) as $Row) {
             $_rows[] = $this->ConvertRowToClass($Row);
         }
 
         return $_rows;
     }
-    
 
     /**
-     * Undocumented function
+     * Undocumented function.
      *
      * @return CoordinateModel[]
      */
@@ -218,23 +208,20 @@ LIMIT %s;', self::tableName, self::tableName, $limit));
 
         $_rows = [];
 
-        foreach ($statement->fetchAll(PDO::FETCH_ASSOC) as $Row) {
+        foreach ($statement->fetchAll(\PDO::FETCH_ASSOC) as $Row) {
             $_rows[] = new CoordinateModel($Row['latitude'], $Row['longitude']);
         }
 
         return $_rows;
     }
 
-
-
-
     /**
-     * Undocumented function
+     * Undocumented function.
      *
-     * @param float $minLat
-     * @param float $maxLat
-     * @param float $minLon
-     * @param float $maxLon
+     * @param  float          $minLat
+     * @param  float          $maxLat
+     * @param  float          $minLon
+     * @param  float          $maxLon
      * @return HeatMapModel[]
      */
     public function fetchHeatmapByBoundary(float $minLat, float $maxLat, float $minLon, float $maxLon): array
@@ -257,7 +244,7 @@ LIMIT %s;', self::tableName, self::tableName, $limit));
 
         $_rows = [];
 
-        foreach ($statement->fetchAll(PDO::FETCH_ASSOC) as $Row) {
+        foreach ($statement->fetchAll(\PDO::FETCH_ASSOC) as $Row) {
             $_rows[] = new HeatMapModel(
                 coordinate: new CoordinateModel($Row['latitude'], $Row['longitude']),
                 weight: $Row['weight'],
@@ -287,7 +274,7 @@ LIMIT %s;', self::tableName, self::tableName, $limit));
 
         $_rows = [];
 
-        foreach ($statement->fetchAll(PDO::FETCH_ASSOC) as $Row) {
+        foreach ($statement->fetchAll(\PDO::FETCH_ASSOC) as $Row) {
             $_rows[] = $this->ConvertRowToClass($Row);
         }
 
@@ -308,23 +295,21 @@ LIMIT %s;', self::tableName, self::tableName, $limit));
             ':maxLon' => $maxLon,
         ]);
 
-        return (int)$statement->fetchColumn();
+        return (int) $statement->fetchColumn();
     }
-
 
     public function insertLocation(LocationModel $locationModel): LocationModel
     {
         if ($this->getDatabaseConnector() && $this->getDatabaseConnector()->inTransaction() === false) {
-            throw new Exception('Cannot create category, because no transaction is active.');
+            throw new \Exception('Cannot create category, because no transaction is active.');
         }
 
         if ($locationModel->getId() !== null) {
-            throw new Exception('LocationModel cannot be created, because it contains an ID.');
+            throw new \Exception('LocationModel cannot be created, because it contains an ID.');
         }
 
         $SQLTemplate = 'INSERT INTO %s (%s, marker_location) VALUES (%s, %s)';
         $Values = [];
-
 
         $Values[':name'] = $locationModel->getName();
         $Values[':description'] = $locationModel->getDescription();
@@ -345,7 +330,7 @@ LIMIT %s;', self::tableName, self::tableName, $limit));
         $statement = $this->getDatabaseConnector()->prepare(sprintf($SQLTemplate, self::tableName, implode(', ', $Columns), implode(', ', $ParsedValues), $locationModel->getCoordinates()->toPostGIS()));
 
         if (!$statement->execute($Values)) {
-            throw new Exception('Layout could not be created.');
+            throw new \Exception('Layout could not be created.');
         }
 
         return $this->getLocationById($this->getDatabaseConnector()->lastInsertId());
@@ -354,14 +339,14 @@ LIMIT %s;', self::tableName, self::tableName, $limit));
     public function canDeleteLocation(LocationModel $locationModel): bool
     {
         if ($this->getDatabaseConnector() && $this->getDatabaseConnector()->inTransaction() === false) {
-            throw new Exception('Cannot delete template, because no transaction is active.');
+            throw new \Exception('Cannot delete template, because no transaction is active.');
         }
 
-        if((new ReportDatabaseController())->locationHasReports($locationModel)) {
+        if ((new ReportDatabaseController())->locationHasReports($locationModel)) {
             return false;
         }
 
-        if((new VoteDatabaseController())->locationHasVotes($locationModel)) {
+        if ((new VoteDatabaseController())->locationHasVotes($locationModel)) {
             return false;
         }
 
@@ -371,11 +356,11 @@ LIMIT %s;', self::tableName, self::tableName, $limit));
     public function deleteLocation(LocationModel $locationModel): bool
     {
         if ($this->getDatabaseConnector() && $this->getDatabaseConnector()->inTransaction() === false) {
-            throw new Exception('Cannot delete template, because no transaction is active.');
+            throw new \Exception('Cannot delete template, because no transaction is active.');
         }
 
         if (!$this->canDeleteLocation($locationModel)) {
-            throw new Exception('Cannot delete location, because it has reports or votes.');
+            throw new \Exception('Cannot delete location, because it has reports or votes.');
         }
 
         $statement = $this->getDatabaseConnector()->prepare(sprintf('DELETE FROM %s WHERE id = :id;', self::tableName));

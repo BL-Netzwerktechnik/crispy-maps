@@ -9,10 +9,11 @@ class FontAwesomeSolidIconModel implements IconInterface
     public function __construct(
         private ?string $name = null,
         private ?string $color = null,
-    ) {}
+    ) {
+    }
 
     /**
-     * Get the name of the icon
+     * Get the name of the icon.
      *
      * @return null|string
      */
@@ -22,7 +23,7 @@ class FontAwesomeSolidIconModel implements IconInterface
     }
 
     /**
-     * Get the prefix of the icon
+     * Get the prefix of the icon.
      *
      * @return string
      */
@@ -32,7 +33,7 @@ class FontAwesomeSolidIconModel implements IconInterface
     }
 
     /**
-     * Get the full class name of the icon, e.g. "fa-solid fa-camera"
+     * Get the full class name of the icon, e.g. "fa-solid fa-camera".
      *
      * @return string
      */
@@ -64,12 +65,14 @@ class FontAwesomeSolidIconModel implements IconInterface
     public function setColor(?string $color): self
     {
         $this->color = $color;
+
         return $this;
     }
 
     public function setName(?string $name): self
     {
         $this->name = $name;
+
         return $this;
     }
 }

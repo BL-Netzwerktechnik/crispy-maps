@@ -60,7 +60,7 @@ class defaultlayouts extends Migrations
                 $this->begin();
             }
 
-            $layout = $this->LayoutDatabaseController->getLayoutById(0);
+            $layout = $this->LayoutDatabaseController->getLayoutById(1);
 
             if (!$layout) {
                 return $this->end();
@@ -100,7 +100,7 @@ class defaultlayouts extends Migrations
                 layout: $layout,
             ));
 
-            $Page = $this->PageDatabaseController->getPageById(0);
+            $Page = $this->PageDatabaseController->getPageById(1);
 
             if ($Page) {
                 $Page->setTemplate($MapTemplate);

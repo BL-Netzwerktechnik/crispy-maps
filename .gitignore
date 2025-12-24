@@ -5,3 +5,5 @@ vendor/
 node_modules/
 plugin/tmp
 !plugin/tmp/.keep
+crispcms/
+crispy/

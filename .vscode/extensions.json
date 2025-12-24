@@ -1,0 +1,15 @@
+{
+  "recommendations": [
+    "felixfbecker.php-debug",
+    "neilbrayfield.php-docblocker",
+    "doi.fileheadercomment",
+    "junstyle.php-cs-fixer",
+    "bmewburn.vscode-intelephense-client",
+    "darkriszty.markdown-table-prettify",
+    "vscode.php",
+    "doi.fileheadercomment",
+    "GitHub.copilot",
+    "mblode.twig-language"
+  ],
+  "unwantedRecommendations": ["gitpod.gitpod-remote-ssh"]
+}

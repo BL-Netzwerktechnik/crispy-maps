@@ -1,6 +1,44 @@
 {
-    "intelephense.environment.includePaths": [
-        "/workspace/crispcms",
-        "/workspace/crispy"
+  "intelephense.environment.includePaths": ["${workspaceFolder}/crispcms", "${workspaceFolder}/crispy"],
+  "[php]": {
+    "editor.defaultFormatter": "junstyle.php-cs-fixer"
+  },
+  "[json]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "[twig]": {
+    "editor.defaultFormatter": "mblode.twig-language"
+  },
+  "redhat.telemetry.enabled": false,
+  "fileHeaderComment.parameter": {
+    "twig": {
+      "commentbegin": "{#",
+      "commentprefix": " #",
+      "commentend": " #}"
+    },
+    "*": {
+      "commentbegin": "/**",
+      "commentprefix": " *",
+      "commentend": " **/",
+      "company": "Back Labidi Netzwerktechnik GbR"
+    }
+  },
+  "fileHeaderComment.template": {
+    "*": [
+      "${commentbegin}",
+      "${commentprefix} Copyright (c) ${year} ${company}. All rights reserved.",
+      "${commentend}"
     ]
+  },
+  "editor.formatOnSave": true,
+  "editor.codeActionsOnSave": {
+    "source.organizeImports": "explicit"
+  },
+  "php-cs-fixer.executablePath": "${workspaceFolder}/vendor/bin/php-cs-fixer",
+  "intelephense.environment.shortOpenTag": false,
+  "intelephense.codeLens.usages.enable": true,
+  "intelephense.codeLens.references.enable": true,
+  "intelephense.codeLens.implementations.enable": true,
+  "intelephense.codeLens.overrides.enable": true,
+  "intelephense.codeLens.parent.enable": true
 }

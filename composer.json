@@ -1,0 +1,13 @@
+{
+    "name": "bl-netzwerke/crispymaps",
+    "description": "CrispyMaps",
+    "require-dev": {
+        "phpunit/phpunit": "^9.5",
+        "friendsofphp/php-cs-fixer": "^3.35"
+    },
+    "config": {
+        "allow-plugins": {
+            "php-http/discovery": true
+        }
+    }
+}

@@ -1,4 +1,6 @@
-$(document).on("configLoaded", function (event, config) {
+$(document).on("leafletFinishedLoading", function (event) {
+    let config = event.detail;
+
     let map = L.map('map', {
         zoomControl: false,
         dragging: false,

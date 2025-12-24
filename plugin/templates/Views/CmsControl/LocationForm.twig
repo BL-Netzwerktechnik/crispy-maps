@@ -1,7 +1,7 @@
 {% extends "Base.twig" %}
 {% set pageTitle = "Maps Location - " ~ Location.name %}
 {% set currentPage = 'admin/lp/locations' %}
-{% set load_quill = true %}
+{% set loadEditor = true %}
 
 
 {% block Content %}
@@ -130,12 +130,25 @@
 
 
 {% block PageJs %}
-	<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
 	<script src="{{ includeResource("lp/js/shared/lostplaces.js") }}"></script>
-	<script src="https://cdn.jsdelivr.net/npm/leaflet.locatecontrol@0.84.1/dist/L.Control.Locate.min.js"></script>
-	<script src="{{ includeResource("lp/libs/Leaflet.awesome-markers/leaflet.awesome-markers.min.js") }}"></script>
 	<script src="{{ includeResource("lp/js/shared/map.preview.js") }}"></script>
+	<script>
+		$(document).on("mapsConfigLoaded", function (event) {
+		let config = event.detail;
+
+		require([
+			'https://unpkg.com/leaflet@1.9.4/dist/leaflet.js',
+			window.location.origin + '{{ includeResource("lp/libs/Leaflet.awesome-markers/leaflet.awesome-markers.min.js") }}'
+		], function () {
+		// plugin patches global L
+			console.log("Leaflet and dependencies loaded");
+			document.dispatchEvent(new CustomEvent('leafletFinishedLoading', { detail: config }));
+		});
+
+	});
+	</script>
 	<script src="{{ includeResource("lp/js/CmsControl/locationform.js") }}"></script>
+
 
 {% endblock %}
 

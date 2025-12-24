@@ -1,8 +1,8 @@
 $(document).ready(function () {
 
     $.get("/config.json", function (data) {
-        $(document).trigger("configLoaded", data);
-        console.log("Config loaded");
+        document.dispatchEvent(new CustomEvent('mapsConfigLoaded', { detail: data }));
+        console.log("Crispy Maps Config loaded");
         console.log(data);
     });
 

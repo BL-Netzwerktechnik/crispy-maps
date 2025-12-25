@@ -28,6 +28,7 @@ class LocationModel
      * @param UserModel            $author
      * @param Carbon               $createdAt
      * @param Carbon               $updatedAt
+     * @param string|null          $externalLink
      */
     public function __construct(
         public ?int $id,
@@ -41,6 +42,7 @@ class LocationModel
         private UserModel $author,
         private ?Carbon $createdAt = null,
         private ?Carbon $updatedAt = null,
+        private ?string $externalLink = null,
     ) {
         // Ensure properties are of type LocationProperties
         foreach ($this->properties as $property) {
@@ -50,6 +52,10 @@ class LocationModel
         }
         $this->createdAt = $this->createdAt ?? Carbon::now($_ENV['TZ'] ?? 'UTC');
         $this->updatedAt = $this->updatedAt ?? Carbon::now($_ENV['TZ'] ?? 'UTC');
+
+        if (strlen($this->externalLink ?? '') === 0) {
+            $this->externalLink = null;
+        }
     }
 
     public function getUploadFilePath(): string
@@ -106,6 +112,22 @@ class LocationModel
     public function setYoutube(?string $youtube): self
     {
         $this->youtube = $youtube;
+
+        return $this;
+    }
+
+    public function getExternalLink(): ?string
+    {
+        return $this->externalLink;
+    }
+
+    public function setExternalLink(?string $externalLink): self
+    {
+        if (strlen($externalLink ?? '') === 0) {
+            $externalLink = null;
+        }
+
+        $this->externalLink = $externalLink;
 
         return $this;
     }
@@ -293,6 +315,7 @@ class LocationModel
             'markerColor' => $this->status->getColor()->value,
             'createdAt' => $this->createdAt->toDateTimeString(),
             'updatedAt' => $this->updatedAt->toDateTimeString(),
+            'externalLink' => $this->externalLink,
         ];
     }
 

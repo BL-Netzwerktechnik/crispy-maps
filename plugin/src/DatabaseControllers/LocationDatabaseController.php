@@ -47,6 +47,7 @@ class LocationDatabaseController extends DatabaseController
             author: $this->userDatabaseController->getUserById($row['author']),
             createdAt: Carbon::parse($row['created_at'], $_ENV['TZ'] ?? 'UTC'),
             updatedAt: Carbon::parse($row['updated_at'], $_ENV['TZ'] ?? 'UTC'),
+            externalLink: $row['external_link'] ?? null,
         );
     }
 
@@ -132,6 +133,7 @@ LIMIT %s;', self::tableName, self::tableName, $limit));
         $Values[':properties'] = LocationProperties::fromArrayToInt($locationModel->getProperties());
         $Values[':author'] = 0; // TODO: Implement author
         $Values[':updated_at'] = $locationModel->getUpdatedAt()->toDateTimeString();
+        $Values[':external_link'] = $locationModel->getExternalLink();
 
         $Columns = [];
         foreach ($Values as $Column => $Value) {
@@ -318,6 +320,7 @@ LIMIT %s;', self::tableName, self::tableName, $limit));
         $Values[':status'] = $locationModel->getStatus()->value;
         $Values[':properties'] = LocationProperties::fromArrayToInt($locationModel->getProperties());
         $Values[':author'] = 0; // TODO: Implement author
+        $Values[':external_link'] = $locationModel->getExternalLink();
 
         $Columns = [];
         $ParsedValues = [];

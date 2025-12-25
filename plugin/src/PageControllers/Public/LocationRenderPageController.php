@@ -73,6 +73,11 @@ class LocationRenderPageController
             return;
         }
 
+        if ($Location->getExternalLink() !== null && $Location->getExternalLink() !== '') {
+            header('Location: ' . $Location->getExternalLink());
+            exit;
+        }
+
         ThemeVariables::set('Location', $Location->toArray());
         ThemeVariables::set('AllLocationProperties', LocationProperties::cases());
         ThemeVariables::set('ReportReasons', ReportReasons::cases());

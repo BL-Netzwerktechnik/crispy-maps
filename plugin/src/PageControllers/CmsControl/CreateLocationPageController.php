@@ -79,6 +79,15 @@ class CreateLocationPageController
             return;
         }
 
+        // Normalize external_link: empty string becomes null
+        $externalLink = isset($_POST['external_link']) && $_POST['external_link'] !== '' ? $_POST['external_link'] : null;
+
+        if ($externalLink !== null && !filter_var($externalLink, FILTER_VALIDATE_URL)) {
+            RESTfulAPI::response(Bitmask::INVALID_PARAMETER, 'Invalid URL format for "external_link"', [], HTTP: 400);
+
+            return;
+        }
+
         $Category = $this->categoryDatabaseController->getCategoryById((int) $_POST['category']);
 
         if ($Category === null) {
@@ -115,6 +124,7 @@ class CreateLocationPageController
             status: LocationStatus::from($_POST['status']),
             coordinates: new CoordinateModel($_GET['lat'], $_GET['lng']),
             author: $this->userController->getUser(),
+            externalLink: $externalLink,
         );
 
         $this->locationDatabaseController->beginTransaction();

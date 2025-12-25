@@ -49,6 +49,10 @@ class externallinktolocation extends Migrations
                 ['external_link', $this::DB_VARCHAR, 'DEFAULT NULL']
             );
 
+            if ($this->Database->inTransaction()) {
+                return $this->end();
+            }
+
             return true;
         } catch (\Exception $ex) {
             echo $ex->getMessage() . PHP_EOL;

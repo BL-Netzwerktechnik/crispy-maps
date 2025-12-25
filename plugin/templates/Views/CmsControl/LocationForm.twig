@@ -5,6 +5,11 @@
 
 
 {% block Content %}
+	{% if Location.externalLink is not empty %}
+		<div class="alert alert-warning" role="alert">
+			Diese Location leitet auf eine externe URL weiter: <a href="{{ Location.externalLink }}" target="_blank">{{ Location.externalLink }}</a>
+		</div>
+	{% endif %}
 	<div class="card mb-3">
 		<div class="card-header">
 			<a href="/admin/map" class="btn btn-primary float-end">Zurück zur Karte</a>
@@ -43,11 +48,21 @@
 				</div>
 
 
-				<div class="my-2">
-					<label for="name" class="form-label">Youtube-Video ID</label>
-					<input type="text" class="form-control" id="youtube" name="youtube" placeholder="Youtube Video ID" value="{{ Location.youtube }}">
 
-					<div class="form-text">Dieses Video wird in der Seitenleiste eingebettet.</div>
+				<div class="row row-cols-2 mt-2 mb-4">
+					<div class="col">
+						<label for="name" class="form-label">Youtube-Video ID</label>
+						<input type="text" class="form-control" id="youtube" name="youtube" placeholder="Youtube Video ID" value="{{ Location.youtube }}">
+
+						<div class="form-text">Dieses Video wird in der Seitenleiste eingebettet.</div>
+					</div>
+
+					<div class="col">
+						<label for="name" class="form-label">Weiterleitung</label>
+						<input type="text" class="form-control" id="external_link" name="external_link" placeholder="Weiterleitungs-URL" value="{{ Location.externalLink }}">
+
+						<div class="form-text">Eine URL, zu der weitergeleitet wird, wenn die Location ausgewählt wird.</div>
+					</div>
 				</div>
 
 				<div class="row row-cols-4">

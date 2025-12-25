@@ -130,6 +130,15 @@ class EditLocationPageController
             return;
         }
 
+        // Normalize external_link: empty string becomes null
+        $externalLink = isset($_POST['external_link']) && $_POST['external_link'] !== '' ? $_POST['external_link'] : null;
+
+        if ($externalLink !== null && !filter_var($externalLink, FILTER_VALIDATE_URL)) {
+            RESTfulAPI::response(Bitmask::INVALID_PARAMETER, 'Invalid URL format for "external_link"', [], HTTP: 400);
+
+            return;
+        }
+
         $Location = $this->locationDatabaseController->getLocationById($id);
 
         if ($Location === null) {
@@ -167,9 +176,11 @@ class EditLocationPageController
         $Location->setName($_POST['name']);
         $Location->setDescription($_POST['description']);
         $Location->setYoutube($_POST['youtube'] ?? null);
+        $Location->setExternalLink($externalLink);
         $Location->setProperties($convertedProperties);
         $Location->setStatus(LocationStatus::from($_POST['status']));
         $Location->setCategory($Category);
+        $Location->setExternalLink($externalLink);
 
         $this->locationDatabaseController->beginTransaction();
         if (!$this->locationDatabaseController->updateLocation($Location)) {

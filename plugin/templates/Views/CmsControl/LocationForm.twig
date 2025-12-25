@@ -145,8 +145,8 @@
 
 
 {% block PageJs %}
-	<script src="{{ includeResource("lp/js/shared/lostplaces.js") }}"></script>
-	<script src="{{ includeResource("lp/js/shared/map.preview.js") }}"></script>
+	<script src="{{ includeResource("lp/js/shared/lostplaces.js?v2") }}"></script>
+	<script src="{{ includeResource("lp/js/shared/map.preview.js?v2") }}"></script>
 	<script>
 		$(document).on("mapsConfigLoaded", function (event) {
 		let config = event.detail;
@@ -162,7 +162,7 @@
 
 	});
 	</script>
-	<script src="{{ includeResource("lp/js/CmsControl/locationform.js") }}"></script>
+	<script src="{{ includeResource("lp/js/CmsControl/locationform.js?v2") }}"></script>
 
 
 {% endblock %}

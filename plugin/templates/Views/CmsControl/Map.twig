@@ -9,11 +9,11 @@
 
 {% block PageJs %}
 	<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
-	<script src="{{ includeResource("lp/js/shared/lostplaces.js") }}"></script>
+	<script src="{{ includeResource("lp/js/shared/lostplaces.js?v2") }}"></script>
 	<script src="https://cdn.jsdelivr.net/npm/leaflet.locatecontrol@0.84.1/dist/L.Control.Locate.min.js"></script>
 	<script src="{{ includeResource("lp/libs/Leaflet.awesome-markers/leaflet.awesome-markers.min.js") }}"></script>
 	<script src="https://unpkg.com/supercluster@8.0.0/dist/supercluster.min.js"></script>
-	<script src="{{ includeResource("lp/js/CmsControl/map.js") }}"></script>
+	<script src="{{ includeResource("lp/js/CmsControl/map.js?v2") }}"></script>
 {% endblock %}
 
 {% block PageCSS %}

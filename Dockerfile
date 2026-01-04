@@ -1,4 +1,4 @@
-ARG CRISPY_VERSION=2.3.1
+ARG CRISPY_VERSION=2.3.2
 
 FROM registry.jrbit.de/jrb-it/crispy:$CRISPY_VERSION
 

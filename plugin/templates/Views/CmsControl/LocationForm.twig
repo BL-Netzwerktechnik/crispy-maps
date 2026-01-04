@@ -7,7 +7,8 @@
 {% block Content %}
 	{% if Location.externalLink is not empty %}
 		<div class="alert alert-warning" role="alert">
-			Diese Location leitet auf eine externe URL weiter: <a href="{{ Location.externalLink }}" target="_blank">{{ Location.externalLink }}</a>
+			Diese Location leitet auf eine externe URL weiter:
+			<a href="{{ Location.externalLink }}" target="_blank">{{ Location.externalLink }}</a>
 		</div>
 	{% endif %}
 	<div class="card mb-3">
@@ -46,7 +47,6 @@
 					<!-- Divider -->
 					<div class="divider-text">Zusätzliche Informationen</div>
 				</div>
-
 
 
 				<div class="row row-cols-2 mt-2 mb-4">
@@ -144,29 +144,6 @@
 {% endblock %}
 
 
-{% block PageJs %}
-	<script src="{{ includeResource("lp/js/shared/lostplaces.js?v2") }}"></script>
-	<script src="{{ includeResource("lp/js/shared/map.preview.js?v2") }}"></script>
-	<script>
-		$(document).on("mapsConfigLoaded", function (event) {
-		let config = event.detail;
-
-		require([
-			'https://unpkg.com/leaflet@1.9.4/dist/leaflet.js',
-			window.location.origin + '{{ includeResource("lp/libs/Leaflet.awesome-markers/leaflet.awesome-markers.min.js") }}'
-		], function () {
-		// plugin patches global L
-			console.log("Leaflet and dependencies loaded");
-			document.dispatchEvent(new CustomEvent('leafletFinishedLoading', { detail: config }));
-		});
-
-	});
-	</script>
-	<script src="{{ includeResource("lp/js/CmsControl/locationform.js?v2") }}"></script>
-
-
-{% endblock %}
-
 {% block PageCSS %}
 	<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin=""/>
 	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/leaflet.locatecontrol@0.84.1/dist/L.Control.Locate.min.css">
@@ -178,4 +155,21 @@
 			height: 250px;
 		}
 	</style>
+{% endblock %}
+
+
+{% block PageJs %}
+	<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+	<script src="{{ includeResource("lp/js/shared/lostplaces.js?v2") }}"></script>
+	<script src="{{ includeResource("lp/js/shared/map.preview.js?v2") }}"></script>
+	<script src="{{ includeResource("lp/libs/Leaflet.awesome-markers/leaflet.awesome-markers.min.js") }}"></script>
+	<script>
+		$(document).on("mapsConfigLoaded", function (event) {
+let config = event.detail;
+document.dispatchEvent(new CustomEvent('leafletFinishedLoading', {detail: config}));
+});
+	</script>
+	<script src="{{ includeResource("lp/js/CmsControl/locationform.js?v2") }}"></script>
+
+
 {% endblock %}

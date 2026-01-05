@@ -27,6 +27,15 @@
         "hint": "Der Tile Server der für die Kartenansicht verwendet wird",
     } %}
 	{% include "Components/Input.twig" with {
+        "type": "text",
+        "id": "settings-lostplaces-map-cluster-zoomlevel",
+        "name": "LostPlaces_MapClusterZoomLevel",
+        "required": true,
+        "value": config.LostPlaces_MapClusterZoomLevel,
+        "label": "Kartenansicht: Cluster Zoom Level",
+        "hint": "Der Zoom Level ab dem Cluster aufgelöst werden. Je höher der Wert, desto mehr muss rein gezoomt werden, damit die Cluster aufgelöst werden.",
+    } %}
+	{% include "Components/Input.twig" with {
         "type": "select",
         "id": "settings-lostplaces-icon-class",
         "name": "LostPlaces_IconClass",

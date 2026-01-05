@@ -136,14 +136,13 @@ class CategoryDatabaseController extends DatabaseController
     {
         $statement = $this->getDatabaseConnector()->query(sprintf("SELECT * FROM %s ORDER BY $OrderCol $Order;", self::tableName));
 
-        if ($statement->rowCount() === 0) {
-            return [];
-        }
-
         $_rows = [];
 
-        // Fallback category
         $_rows[] = $this->createFallbackCategory();
+
+        if ($statement->rowCount() === 0) {
+            return $_rows;
+        }
 
         foreach ($statement->fetchAll(\PDO::FETCH_ASSOC) as $Row) {
             $_rows[] = $this->ConvertRowToClass($Row);

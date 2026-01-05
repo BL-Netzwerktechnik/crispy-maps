@@ -18,6 +18,7 @@ use blfilme\lostplaces\PageControllers\Public\ReportLocationPageController;
 use blfilme\lostplaces\PageControllers\Public\VoteLocationPageController;
 use crisp\api\Config;
 use crisp\core\CLI;
+use crisp\core\Logger;
 use crisp\core\Migrations;
 use crisp\core\Router;
 use crisp\core\Themes;
@@ -47,6 +48,19 @@ class InitEventSubscriber implements EventSubscriberInterface
         $Migrations = new Migrations();
 
         $Migrations->migrate(__DIR__ . '/../../', 'bl-filme/lost-places');
+
+        Logger::getLogger(__METHOD__)->info('Bootstrapping config...');
+
+        Config::bootstrap('LostPlaces_MapPath', '/map.json');
+        Config::bootstrap('LostPlaces_IconClass', "\blfilme\lostplaces\Models\IconModels\FontAwesomeSolidIconModel");
+        Config::bootstrap('LostPlaces_ProviderPath', 'uploads');
+        Config::bootstrap('LostPlaces_FileProvider', 'LocalFileProvider');
+        Config::bootstrap('LostPlaces_MapAttribution', '&copy; <a href="https://openstreetmap.org">OpenStreetMap</a> Contributors | <a href="https://crispycms.de">Crispy Maps</a>');
+        Config::bootstrap('LostPlaces_MapTileServer', 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png');
+        Config::bootstrap('CMSControl_SiteName', 'Crispy Maps');
+        Config::bootstrap('LostPlaces_MapClusterZoomLevel', 10);
+
+        Logger::getLogger(__METHOD__)->info('Config bootstrapped.');
     }
 
     public function onSetup(Event $event)

@@ -33,7 +33,7 @@ function updateMap(config, map) {
 
   cleanupClusterLayer();
 
-  if (zoom >= 10) {
+  if (zoom >= config.map.cluster_zoom) {
     $.get(
       `${config.map.path}?editMode=true&minLat=${params.minLat}&minLon=${params.minLon}&maxLat=${params.maxLat}&maxLon=${params.maxLon}`,
       function (data) {

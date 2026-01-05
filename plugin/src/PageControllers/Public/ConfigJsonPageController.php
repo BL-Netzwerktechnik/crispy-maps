@@ -43,6 +43,7 @@ class ConfigJsonPageController
         echo json_encode([
             'netzdg_report_url' => Config::get('LostPlaces_NetzDGReportUrl'),
             'map' => [
+                'cluster_zoom' => Config::get('LostPlaces_MapClusterZoomLevel') ?? 10,
                 'path' => Config::get('LostPlaces_MapPath'),
                 'bounds' => [
                     [48.603931996685255, -1.6040039062500002],

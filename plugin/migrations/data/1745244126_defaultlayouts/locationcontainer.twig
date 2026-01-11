@@ -1,121 +1,121 @@
 {% set title = Location.name %}
 {% block Head %}
 
-  <meta name="description" content="{{ Location.description|striptags|truncateText(160) }}">
-  
-  <!-- Open Graph / Facebook -->
-  <meta property="og:type" content="website">
-  <meta property="og:title" content="{{ title }} - {{ config.CMSControl_SiteName }}">
-  <meta property="og:description" content="{{ Location.description|striptags|truncateText(160) }}">
-  {#<meta property="og:image" content="https://deine-domain.de/pfad/zum/bild.jpg">#}
+	<meta
+	name="description" content="{{ Location.description|striptags|truncateText(160) }}">
+
+	<!-- Open Graph / Facebook -->
+	<meta property="og:type" content="website">
+	<meta property="og:title" content="{{ title }} - {{ config.CMSControl_SiteName }}">
+	<meta
+	property="og:description" content="{{ Location.description|striptags|truncateText(160) }}">
+{#<meta property="og:image" content="https://deine-domain.de/pfad/zum/bild.jpg">#}
 
 {% endblock %}
 {% block Content %}
-<div id="map"></div>
-<div class="container mt-5">
-            <div class="row">
-                <div class="col-lg-8">
-                    <!-- Post content-->
-                    <article>
-                      	{% if Location.status == 2 %}
-                      		<div class="mb-5">
-                      			<div class="alert alert-warning">Bearbeite mich in Templates > Default Location Container!</div>
-                            </div>
-                      	{% endif %}
-                        <!-- Post header-->
-                        <header class="mb-4">
-                            <!-- Post title-->
-                          <h1 class="fw-bolder mb-1"><i style="color: {{ Location.markerColor }};" class="{{ Location.icon.fullClass }}"></i> {{ Location.name }}</h1>
-                            <!-- Post meta content-->
-                          	{#
-                            <div class="text-muted fst-italic mb-2">Posted on January 1, 2023 by Start Bootstrap</div>
-                          	#}
-                        </header>
-                      	<div>
-                          {{ Location.description|raw }}
-                      	</div>
-                    </article>
-                  	{#
-                    <!-- Comments section-->
-                    <section class="mb-5">
-                        <div class="card bg-light">
-                            <div class="card-body">
-                                <!-- Comment form-->
-                                <form class="mb-4"><textarea class="form-control" rows="3" placeholder="Join the discussion and leave a comment!"></textarea></form>
-                                <!-- Comment with nested comments-->
-                                <div class="d-flex mb-4">
-                                    <!-- Parent comment-->
-                                    <div class="flex-shrink-0"><img class="rounded-circle" src="https://dummyimage.com/50x50/ced4da/6c757d.jpg" alt="..." /></div>
-                                    <div class="ms-3">
-                                        <div class="fw-bold">Commenter Name</div>
-                                        If you're going to lead a space frontier, it has to be government; it'll never be private enterprise. Because the space frontier is dangerous, and it's expensive, and it has unquantified risks.
-                                        <!-- Child comment 1-->
-                                        <div class="d-flex mt-4">
-                                            <div class="flex-shrink-0"><img class="rounded-circle" src="https://dummyimage.com/50x50/ced4da/6c757d.jpg" alt="..." /></div>
-                                            <div class="ms-3">
-                                                <div class="fw-bold">Commenter Name</div>
-                                                And under those conditions, you cannot establish a capital-market evaluation of that enterprise. You can't get investors.
-                                            </div>
-                                        </div>
-                                        <!-- Child comment 2-->
-                                        <div class="d-flex mt-4">
-                                            <div class="flex-shrink-0"><img class="rounded-circle" src="https://dummyimage.com/50x50/ced4da/6c757d.jpg" alt="..." /></div>
-                                            <div class="ms-3">
-                                                <div class="fw-bold">Commenter Name</div>
-                                                When you put money directly to a problem, it makes a good headline.
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <!-- Single comment-->
-                                <div class="d-flex">
-                                    <div class="flex-shrink-0"><img class="rounded-circle" src="https://dummyimage.com/50x50/ced4da/6c757d.jpg" alt="..." /></div>
-                                    <div class="ms-3">
-                                        <div class="fw-bold">Commenter Name</div>
-                                        When I look at the universe and all the ways the universe wants to kill us, I find it hard to reconcile that with statements of beneficence.
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </section>
-                    #}
-                </div>
-              	
-                <!-- Side widgets-->
-                <div class="col-lg-4">
-                    {% if Location.properties > 0 %}
-                      <div class="card mb-4">
-                          <div class="card-header">Anmerkungen</div>
-                          <div class="card-body">
-                                {% for property in AllLocationProperties %}
-                                    {% if property.value in Location.properties %}
-                                        {% include "maps/templates/Components/PropertyBadge.twig" with {'property': property} %}
-                                    {% endif %}
-                                {% endfor %}
-                          </div>
-                      </div>
-                    {% endif %}
-                  
-                    {% if Location.youtube is not empty %}
-                  	<div class="card mb-4">
-                      		<iframe height="250px"
-                            src="https://www.youtube.com/embed/{{ Location.youtube }}"
-                            title="YouTube video player"
-                            frameborder="0"
-                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-                            allowfullscreen>
-                        </iframe>
-                	</div>
-                    {% endif %}
-                  
-                    {% if NearbyLocations|length > 0 %}
-                    <div class="card mb-4">
-                        <div class="card-header">Andere Locations in der Nähe (100km)</div>
-                        <div class="card-body">
-                          <ol class="list-group list-group-flush">
-                              {% for NearbyLocation in NearbyLocations %}
+	<div id="map"></div>
+	<div class="container mt-5">
+		<div class="row">
+			<div
+				class="col-lg-8">
+				<!-- Post content-->
+				<article>
+					{% if Location.status == 2 %}
+						<div class="mb-5">
+							<div class="alert alert-warning">Bearbeite mich in Templates > Default Location Container!</div>
+						</div>
+					{% endif %}
+					<!-- Post header-->
+					<header
+						class="mb-4">
+						<!-- Post title-->
+						<h1 class="fw-bolder mb-1">
+							<i style="color: {{ Location.markerColor }};" class="{{ Location.icon.fullClass }}"></i>
+							{{ Location.name }}</h1>
+						<!-- Post meta content-->
+						{#
+												                            <div class="text-muted fst-italic mb-2">Posted on January 1, 2023 by Start Bootstrap</div>
+												                          	#}
+					</header>
+					<div>
+						{{ Location.description|raw }}
+					</div>
+				</article>
+				{#
+								                    <!-- Comments section-->
+								                    <section class="mb-5">
+								                        <div class="card bg-light">
+								                            <div class="card-body">
+								                                <!-- Comment form-->
+								                                <form class="mb-4"><textarea class="form-control" rows="3" placeholder="Join the discussion and leave a comment!"></textarea></form>
+								                                <!-- Comment with nested comments-->
+								                                <div class="d-flex mb-4">
+								                                    <!-- Parent comment-->
+								                                    <div class="flex-shrink-0"><img class="rounded-circle" src="https://dummyimage.com/50x50/ced4da/6c757d.jpg" alt="..." /></div>
+								                                    <div class="ms-3">
+								                                        <div class="fw-bold">Commenter Name</div>
+								                                        If you're going to lead a space frontier, it has to be government; it'll never be private enterprise. Because the space frontier is dangerous, and it's expensive, and it has unquantified risks.
+								                                        <!-- Child comment 1-->
+								                                        <div class="d-flex mt-4">
+								                                            <div class="flex-shrink-0"><img class="rounded-circle" src="https://dummyimage.com/50x50/ced4da/6c757d.jpg" alt="..." /></div>
+								                                            <div class="ms-3">
+								                                                <div class="fw-bold">Commenter Name</div>
+								                                                And under those conditions, you cannot establish a capital-market evaluation of that enterprise. You can't get investors.
+								                                            </div>
+								                                        </div>
+								                                        <!-- Child comment 2-->
+								                                        <div class="d-flex mt-4">
+								                                            <div class="flex-shrink-0"><img class="rounded-circle" src="https://dummyimage.com/50x50/ced4da/6c757d.jpg" alt="..." /></div>
+								                                            <div class="ms-3">
+								                                                <div class="fw-bold">Commenter Name</div>
+								                                                When you put money directly to a problem, it makes a good headline.
+								                                            </div>
+								                                        </div>
+								                                    </div>
+								                                </div>
+								                                <!-- Single comment-->
+								                                <div class="d-flex">
+								                                    <div class="flex-shrink-0"><img class="rounded-circle" src="https://dummyimage.com/50x50/ced4da/6c757d.jpg" alt="..." /></div>
+								                                    <div class="ms-3">
+								                                        <div class="fw-bold">Commenter Name</div>
+								                                        When I look at the universe and all the ways the universe wants to kill us, I find it hard to reconcile that with statements of beneficence.
+								                                    </div>
+								                                </div>
+								                            </div>
+								                        </div>
+								                    </section>
+								                    #}
+			</div>
 
-								{% set bootstrapColors = {
+			<!-- Side widgets-->
+			<div class="col-lg-4">
+				{% if Location.properties > 0 %}
+					<div class="card mb-4">
+						<div class="card-header">Anmerkungen</div>
+						<div class="card-body">
+							{% for property in AllLocationProperties %}
+								{% if property.value in Location.properties %}
+									{% include "maps/templates/Components/PropertyBadge.twig" with {'property': property} %}
+								{% endif %}
+							{% endfor %}
+						</div>
+					</div>
+				{% endif %}
+
+				{% if Location.youtube is not empty %}
+					<div class="card mb-4">
+						<iframe height="250px" src="https://www.youtube.com/embed/{{ Location.youtube }}" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
+					</div>
+				{% endif %}
+
+				{% if NearbyLocations|length > 0 %}
+					<div class="card mb-4">
+						<div class="card-header">Andere Locations in der Nähe (100km)</div>
+						<div class="card-body">
+							<ol class="list-group list-group-flush">
+								{% for NearbyLocation in NearbyLocations %}
+
+									{% set bootstrapColors = {
 									'red': 'danger',
 									'orange': 'warning',
 									'green': 'success',
@@ -126,49 +126,52 @@
 									'cyan': 'info'
 								} %}
 
-								{% set bootstrapColor = bootstrapColors[NearbyLocation.location.markerColor] ?? 'secondary' %}
+									{% set bootstrapColor = bootstrapColors[NearbyLocation.location.markerColor] ?? 'secondary' %}
 
-                              <li class="list-group-item d-flex flex-wrap align-items-center justify-content-between">
-                                <a href="/location/{{ NearbyLocation.location.id }}">{{ loop.index }}. {{ NearbyLocation.location.name|truncateText(20) }}</a>
-                                <div class="ms-auto">
-                                	<span class="badge bg-{{ bootstrapColor }} me-2">{{ NearbyLocation.location.category.name }} <i class="{{ NearbyLocation.location.icon.fullClass }}"></i></span>
-                                	<small class="text-muted">{{ NearbyLocation.distance|round }}km</small>
-                                </div>
-                              </li>
-                              {% endfor %}
-                          </ol>
-                        </div>
-                    </div>
-                    {% endif %}
-                  
-                    <div class="card mb-4">
-							{% include "maps/templates/Components/LikeButtons.twig" %}
-                    </div>
-              	</div>
-            </div>
-        </div>
-{% include 'maps/templates/Components/ReportModal.twig' %}
+									<li class="list-group-item d-flex flex-wrap align-items-center justify-content-between">
+										<a href="/location/{{ NearbyLocation.location.id }}">{{ loop.index }}.
+											{{ NearbyLocation.location.name|truncateText(20) }}</a>
+										<div class="ms-auto">
+											<span class="badge bg-{{ bootstrapColor }} me-2">{{ NearbyLocation.location.category.name }}
+												<i class="{{ NearbyLocation.location.icon.fullClass }}"></i>
+											</span>
+											<small class="text-muted">{{ NearbyLocation.distance|round }}km</small>
+										</div>
+									</li>
+								{% endfor %}
+							</ol>
+						</div>
+					</div>
+				{% endif %}
+
+				<div class="card mb-4">
+					{% include "maps/templates/Components/LikeButtons.twig" %}
+				</div>
+			</div>
+		</div>
+	</div>
+	{% include 'maps/templates/Components/ReportModal.twig' %}
 {% endblock %}
 
 {% block Scripts %}
 	<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
-	<script src="{{ includeResource("lp/js/shared/lostplaces.js") }}"></script>
+	<script src="{{ includeResource("lp/js/shared/lostplaces.js?" ~ ENV.MAPS_THEME_GIT_COMMIT|md5) }}"></script>
 	<script src="https://cdn.jsdelivr.net/npm/leaflet.locatecontrol@0.84.1/dist/L.Control.Locate.min.js"></script>
-	<script src="{{ includeResource("lp/libs/Leaflet.awesome-markers/leaflet.awesome-markers.min.js") }}"></script>
-	<script src="{{ includeResource("lp/js/public/locationDetail.js") }}"></script>
-	<script src="{{ includeResource("lp/js/shared/map.preview.js") }}"></script>
-	<script src="{{ includeResource("lp/js/public/votelocation.js") }}"></script>
-	<script src="{{ includeResource("lp/js/public/reportLocation.js") }}"></script>
+	<script src="{{ includeResource("lp/libs/Leaflet.awesome-markers/leaflet.awesome-markers.min.js?" ~ ENV.MAPS_THEME_GIT_COMMIT|md5) }}"></script>
+	<script src="{{ includeResource("lp/js/public/locationDetail.js?" ~ ENV.MAPS_THEME_GIT_COMMIT|md5) }}"></script>
+	<script src="{{ includeResource("lp/js/shared/map.preview.js?" ~ ENV.MAPS_THEME_GIT_COMMIT|md5) }}"></script>
+	<script src="{{ includeResource("lp/js/public/votelocation.js?" ~ ENV.MAPS_THEME_GIT_COMMIT|md5) }}"></script>
+	<script src="{{ includeResource("lp/js/public/reportLocation.js?" ~ ENV.MAPS_THEME_GIT_COMMIT|md5) }}"></script>
 {% endblock %}
 
 {% block Stylesheets %}
 	<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin=""/>
 	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/leaflet.locatecontrol@0.84.1/dist/L.Control.Locate.min.css">
 	<style>
-    #map {
-      height: 250px;
-    }
-    </style>
-	<link rel="stylesheet" href="{{ includeResource("lp/libs/Leaflet.awesome-markers/leaflet.awesome-markers.css") }}">
-	<link rel="stylesheet" href="{{ includeResource("lp/libs/fontawesome/css/all.min.css") }}">
+		#map {
+			height: 250px;
+		}
+	</style>
+	<link rel="stylesheet" href="{{ includeResource("lp/libs/Leaflet.awesome-markers/leaflet.awesome-markers.css?" ~ ENV.MAPS_THEME_GIT_COMMIT|md5) }}">
+	<link rel="stylesheet" href="{{ includeResource("lp/libs/fontawesome/css/all.min.css?" ~ ENV.MAPS_THEME_GIT_COMMIT|md5) }}">
 {% endblock %}

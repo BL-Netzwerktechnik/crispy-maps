@@ -160,16 +160,16 @@
 
 {% block PageJs %}
 	<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-	<script src="{{ includeResource("lp/js/shared/lostplaces.js?v2") }}"></script>
-	<script src="{{ includeResource("lp/js/shared/map.preview.js?v2") }}"></script>
-	<script src="{{ includeResource("lp/libs/Leaflet.awesome-markers/leaflet.awesome-markers.min.js") }}"></script>
+	<script src="{{ includeResource("lp/js/shared/lostplaces.js?" ~ ENV.MAPS_THEME_GIT_COMMIT|md5) }}"></script>
+	<script src="{{ includeResource("lp/js/shared/map.preview.js?" ~ ENV.MAPS_THEME_GIT_COMMIT|md5) }}"></script>
+	<script src="{{ includeResource("lp/libs/Leaflet.awesome-markers/leaflet.awesome-markers.min.js?" ~ ENV.MAPS_THEME_GIT_COMMIT|md5) }}"></script>
 	<script>
 		$(document).on("mapsConfigLoaded", function (event) {
 let config = event.detail;
 document.dispatchEvent(new CustomEvent('leafletFinishedLoading', {detail: config}));
 });
 	</script>
-	<script src="{{ includeResource("lp/js/CmsControl/locationform.js?v2") }}"></script>
+	<script src="{{ includeResource("lp/js/CmsControl/locationform.js?" ~ ENV.MAPS_THEME_GIT_COMMIT|md5) }}"></script>
 
 
 {% endblock %}

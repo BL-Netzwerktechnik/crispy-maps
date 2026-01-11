@@ -113,18 +113,21 @@ function updateMap(config, map) {
 $(document).on("mapsConfigLoaded", function (event) {
   let config = event.detail;
   console.log("Crispy Maps Config loaded in map.js", config);
-  let map = L.map("map").fitWorld();
-  let newMarker;
+
+  let map = L.map("map", {
+    center: config.map.center,
+    zoom: config.map.default_zoom,
+    maxBounds: config.map.bounds,
+  });
   let defaultLayer = L.tileLayer(config.map.tileLayer.server, {
     attribution: config.map.tileLayer.attribution,
     maxZoom: config.map.tileLayer.maxZoom,
-  });
+  }).addTo(map);
+  let newMarker;
 
   defaultLayer.addTo(map);
 
   L.control.locate().addTo(map);
-
-  map.fitBounds(config.map.bounds);
 
   updateMap(config, map);
 

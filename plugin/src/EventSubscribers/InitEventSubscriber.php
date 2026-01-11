@@ -59,6 +59,10 @@ class InitEventSubscriber implements EventSubscriberInterface
         Config::bootstrap('LostPlaces_MapTileServer', 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png');
         Config::bootstrap('CMSControl_SiteName', 'Crispy Maps');
         Config::bootstrap('LostPlaces_MapClusterZoomLevel', 10);
+        Config::bootstrap('LostPlaces_MapBoundaryBox', json_encode([
+                    [48.603931996685255, -1.6040039062500002],
+                    [53.57952828271051, 25.290527343750004],
+                ]));
 
         Logger::getLogger(__METHOD__)->info('Config bootstrapped.');
     }

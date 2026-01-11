@@ -45,10 +45,7 @@ class ConfigJsonPageController
             'map' => [
                 'cluster_zoom' => Config::get('LostPlaces_MapClusterZoomLevel') ?? 10,
                 'path' => Config::get('LostPlaces_MapPath'),
-                'bounds' => [
-                    [48.603931996685255, -1.6040039062500002],
-                    [53.57952828271051, 25.290527343750004],
-                ],
+                'bounds' => json_decode(Config::get('LostPlaces_MapBoundaryBox'), true),
                 'tileLayer' => [
                     'server' => Config::get('LostPlaces_MapTileServer'),
                     'maxZoom' => 18,

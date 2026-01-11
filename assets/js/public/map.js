@@ -112,15 +112,17 @@ function updateMap(config, map) {
 
 $(document).on("mapsConfigLoaded", function (event) {
   let config = event.detail;
-  let map = L.map("map").fitWorld();
+  let map = L.map("map", {
+    center: config.map.center,
+    zoom: config.map.default_zoom,
+    maxBounds: config.map.bounds,
+  });
   L.tileLayer(config.map.tileLayer.server, {
     attribution: config.map.tileLayer.attribution,
     maxZoom: config.map.tileLayer.maxZoom,
   }).addTo(map);
 
   L.control.locate().addTo(map);
-
-  map.fitBounds(config.map.bounds);
 
   updateMap(config, map);
   let debounceTimer = null;

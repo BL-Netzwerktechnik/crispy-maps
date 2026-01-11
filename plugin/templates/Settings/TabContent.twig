@@ -114,15 +114,41 @@
         "hint": "Der lokale Pfad zu den Dateien, relativ zum /data Verzeichnis",
     } %}
 </div>
-{#
+
 <div class="divider">
 	<div class="divider-text">Karten Boundaries</div>
 </div>
-<div class="row">
-	<div class="col-12">
-		<div class="d-grid gap-2">
-			<a role="button" href="/admin/lp/mapboundary" class="btn btn-primary" type="button">Boundary Bearbeiten</a>
-		</div>
-	</div>
+<div class="row row-cols-2">
+
+	{% include "Components/Input.twig" with {
+        "type": "text",
+        "id": "settings-lostplaces-map-center",
+        "name": "LostPlaces_MapCenter",
+        "required": true,
+        "value": config.LostPlaces_MapCenter,
+        "label": "Karten Zentrum",
+        "hint": "Das Zentrum der Karte als JSON Array [Lat, Lon]",
+    } %}
+
+	{% include "Components/Input.twig" with {
+        "type": "text",
+        "id": "settings-lostplaces-map-boundarybox",
+        "name": "LostPlaces_MapBoundaryBox",
+        "required": true,
+        "value": config.LostPlaces_MapBoundaryBox,
+        "label": "Karten Boundary Box",
+        "hint": "Die Boundary Box der Karte als JSON Array [[SouthWest Lat, SouthWest Lon], [NorthEast Lat, NorthEast Lon]]",
+    } %}
+
+
+	{% include "Components/Input.twig" with {
+        "type": "number",
+        "id": "settings-lostplaces-map-boundarybox",
+        "name": "LostPlaces_MapDefaultZoom",
+        "required": true,
+        "value": config.LostPlaces_MapDefaultZoom,
+        "label": "Karten Default Zoom",
+        "hint": "Der Default Zoom Level der Karte",
+    } %}
+
 </div>
-#}

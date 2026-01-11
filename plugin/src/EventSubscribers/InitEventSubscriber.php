@@ -63,6 +63,8 @@ class InitEventSubscriber implements EventSubscriberInterface
                     [48.603931996685255, -1.6040039062500002],
                     [53.57952828271051, 25.290527343750004],
                 ]));
+        Config::bootstrap('LostPlaces_MapCenter', json_encode([51.1657, 10.4515]));
+        Config::bootstrap('LostPlaces_MapDefaultZoom', 6);
 
         Logger::getLogger(__METHOD__)->info('Config bootstrapped.');
     }

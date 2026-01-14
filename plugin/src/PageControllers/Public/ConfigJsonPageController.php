@@ -48,11 +48,7 @@ class ConfigJsonPageController
                 'bounds' => json_decode(Config::get('LostPlaces_MapBoundaryBox'), true),
                 'center' => json_decode(Config::get('LostPlaces_MapCenter'), true),
                 'default_zoom' => Config::get('LostPlaces_MapDefaultZoom') ?? 6,
-                'tileLayer' => [
-                    'server' => Config::get('LostPlaces_MapTileServer'),
-                    'maxZoom' => 18,
-                    'attribution' => Config::get('LostPlaces_MapAttribution'),
-                ],
+                'basemaps' => json_decode(Config::get('LostPlaces_BaseMapsConfig'), true),
             ],
             'iconProvider' => $this->iconProvider->toArray(),
             'categories' => $categoriesArray,

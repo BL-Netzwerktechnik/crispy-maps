@@ -1,16 +1,19 @@
 {
-    "name": "blfilme/maps",
-    "description": "Map Plugin for Crispy",
-    "version": "1.0.0",
-    "autoload": {
-          "psr-4": {
-              "blfilme\\lostplaces\\": "src/"
-        }
-    },  
-    "authors": [
-        {
-            "name": "Justin Back",
-            "email": "justin.back@bl-filme.de"
-        }
-    ]
+  "name": "blfilme/maps",
+  "description": "Map Plugin for Crispy",
+  "version": "1.0.0",
+  "require": {
+    "php": ">=8.4"
+  },
+  "autoload": {
+    "psr-4": {
+      "blfilme\\lostplaces\\": "src/"
+    }
+  },
+  "authors": [
+    {
+      "name": "Justin Back",
+      "email": "justin.back@bl-filme.de"
+    }
+  ]
 }

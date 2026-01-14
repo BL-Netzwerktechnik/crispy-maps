@@ -55,8 +55,6 @@ class InitEventSubscriber implements EventSubscriberInterface
         Config::bootstrap('LostPlaces_IconClass', "\blfilme\lostplaces\Models\IconModels\FontAwesomeSolidIconModel");
         Config::bootstrap('LostPlaces_ProviderPath', 'uploads');
         Config::bootstrap('LostPlaces_FileProvider', 'LocalFileProvider');
-        Config::bootstrap('LostPlaces_MapAttribution', '&copy; <a href="https://openstreetmap.org">OpenStreetMap</a> Contributors | <a href="https://crispycms.de">Crispy Maps</a>');
-        Config::bootstrap('LostPlaces_MapTileServer', 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png');
         Config::bootstrap('CMSControl_SiteName', 'Crispy Maps');
         Config::bootstrap('LostPlaces_MapClusterZoomLevel', 10);
         Config::bootstrap('LostPlaces_MapBoundaryBox', json_encode([
@@ -65,6 +63,16 @@ class InitEventSubscriber implements EventSubscriberInterface
                 ]));
         Config::bootstrap('LostPlaces_MapCenter', json_encode([51.1657, 10.4515]));
         Config::bootstrap('LostPlaces_MapDefaultZoom', 6);
+        Config::bootstrap('LostPlaces_BaseMapsConfig', json_encode([
+                'OpenStreetMap' => [
+                    'type'   => 'tile',
+                    'url'    => 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
+                    'options' => [
+                        'attribution' => '&copy; <a href="https://openstreetmap.org">OpenStreetMap</a> Contributors',
+                        'maxZoom'     => 18,
+                    ],
+                ],
+            ]));
 
         Logger::getLogger(__METHOD__)->info('Config bootstrapped.');
     }

@@ -3,6 +3,31 @@ let clusterLayer = [];
 let superClusterIndex;
 let markerCache = [];
 
+function buildBasemaps(config) {
+  const basemaps = {};
+
+  Object.entries(config).forEach(([name, def]) => {
+    let layer;
+
+    if (def.type === "tile") {
+      layer = L.tileLayer(def.url, def.options || {});
+    }
+
+    if (def.type === "wms") {
+      layer = L.tileLayer.wms(def.url, {
+        ...(def.options || {}),
+        layers: Array.isArray(def.layers) ? def.layers.join(",") : def.layers,
+      });
+    }
+
+    if (layer) {
+      basemaps[name] = layer;
+    }
+  });
+
+  return basemaps;
+}
+
 function cleanupGeoJsonLayer() {
   if (geoJsonLayer) {
     geoJsonLayer.forEach(function (layer) {
@@ -117,10 +142,13 @@ $(document).on("mapsConfigLoaded", function (event) {
     zoom: config.map.default_zoom,
     maxBounds: config.map.bounds,
   });
-  L.tileLayer(config.map.tileLayer.server, {
-    attribution: config.map.tileLayer.attribution,
-    maxZoom: config.map.tileLayer.maxZoom,
-  }).addTo(map);
+
+  const basemaps = buildBasemaps(config.map.basemaps);
+
+  L.control.layers(basemaps).addTo(map);
+
+  // default basemap
+  Object.values(basemaps)[0].addTo(map);
 
   L.control.locate().addTo(map);
 

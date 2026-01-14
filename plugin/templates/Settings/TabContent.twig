@@ -10,21 +10,12 @@
     } %}
 	{% include "Components/Input.twig" with {
         "type": "text",
-        "id": "settings-lostplaces-map-attribution",
-        "name": "LostPlaces_MapAttribution",
+        "id": "settings-lostplaces-map-basemapsconfig",
+        "name": "LostPlaces_BaseMapsConfig",
         "required": true,
-        "value": config.LostPlaces_MapAttribution,
-        "label": "Kartenansicht: Attribution",
-        "hint": "Die Attribution die in der Kartenansicht angezeigt wird",
-    } %}
-	{% include "Components/Input.twig" with {
-        "type": "text",
-        "id": "settings-lostplaces-map-tileserver",
-        "name": "LostPlaces_MapTileServer",
-        "required": true,
-        "value": config.LostPlaces_MapTileServer,
-        "label": "Kartenansicht: Tile Server",
-        "hint": "Der Tile Server der für die Kartenansicht verwendet wird",
+        "value": config.LostPlaces_BaseMapsConfig,
+        "label": "Kartenansicht: Base Maps Config",
+        "hint": "Die Base Maps Config die für die Kartenansicht verwendet wird. Im JSON Format.",
     } %}
 	{% include "Components/Input.twig" with {
         "type": "text",

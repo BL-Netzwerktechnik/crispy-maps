@@ -2,6 +2,52 @@ let geoJsonLayer = [];
 let clusterLayer = [];
 let superClusterIndex;
 let markerCache = [];
+let activeLayer = null;
+
+function updateActiveLayer(e, config, map) {
+  activeLayer = e.name;
+  updateHash(config, map);
+}
+
+function restoreMapState(config, map) {
+  if (!location.hash) return;
+
+  const params = new URLSearchParams(location.hash.slice(1));
+
+  const lat = parseFloat(params.get("lat"));
+  const lng = parseFloat(params.get("lng"));
+  const zoom = parseInt(params.get("zoom"), 10);
+  const base = params.get("base");
+
+  if (!isNaN(lat) && !isNaN(lng) && !isNaN(zoom)) {
+    map.setView([lat, lng], zoom);
+  }
+
+  if (base && config.map.basemaps[base]) {
+    activeLayer = base;
+
+    Object.values(config.map.basemaps).forEach((layer) =>
+      map.removeLayer(layer)
+    );
+    map.addLayer(buildBasemaps([config.map.basemaps[base]])[0]);
+  }
+
+  updateHash(config, map);
+}
+
+function updateHash(config, map) {
+  const center = map.getCenter();
+  const zoom = map.getZoom();
+
+  const params = new URLSearchParams({
+    lat: center.lat.toFixed(6),
+    lng: center.lng.toFixed(6),
+    zoom,
+    base: activeLayer || "",
+  });
+
+  history.replaceState(null, "", "#" + params.toString());
+}
 
 function buildBasemaps(config) {
   const basemaps = {};
@@ -46,6 +92,7 @@ function cleanupClusterLayer() {
 }
 
 function updateMap(config, map) {
+  updateHash(config, map);
   const bounds = map.getBounds();
   const zoom = map.getZoom();
 
@@ -152,6 +199,7 @@ $(document).on("mapsConfigLoaded", function (event) {
 
   L.control.locate().addTo(map);
 
+  restoreMapState(config, map);
   updateMap(config, map);
   let debounceTimer = null;
 
@@ -162,5 +210,9 @@ $(document).on("mapsConfigLoaded", function (event) {
     debounceTimer = setTimeout(function () {
       updateMap(config, map);
     }, 300);
+  });
+
+  map.on("baselayerchange", function (e) {
+    updateActiveLayer(e, config, map);
   });
 });

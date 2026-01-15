@@ -160,9 +160,9 @@ function updateMap(config, map) {
 $(document).on("mapsConfigLoaded", function (event) {
   let params = new URLSearchParams(location.hash.slice(1));
   let config = event.detail;
-
   let center = config.map.center;
   let zoom = config.map.default_zoom;
+  let basemaps = buildBasemaps(config.map.basemaps);
 
   if (params.get("lat") && params.get("lng")) {
     center = [parseFloat(params.get("lat")), parseFloat(params.get("lng"))];
@@ -180,8 +180,6 @@ $(document).on("mapsConfigLoaded", function (event) {
     dragging: params.get("hideControls") ? false : true,
     scrollWheelZoom: params.get("hideControls") ? false : true,
   });
-
-  const basemaps = buildBasemaps(config.map.basemaps);
 
   if (!params.get("base") && !params.get("hideControls")) {
     L.control.layers(basemaps).addTo(map);

@@ -9,31 +9,6 @@ function updateActiveLayer(e, config, map) {
   updateHash(config, map);
 }
 
-function restoreMapState(config, map) {
-  if (!location.hash) return;
-
-  const params = new URLSearchParams(location.hash.slice(1));
-
-  const lat = parseFloat(params.get("lat"));
-  const lng = parseFloat(params.get("lng"));
-  const zoom = parseInt(params.get("zoom"), 10);
-  const base = params.get("base");
-
-  if (!isNaN(lat) && !isNaN(lng) && !isNaN(zoom)) {
-    map.setView([lat, lng], zoom);
-  }
-
-  if (base && config.map.basemaps[base]) {
-    activeLayer = base;
-
-    Object.values(config.map.basemaps).forEach((layer) =>
-      map.removeLayer(layer)
-    );
-    map.addLayer(buildBasemaps([config.map.basemaps[base]])[0]);
-  }
-
-  updateHash(config, map);
-}
 function updateHash(config, map) {
   const center = map.getCenter();
   const zoom = map.getZoom();
@@ -183,11 +158,23 @@ function updateMap(config, map) {
 }
 
 $(document).on("mapsConfigLoaded", function (event) {
-  const params = new URLSearchParams(location.hash.slice(1));
+  let params = new URLSearchParams(location.hash.slice(1));
   let config = event.detail;
+
+  let center = config.map.center;
+  let zoom = config.map.default_zoom;
+
+  if (params.get("lat") && params.get("lng")) {
+    center = [parseFloat(params.get("lat")), parseFloat(params.get("lng"))];
+  }
+
+  if (params.get("zoom")) {
+    zoom = parseInt(params.get("zoom"), 10);
+  }
+
   let map = L.map("map", {
-    center: config.map.center,
-    zoom: config.map.default_zoom,
+    center: center,
+    zoom: zoom,
     maxBounds: config.map.bounds,
     zoomControl: params.get("hideControls") ? false : true,
     dragging: params.get("hideControls") ? false : true,
@@ -216,8 +203,6 @@ $(document).on("mapsConfigLoaded", function (event) {
   if (!params.get("hideControls")) {
     L.control.locate().addTo(map);
   }
-
-  restoreMapState(config, map);
 
   if (!params.get("noMarkers")) {
     updateMap(config, map);

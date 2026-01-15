@@ -165,6 +165,9 @@ $(document).on("mapsConfigLoaded", function (event) {
   let basemaps = buildBasemaps(config.map.basemaps);
   let overlays = buildBasemaps(config.map.overlays);
   let overlayParam = params.get("overlay");
+  let baseParam = params.get("base");
+  let hideControlsParam = params.get("hideControls");
+  let noMarkersParam = params.get("noMarkers");
 
   if (params.get("lat") && params.get("lng")) {
     center = [parseFloat(params.get("lat")), parseFloat(params.get("lng"))];
@@ -178,22 +181,21 @@ $(document).on("mapsConfigLoaded", function (event) {
     center: center,
     zoom: zoom,
     maxBounds: config.map.bounds,
-    zoomControl: params.get("hideControls") ? false : true,
-    dragging: params.get("hideControls") ? false : true,
-    scrollWheelZoom: params.get("hideControls") ? false : true,
+    zoomControl: hideControlsParam ? false : true,
+    dragging: hideControlsParam ? false : true,
+    scrollWheelZoom: hideControlsParam ? false : true,
   });
 
-  if (!params.get("base") && !params.get("hideControls")) {
+  if (!baseParam && !hideControlsParam && !overlayParam) {
     L.control.layers(basemaps, overlays).addTo(map);
   }
 
-  if (!params.get("base")) {
+  if (!baseParam) {
     // default basemap
     Object.values(basemaps)[0].addTo(map);
   } else {
-    const base = params.get("base");
-    if (config.map.basemaps[base]) {
-      basemaps[base].addTo(map);
+    if (config.map.basemaps[baseParam]) {
+      basemaps[baseParam].addTo(map);
     } else {
       // fallback to default basemap
       Object.values(basemaps)[0].addTo(map);
@@ -210,11 +212,11 @@ $(document).on("mapsConfigLoaded", function (event) {
     });
   }
 
-  if (!params.get("hideControls")) {
+  if (!hideControlsParam) {
     L.control.locate().addTo(map);
   }
 
-  if (!params.get("noMarkers")) {
+  if (!noMarkersParam) {
     updateMap(config, map);
     updateHash(config, map);
   }

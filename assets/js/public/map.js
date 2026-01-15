@@ -23,7 +23,6 @@ function restoreMapState(config, map) {
     map.setView([lat, lng], zoom);
   }
 
-  /**
   if (base && config.map.basemaps[base]) {
     activeLayer = base;
 
@@ -32,21 +31,20 @@ function restoreMapState(config, map) {
     );
     map.addLayer(buildBasemaps([config.map.basemaps[base]])[0]);
   }
-  */
 
   updateHash(config, map);
 }
-
 function updateHash(config, map) {
   const center = map.getCenter();
   const zoom = map.getZoom();
 
-  const params = new URLSearchParams({
-    lat: center.lat.toFixed(6),
-    lng: center.lng.toFixed(6),
-    zoom,
-    base: activeLayer || "",
-  });
+  // start with existing hash params
+  const params = new URLSearchParams(location.hash.replace("#", ""));
+
+  // override only these values
+  params.set("lat", center.lat.toFixed(6));
+  params.set("lng", center.lng.toFixed(6));
+  params.set("zoom", zoom);
 
   history.replaceState(null, "", "#" + params.toString());
 }
@@ -185,21 +183,28 @@ function updateMap(config, map) {
 }
 
 $(document).on("mapsConfigLoaded", function (event) {
+  const params = new URLSearchParams(location.hash.slice(1));
   let config = event.detail;
   let map = L.map("map", {
     center: config.map.center,
     zoom: config.map.default_zoom,
     maxBounds: config.map.bounds,
+    zoomControl: params.get("hideControls") ? false : true,
+    dragging: params.get("hideControls") ? false : true,
+    scrollWheelZoom: params.get("hideControls") ? false : true,
   });
 
   const basemaps = buildBasemaps(config.map.basemaps);
 
-  L.control.layers(basemaps).addTo(map);
-
+  if (!params.get("base") && !params.get("hideControls")) {
+    L.control.layers(basemaps).addTo(map);
+  }
   // default basemap
   Object.values(basemaps)[0].addTo(map);
 
-  L.control.locate().addTo(map);
+  if (!params.get("hideControls")) {
+    L.control.locate().addTo(map);
+  }
 
   restoreMapState(config, map);
   updateMap(config, map);

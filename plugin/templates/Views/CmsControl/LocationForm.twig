@@ -13,7 +13,7 @@
 	{% endif %}
 	<div class="card mb-3">
 		<div class="card-header">
-			<a href="/admin/map" class="btn btn-primary float-end">Zurück zur Karte</a>
+			<a href="/admin/map#lat={{ Location.coordinates.latitude }}&lng={{ Location.coordinates.longitude }}&zoom=15" class="btn btn-primary float-end">Zurück zur Karte</a>
 		</div>
 		{% if hideMap is not defined %}
 			<div id="map"></div>

@@ -136,26 +136,68 @@ function updateMap(config, map) {
 }
 
 $(document).on("mapsConfigLoaded", function (event) {
+  let newMarker;
+  let params = new URLSearchParams(location.hash.slice(1));
   let config = event.detail;
-  console.log("Crispy Maps Config loaded in map.js", config);
+  let center = config.map.center;
+  let zoom = config.map.default_zoom;
+  let basemaps = buildBasemaps(config.map.basemaps);
+  let overlays = buildBasemaps(config.map.overlays);
+  let overlayParam = params.get("overlay");
+  let baseParam = params.get("base");
+  let hideControlsParam = params.get("hideControls");
+  let noMarkersParam = params.get("noMarkers");
+
+  if (params.get("lat") && params.get("lng")) {
+    center = [parseFloat(params.get("lat")), parseFloat(params.get("lng"))];
+  }
+
+  if (params.get("zoom")) {
+    zoom = parseInt(params.get("zoom"), 10);
+  }
 
   let map = L.map("map", {
-    center: config.map.center,
-    zoom: config.map.default_zoom,
+    center: center,
+    zoom: zoom,
     maxBounds: config.map.bounds,
+    zoomControl: hideControlsParam ? false : true,
+    dragging: hideControlsParam ? false : true,
+    scrollWheelZoom: hideControlsParam ? false : true,
   });
-  let newMarker;
 
-  const basemaps = buildBasemaps(config.map.basemaps);
+  if (!baseParam && !hideControlsParam && !overlayParam) {
+    L.control.layers(basemaps, overlays).addTo(map);
+  }
 
-  L.control.layers(basemaps).addTo(map);
+  if (!baseParam) {
+    // default basemap
+    Object.values(basemaps)[0].addTo(map);
+  } else {
+    if (config.map.basemaps[baseParam]) {
+      basemaps[baseParam].addTo(map);
+    } else {
+      // fallback to default basemap
+      Object.values(basemaps)[0].addTo(map);
+    }
+  }
 
-  // default basemap
-  Object.values(basemaps)[0].addTo(map);
+  if (overlayParam) {
+    const overlayNames = overlayParam.split(",");
 
-  L.control.locate().addTo(map);
+    overlayNames.forEach((name) => {
+      if (config.map.overlays[name]) {
+        overlays[name].addTo(map);
+      }
+    });
+  }
 
-  updateMap(config, map);
+  if (!hideControlsParam) {
+    L.control.locate().addTo(map);
+  }
+
+  if (!noMarkersParam) {
+    updateMap(config, map);
+  }
 
   map.on("click", function (data) {
     if (newMarker) {

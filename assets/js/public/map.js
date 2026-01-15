@@ -199,8 +199,19 @@ $(document).on("mapsConfigLoaded", function (event) {
   if (!params.get("base") && !params.get("hideControls")) {
     L.control.layers(basemaps).addTo(map);
   }
-  // default basemap
-  Object.values(basemaps)[0].addTo(map);
+
+  if (!params.get("base")) {
+    // default basemap
+    Object.values(basemaps)[0].addTo(map);
+  } else {
+    const base = params.get("base");
+    if (config.map.basemaps[base]) {
+      basemaps[base].addTo(map);
+    } else {
+      // fallback to default basemap
+      Object.values(basemaps)[0].addTo(map);
+    }
+  }
 
   if (!params.get("hideControls")) {
     L.control.locate().addTo(map);

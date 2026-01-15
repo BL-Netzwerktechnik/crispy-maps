@@ -218,7 +218,11 @@ $(document).on("mapsConfigLoaded", function (event) {
   }
 
   restoreMapState(config, map);
-  updateMap(config, map);
+
+  if (!params.get("noMarkers")) {
+    updateMap(config, map);
+    updateHash(config, map);
+  }
   let debounceTimer = null;
 
   map.on("zoomend dragend", function () {
@@ -226,7 +230,10 @@ $(document).on("mapsConfigLoaded", function (event) {
       clearTimeout(debounceTimer);
     }
     debounceTimer = setTimeout(function () {
-      updateMap(config, map);
+      if (!params.get("noMarkers")) {
+        updateMap(config, map);
+        updateHash(config, map);
+      }
     }, 300);
   });
 

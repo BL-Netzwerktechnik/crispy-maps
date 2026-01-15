@@ -19,6 +19,15 @@
     } %}
 	{% include "Components/Input.twig" with {
         "type": "text",
+        "id": "settings-lostplaces-map-overlaymapsconfig",
+        "name": "LostPlaces_OverlayMapsConfig",
+        "required": true,
+        "value": config.LostPlaces_OverlayMapsConfig,
+        "label": "Kartenansicht: Overlay Maps Config",
+        "hint": "Die Overlay Maps Config die für die Kartenansicht verwendet wird. Im JSON Format.",
+    } %}
+	{% include "Components/Input.twig" with {
+        "type": "text",
         "id": "settings-lostplaces-map-cluster-zoomlevel",
         "name": "LostPlaces_MapClusterZoomLevel",
         "required": true,

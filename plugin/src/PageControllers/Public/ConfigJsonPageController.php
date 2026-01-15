@@ -49,6 +49,7 @@ class ConfigJsonPageController
                 'center' => json_decode(Config::get('LostPlaces_MapCenter'), true),
                 'default_zoom' => Config::get('LostPlaces_MapDefaultZoom') ?? 6,
                 'basemaps' => json_decode(Config::get('LostPlaces_BaseMapsConfig'), true),
+                'overlays' => json_decode(Config::get('LostPlaces_OverlayMapsConfig'), true),
             ],
             'iconProvider' => $this->iconProvider->toArray(),
             'categories' => $categoriesArray,

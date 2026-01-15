@@ -163,6 +163,8 @@ $(document).on("mapsConfigLoaded", function (event) {
   let center = config.map.center;
   let zoom = config.map.default_zoom;
   let basemaps = buildBasemaps(config.map.basemaps);
+  let overlays = buildBasemaps(config.map.overlays);
+  let overlayParam = params.get("overlay");
 
   if (params.get("lat") && params.get("lng")) {
     center = [parseFloat(params.get("lat")), parseFloat(params.get("lng"))];
@@ -182,7 +184,7 @@ $(document).on("mapsConfigLoaded", function (event) {
   });
 
   if (!params.get("base") && !params.get("hideControls")) {
-    L.control.layers(basemaps).addTo(map);
+    L.control.layers(basemaps, overlays).addTo(map);
   }
 
   if (!params.get("base")) {
@@ -196,6 +198,16 @@ $(document).on("mapsConfigLoaded", function (event) {
       // fallback to default basemap
       Object.values(basemaps)[0].addTo(map);
     }
+  }
+
+  if (overlayParam) {
+    const overlayNames = overlayParam.split(",");
+
+    overlayNames.forEach((name) => {
+      if (config.map.overlays[name]) {
+        overlays[name].addTo(map);
+      }
+    });
   }
 
   if (!params.get("hideControls")) {

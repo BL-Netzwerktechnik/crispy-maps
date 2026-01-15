@@ -74,6 +74,8 @@ class InitEventSubscriber implements EventSubscriberInterface
                 ],
             ]));
 
+        Config::bootstrap('LostPlaces_OverlayMapsConfig', json_encode([]));
+
         Logger::getLogger(__METHOD__)->info('Config bootstrapped.');
     }
 

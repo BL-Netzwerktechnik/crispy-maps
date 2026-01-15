@@ -30,9 +30,7 @@ class CategoryDatabaseController extends DatabaseController
             return $this->createFallbackCategory();
         }
 
-        Logger::getLogger(__METHOD__)->info('Saving to cache', $row);
-
-        $categoryCache[$row['id']] = new CategoryModel(
+        $this->categoryCache[$row['id']] = new CategoryModel(
             id: $row['id'],
             name: $row['name'],
             description: $row['description'],
@@ -41,7 +39,7 @@ class CategoryDatabaseController extends DatabaseController
             updatedAt: Carbon::parse($row['updated_at'], $_ENV['TZ'] ?? 'UTC'),
         );
 
-        return $categoryCache[$row['id']];
+        return $this->categoryCache[$row['id']];
     }
 
     public function getCategoryById(int $id): ?CategoryModel

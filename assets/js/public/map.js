@@ -23,6 +23,7 @@ function restoreMapState(config, map) {
     map.setView([lat, lng], zoom);
   }
 
+  /**
   if (base && config.map.basemaps[base]) {
     activeLayer = base;
 
@@ -31,6 +32,7 @@ function restoreMapState(config, map) {
     );
     map.addLayer(buildBasemaps([config.map.basemaps[base]])[0]);
   }
+  */
 
   updateHash(config, map);
 }

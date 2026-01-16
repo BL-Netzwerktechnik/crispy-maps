@@ -9,33 +9,6 @@
         "hint": "Der URL Pfad der Kartenansicht",
     } %}
 	{% include "Components/Input.twig" with {
-        "type": "text",
-        "id": "settings-lostplaces-map-basemapsconfig",
-        "name": "LostPlaces_BaseMapsConfig",
-        "required": true,
-        "value": config.LostPlaces_BaseMapsConfig,
-        "label": "Kartenansicht: Base Maps Config",
-        "hint": "Die Base Maps Config die für die Kartenansicht verwendet wird. Im JSON Format.",
-    } %}
-	{% include "Components/Input.twig" with {
-        "type": "text",
-        "id": "settings-lostplaces-map-overlaymapsconfig",
-        "name": "LostPlaces_OverlayMapsConfig",
-        "required": true,
-        "value": config.LostPlaces_OverlayMapsConfig,
-        "label": "Kartenansicht: Overlay Maps Config",
-        "hint": "Die Overlay Maps Config die für die Kartenansicht verwendet wird. Im JSON Format.",
-    } %}
-	{% include "Components/Input.twig" with {
-        "type": "text",
-        "id": "settings-lostplaces-map-cluster-zoomlevel",
-        "name": "LostPlaces_MapClusterZoomLevel",
-        "required": true,
-        "value": config.LostPlaces_MapClusterZoomLevel,
-        "label": "Kartenansicht: Cluster Zoom Level",
-        "hint": "Der Zoom Level ab dem Cluster aufgelöst werden. Je höher der Wert, desto mehr muss rein gezoomt werden, damit die Cluster aufgelöst werden.",
-    } %}
-	{% include "Components/Input.twig" with {
         "type": "select",
         "id": "settings-lostplaces-icon-class",
         "name": "LostPlaces_IconClass",
@@ -116,12 +89,30 @@
 </div>
 
 <div class="divider">
-	<div class="divider-text">Karten Boundaries</div>
+	<div class="divider-text">Karten Render</div>
 </div>
 <div class="row row-cols-2">
 
 	{% include "Components/Input.twig" with {
-        "type": "text",
+        "type": "textarea",
+        "id": "settings-lostplaces-map-basemapsconfig",
+        "name": "LostPlaces_BaseMapsConfig",
+        "required": true,
+        "value": config.LostPlaces_BaseMapsConfig,
+        "label": "Base Maps Config",
+        "hint": "Die Base Maps Config die für die Kartenansicht verwendet wird. Im JSON Format.",
+    } %}
+	{% include "Components/Input.twig" with {
+        "type": "textarea",
+        "id": "settings-lostplaces-map-overlaymapsconfig",
+        "name": "LostPlaces_OverlayMapsConfig",
+        "required": true,
+        "value": config.LostPlaces_OverlayMapsConfig,
+        "label": "Overlay Maps Config",
+        "hint": "Die Overlay Maps Config die für die Kartenansicht verwendet wird. Im JSON Format.",
+    } %}
+	{% include "Components/Input.twig" with {
+        "type": "textarea",
         "id": "settings-lostplaces-map-center",
         "name": "LostPlaces_MapCenter",
         "required": true,
@@ -131,7 +122,7 @@
     } %}
 
 	{% include "Components/Input.twig" with {
-        "type": "text",
+        "type": "textarea",
         "id": "settings-lostplaces-map-boundarybox",
         "name": "LostPlaces_MapBoundaryBox",
         "required": true,
@@ -139,16 +130,22 @@
         "label": "Karten Boundary Box",
         "hint": "Die Boundary Box der Karte als JSON Array [[SouthWest Lat, SouthWest Lon], [NorthEast Lat, NorthEast Lon]]",
     } %}
-
-
 	{% include "Components/Input.twig" with {
         "type": "number",
-        "id": "settings-lostplaces-map-boundarybox",
+        "id": "settings-lostplaces-map-cluster-zoomlevel",
+        "name": "LostPlaces_MapClusterZoomLevel",
+        "required": true,
+        "value": config.LostPlaces_MapClusterZoomLevel,
+        "label": "Cluster Zoom Level",
+        "hint": "Der Zoom Level ab dem Cluster aufgelöst werden. Je höher der Wert, desto mehr muss rein gezoomt werden, damit die Cluster aufgelöst werden.",
+    } %}
+	{% include "Components/Input.twig" with {
+        "type": "number",
+        "id": "settings-lostplaces-map-default-zoom",
         "name": "LostPlaces_MapDefaultZoom",
         "required": true,
         "value": config.LostPlaces_MapDefaultZoom,
-        "label": "Karten Default Zoom",
-        "hint": "Der Default Zoom Level der Karte",
+        "label": "Default Zoom Level",
+        "hint": "Der Default Zoom Level der Karte. Je höher der Wert, desto weiter ist die Karte rein gezoomt.",
     } %}
-
 </div>

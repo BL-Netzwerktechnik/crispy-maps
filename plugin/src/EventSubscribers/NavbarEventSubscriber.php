@@ -51,7 +51,7 @@ class NavbarEventSubscriber implements EventSubscriberInterface
             new NavBarItemModel(
                 name: 'Karte',
                 url: 'admin/map',
-                icon: 'fas fa-map-location-dot',
+                icon: 'fa-sharp-duotone fa-regular fa-map-location-dot',
                 permissions: [
                     Permissions::READ_PAGES->value,
                     Permissions::SUPERUSER->value,
@@ -63,7 +63,7 @@ class NavbarEventSubscriber implements EventSubscriberInterface
             new NavBarItemModel(
                 name: 'Kategorien',
                 url: 'admin/lp/categories',
-                icon: 'fas fa-location-dot',
+                icon: 'fa-sharp-duotone fa-regular fa-location-dot',
                 permissions: [
                     Permissions::READ_CATEGORIES->value,
                     Permissions::SUPERUSER->value,
@@ -75,7 +75,7 @@ class NavbarEventSubscriber implements EventSubscriberInterface
             new NavBarItemModel(
                 name: 'Meldungen',
                 url: 'admin/lp/reports',
-                icon: 'fas fa-flag',
+                icon: 'fa-sharp-duotone fa-regular fa-flag',
                 permissions: [
                     Permissions::SUPERUSER->value,
                 ],
